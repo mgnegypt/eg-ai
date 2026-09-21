@@ -132,8 +132,14 @@ This project is developed using [Android Studio](https://developer.android.com/s
 </div>
 
 
-## License
+<div align="center">
 
-This project is licensed under the [GNU Affero General Public License v3.0](LICENSE) (AGPL-3.0).
+### License 📜
 
-MGN AI's copyright is held by its developers and contributors only, and it is distributed under the same license. The original copyright notices are preserved.
+**This project is licensed under the [GNU Affero General Public License v3.0](LICENSE)** • **(AGPL-3.0)**
+
+
+<sub>MGN AI's copyright is held by its developers and contributors only, and it is distributed under the same license. The original copyright notices are preserved</sub>
+<sub>Built with ❤️ by MGN EG</sub>
+
+</div>
