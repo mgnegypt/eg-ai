@@ -123,9 +123,14 @@ This project is developed using [Android Studio](https://developer.android.com/s
 | [kotlinx.serialization](https://github.com/Kotlin/kotlinx.serialization) | JSON serialization |
 | [Firebase](https://firebase.google.com/) | Crashlytics, Analytics, Remote Config |
 
-## Star History
+## 🌟 Star History
 
-If you like this project, please consider giving it a star.
+<div align="center">
+
+[![Star History Chart](https://api.star-history.com/svg?repos=mgnegypt/eg-ai&type=Date)](https://star-history.com/#mgnegypt/eg-ai&Date)
+
+</div>
+
 
 ## License
 
