@@ -125,9 +125,13 @@ cd eg-ai
 | [kotlinx.serialization](https://github.com/Kotlin/kotlinx.serialization) | تسلسل JSON |
 | [Firebase](https://firebase.google.com/) | Crashlytics وAnalytics وRemote Config |
 
-## تاريخ النجوم
+## 🌟 تاريخ النجوم
 
-إذا أعجبك هذا المشروع، يسعدنا دعمك بنجمة (Star) على GitHub.
+<div align="center">
+
+[![Star History Chart](https://api.star-history.com/svg?repos=mgnegypt/eg-ai&type=Date)](https://star-history.com/#mgnegypt/eg-ai&Date)
+
+</div>
 
 ## الترخيص
 
