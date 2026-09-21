@@ -158,5 +158,4 @@ If you like this project, please give it a star ⭐
 
 This project is licensed under the [GNU Affero General Public License v3.0](LICENSE) (AGPL-3.0).
 
-MGN AI is based on [RikkaHub](https://github.com/rikkahub/rikkahub) and is distributed under
-the same license. The original copyright notices are preserved.
+MGN AI's copyright is held by its developers and contributors only, and it is distributed under the same license. The original copyright notices are preserved.
