@@ -140,6 +140,7 @@ This project is developed using [Android Studio](https://developer.android.com/s
 
 
 <sub>MGN AI's copyright is held by its developers and contributors only, and it is distributed under the same license. The original copyright notices are preserved</sub>
+
 <sub>Built with ❤️ by MGN EG</sub>
 
 </div>
