@@ -84,6 +84,8 @@ class SettingsStore(
         val DISPLAY_SETTING = stringPreferencesKey("display_setting")
         val NETWORK_SETTING = stringPreferencesKey("network_setting")
         val DEVELOPER_MODE = booleanPreferencesKey("developer_mode")
+        val SUBAGENT_MODEL = stringPreferencesKey("subagent_model")
+        val SUBAGENT_REASONING_LEVEL = stringPreferencesKey("subagent_reasoning_level")
         val KEEP_AWAKE = booleanPreferencesKey("keep_awake")
 
         // 模型选择
@@ -167,6 +169,13 @@ class SettingsStore(
                 preferences[THEME_ID] = settings.themeId
                 preferences[CUSTOM_THEMES] = JsonInstant.encodeToString(settings.customThemes)
                 preferences[DEVELOPER_MODE] = settings.developerMode
+                val subAgentModelId = settings.subAgentModelId
+                if (subAgentModelId != null) {
+                    preferences[SUBAGENT_MODEL] = subAgentModelId.toString()
+                } else {
+                    preferences.remove(SUBAGENT_MODEL)
+                }
+                preferences[SUBAGENT_REASONING_LEVEL] = settings.subAgentReasoningLevel.name
                 preferences[KEEP_AWAKE] = settings.keepAwakeEnabled
                 preferences[DISPLAY_SETTING] = JsonInstant.encodeToString(settings.displaySetting)
                 preferences[NETWORK_SETTING] = JsonInstant.encodeToString(settings.networkSetting)
@@ -270,6 +279,10 @@ class SettingsStore(
                     JsonInstant.decodeFromString(it)
                 } ?: emptyList(),
                 developerMode = preferences[DEVELOPER_MODE] == true,
+                subAgentModelId = preferences[SUBAGENT_MODEL]?.let { Uuid.parse(it) },
+                subAgentReasoningLevel = preferences[SUBAGENT_REASONING_LEVEL]
+                    ?.let { value -> ReasoningLevel.entries.find { it.name == value } }
+                    ?: ReasoningLevel.AUTO,
                 keepAwakeEnabled = preferences[KEEP_AWAKE] == true,
                 displaySetting = JsonInstant.decodeFromString(preferences[DISPLAY_SETTING] ?: "{}"),
                 networkSetting = JsonInstant.decodeFromString(preferences[NETWORK_SETTING] ?: "{}"),
@@ -526,6 +539,8 @@ data class Settings(
     val themeId: String = PresetThemes[0].id,
     val customThemes: List<CustomTheme> = emptyList(),
     val developerMode: Boolean = false,
+    val subAgentModelId: Uuid? = null,
+    val subAgentReasoningLevel: ReasoningLevel = ReasoningLevel.AUTO,
     val keepAwakeEnabled: Boolean = false,
     val displaySetting: DisplaySetting = DisplaySetting(),
     val networkSetting: NetworkSetting = NetworkSetting(),

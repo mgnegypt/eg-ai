@@ -8,6 +8,8 @@ import kotlinx.serialization.json.Json
 import com.mgn.ai.AppScope
 import com.mgn.ai.data.ai.tools.local.LocalTools
 import com.mgn.ai.data.ai.tools.ChatToolFactory
+import com.mgn.ai.data.ai.subagent.SubAgentEngine
+import com.mgn.ai.data.ai.subagent.SubAgentRunRegistry
 import com.mgn.ai.data.donation.DonationRepository
 import com.mgn.ai.data.event.AppEventBus
 import com.mgn.ai.service.ChatNotificationManager
@@ -87,6 +89,15 @@ val appModule = module {
         )
     }
 
+    single { SubAgentRunRegistry() }
+    single {
+        SubAgentEngine(
+            json = get(),
+            registry = get(),
+            providerManager = get(),
+        )
+    }
+
     single {
         ChatToolFactory(
             json = get(),
@@ -97,6 +108,7 @@ val appModule = module {
             skillManager = get(),
             workspaceRepository = get(),
             settingsStore = get(),
+            subAgentEngine = get(),
         )
     }
 

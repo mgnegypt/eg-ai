@@ -7,6 +7,10 @@ import com.mgn.ai.ai.core.Tool
 import com.mgn.ai.ai.provider.BuiltInTools
 import com.mgn.ai.ai.provider.Model
 import com.mgn.ai.data.ai.mcp.McpManager
+import com.mgn.ai.data.ai.subagent.SubAgentEngine
+import com.mgn.ai.data.ai.subagent.buildSubAgentTool
+import com.mgn.ai.data.ai.subagent.filterSubAgentTools
+import com.mgn.ai.data.datastore.findModelById
 import com.mgn.ai.data.ai.tools.local.LocalTools
 import com.mgn.ai.data.datastore.Settings
 import com.mgn.ai.data.datastore.SettingsStore
@@ -36,13 +40,15 @@ class ChatToolFactory(
     private val skillManager: SkillManager,
     private val workspaceRepository: WorkspaceRepository,
     private val settingsStore: SettingsStore,
+    private val subAgentEngine: SubAgentEngine,
 ) {
     suspend fun createTools(
         settings: Settings,
         assistant: Assistant,
         model: Model,
         workspaceCwd: String? = null,
-    ): List<Tool> = buildList {
+    ): List<Tool> {
+        val assembled = buildList {
         if (assistant.enableMemory) {
             val memoryAssistantId = if (assistant.useGlobalMemory) {
                 MemoryRepository.GLOBAL_MEMORY_ID
@@ -96,6 +102,55 @@ class ChatToolFactory(
                 )
             )
         }
+        }
+        // Sub-agent gate: no sub-agent model selected = dispatch_subagent is not
+        // exposed at all (not even its schema).
+        val subAgentModelId = settings.subAgentModelId ?: return assembled
+        val subAgentModel = settings.findModelById(subAgentModelId)
+        val subAgentProvider = subAgentModel?.findProvider(settings.providers, checkOverwrite = false)
+            ?.takeIf { it.enabled }
+        if (subAgentModel == null || subAgentProvider == null) {
+            Log.w(
+                TAG,
+                "createTools: sub-agent model $subAgentModelId not usable, sub-agent disabled"
+            )
+            return assembled
+        }
+        val subTools = filterSubAgentTools(assembled)
+        return assembled + buildSubAgentTool(
+            engine = subAgentEngine,
+            model = subAgentModel,
+            settings = settings,
+            tools = subTools,
+            reasoningLevel = settings.subAgentReasoningLevel,
+            unavailableReason = if (subTools.isEmpty()) {
+                describeEmptySubAgentToolset(assistant = assistant, chatModel = model)
+            } else {
+                null
+            },
+        )
+    }
+
+    /**
+     * Human-readable reason when the sub-agent is enabled but no tools pass
+     * the filter this round. Adapted from ROCL (AGPL-3.0, same license).
+     */
+    private fun describeEmptySubAgentToolset(assistant: Assistant, chatModel: Model): String {
+        val reasons = buildList {
+            add(
+                if (assistant.workspaceId == null) {
+                    "No workspace attached, so there are no file tools"
+                } else {
+                    "Workspace unavailable (missing, or rootfs not READY), so there are no file tools"
+                }
+            )
+            if (!assistant.enableWebSearch) {
+                add("Web search is not enabled for this assistant")
+            } else if (BuiltInTools.Search in chatModel.tools) {
+                add("The chat model has built-in search, so no external search tool is attached")
+            }
+        }
+        return reasons.joinToString("; ")
     }
 
     private suspend fun createWorkspaceToolsIfReady(workspaceId: String?, cwd: String?): List<Tool> {
