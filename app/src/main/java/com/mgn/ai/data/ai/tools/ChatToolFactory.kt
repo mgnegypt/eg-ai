@@ -11,6 +11,7 @@ import com.mgn.ai.data.ai.subagent.SubAgentEngine
 import com.mgn.ai.data.ai.subagent.buildSubAgentTool
 import com.mgn.ai.data.ai.subagent.filterSubAgentTools
 import com.mgn.ai.data.datastore.findModelById
+import com.mgn.ai.data.datastore.findProvider
 import com.mgn.ai.data.ai.tools.local.LocalTools
 import com.mgn.ai.data.datastore.Settings
 import com.mgn.ai.data.datastore.SettingsStore
