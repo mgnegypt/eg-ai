@@ -114,6 +114,7 @@ import com.mgn.ai.ui.pages.setting.SettingPreferencesUIPage
 import com.mgn.ai.ui.pages.setting.SettingThemePage
 import com.mgn.ai.ui.pages.setting.SettingDonatePage
 import com.mgn.ai.ui.pages.setting.SettingFilesPage
+import com.mgn.ai.ui.pages.setting.SettingPermissionsPage
 import com.mgn.ai.ui.pages.setting.SettingMcpPage
 import com.mgn.ai.ui.pages.setting.SettingModelPage
 import com.mgn.ai.ui.pages.setting.SettingPage
@@ -472,6 +473,10 @@ class RouteActivity : ComponentActivity() {
                                 SettingDonatePage()
                             }
 
+                            entry<Screen.SettingPermissions> {
+                                SettingPermissionsPage()
+                            }
+
                             entry<Screen.SettingFiles> {
                                 SettingFilesPage()
                             }
@@ -692,6 +697,9 @@ sealed interface Screen : NavKey {
 
     @Serializable
     data object SettingDonate : Screen
+
+    @Serializable
+    data object SettingPermissions : Screen
 
     @Serializable
     data object SettingFiles : Screen

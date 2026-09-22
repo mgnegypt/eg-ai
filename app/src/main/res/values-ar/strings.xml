@@ -1397,4 +1397,20 @@ GitHub: https://github.com/mgnegypt/eg-ai</string>
   <string name="setting_display_page_background_effect_type">نوع تأثير الخلفية</string>
   <string name="setting_display_page_background_effect_blur">ضبابية</string>
   <string name="setting_display_page_background_effect_glass">زجاج</string>
+  <string name="setting_permissions_title">الأذونات</string>
+  <string name="setting_permissions_notification">الإشعارات</string>
+  <string name="setting_permissions_notification_desc">مطلوبة لخدمات المقدمة وتنبيهات اكتمال التنزيل</string>
+  <string name="setting_permissions_battery_optimization">تحسين البطارية</string>
+  <string name="setting_permissions_battery_optimization_desc">استثنِ MGN AI للحفاظ على عمل الخلفية</string>
+  <string name="setting_permissions_background">عمل الخلفية</string>
+  <string name="setting_permissions_background_desc">يتطلب استثناء البطارية والإشعارات لخدمة مقدمة مرئية</string>
+  <string name="setting_permissions_storage">التخزين</string>
+  <string name="setting_permissions_storage_desc">الوصول الكامل للملفات لمساحة العمل والصادرات</string>
+  <string name="setting_permissions_install_unknown_apps">تثبيت التطبيقات غير المعروفة</string>
+  <string name="setting_permissions_install_unknown_apps_desc">مطلوب لتثبيت تحديثات APK المنزلة</string>
+  <string name="setting_permissions_footer">هذه أذونات على مستوى النظام. امنحها من إعدادات النظام؛ تتحدث الحالة عند العودة.</string>
+  <string name="setting_permissions_enabled">مفعّل</string>
+  <string name="setting_permissions_disabled">معطّل</string>
+  <string name="setting_page_permissions">الأذونات</string>
+  <string name="setting_page_permissions_desc">نظرة عامة على أذونات النظام</string>
 </resources>

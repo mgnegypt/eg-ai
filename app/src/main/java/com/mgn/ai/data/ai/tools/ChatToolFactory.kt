@@ -9,6 +9,7 @@ import com.mgn.ai.ai.provider.Model
 import com.mgn.ai.data.ai.mcp.McpManager
 import com.mgn.ai.data.ai.tools.local.LocalTools
 import com.mgn.ai.data.datastore.Settings
+import com.mgn.ai.data.datastore.SettingsStore
 import com.mgn.ai.data.files.SkillManager
 import com.mgn.ai.data.model.Assistant
 import com.mgn.ai.data.repository.ConversationRepository
@@ -34,6 +35,7 @@ class ChatToolFactory(
     private val mcpManager: McpManager,
     private val skillManager: SkillManager,
     private val workspaceRepository: WorkspaceRepository,
+    private val settingsStore: SettingsStore,
 ) {
     suspend fun createTools(
         settings: Settings,
@@ -72,6 +74,8 @@ class ChatToolFactory(
                 )
             )
         }
+        addAll(createSkillManageTools(skillManager))
+        addAll(createMcpManageTools(mcpManager, settingsStore))
 
         val mcpTools = mcpManager.getAllAvailableTools()
         val invalidNames = mcpTools

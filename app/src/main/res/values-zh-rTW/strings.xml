@@ -1397,4 +1397,20 @@ GitHub: https://github.com/mgnegypt/eg-ai</string>
   <string name="workspace_terminal_close_tab">關閉終端機 %1$d</string>
   <string name="workspace_terminal_no_tabs">沒有開啟的終端機分頁</string>
   <string name="assistant_page_context_message_limit_too_small">上下文訊息上限不能小於 %1$d，已重設為 %1$d。</string>
+  <string name="setting_permissions_title">權限</string>
+  <string name="setting_permissions_notification">通知</string>
+  <string name="setting_permissions_notification_desc">前景服務和下載完成提醒所需</string>
+  <string name="setting_permissions_battery_optimization">電池最佳化</string>
+  <string name="setting_permissions_battery_optimization_desc">將 MGN AI 加入電池最佳化白名單以保持背景執行</string>
+  <string name="setting_permissions_background">背景執行</string>
+  <string name="setting_permissions_background_desc">可見的前景服務需要電池豁免和通知</string>
+  <string name="setting_permissions_storage">儲存空間</string>
+  <string name="setting_permissions_storage_desc">工作區和匯出所需的完整檔案存取權限</string>
+  <string name="setting_permissions_install_unknown_apps">安裝未知應用程式</string>
+  <string name="setting_permissions_install_unknown_apps_desc">安裝下載的 APK 更新所需</string>
+  <string name="setting_permissions_footer">這些是系統級權限，請在系統設定中授予；返回時狀態會自動重新整理。</string>
+  <string name="setting_permissions_enabled">開</string>
+  <string name="setting_permissions_disabled">關</string>
+  <string name="setting_page_permissions">權限</string>
+  <string name="setting_page_permissions_desc">系統權限概覽</string>
 </resources>

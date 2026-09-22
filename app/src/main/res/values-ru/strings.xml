@@ -1399,4 +1399,20 @@ GitHub: https://github.com/mgnegypt/eg-ai</string>
   <string name="workspace_terminal_close_tab">Закрыть терминал %1$d</string>
   <string name="workspace_terminal_no_tabs">Нет открытых вкладок терминала</string>
   <string name="assistant_page_context_message_limit_too_small">Лимит контекстных сообщений не может быть меньше %1$d. Значение сброшено на %1$d.</string>
+  <string name="setting_permissions_title">Разрешения</string>
+  <string name="setting_permissions_notification">Уведомления</string>
+  <string name="setting_permissions_notification_desc">Нужны для служб переднего плана и уведомлений о загрузке</string>
+  <string name="setting_permissions_battery_optimization">Оптимизация батареи</string>
+  <string name="setting_permissions_battery_optimization_desc">Добавьте MGN AI в исключения для фоновой работы</string>
+  <string name="setting_permissions_background">Фоновая работа</string>
+  <string name="setting_permissions_background_desc">Для видимой службы нужны исключение батареи и уведомления</string>
+  <string name="setting_permissions_storage">Хранилище</string>
+  <string name="setting_permissions_storage_desc">Полный доступ к файлам для рабочей области и экспорта</string>
+  <string name="setting_permissions_install_unknown_apps">Установка неизвестных приложений</string>
+  <string name="setting_permissions_install_unknown_apps_desc">Нужно для установки загруженных APK-обновлений</string>
+  <string name="setting_permissions_footer">Это системные разрешения. Выдайте их в настройках системы; статус обновится при возврате.</string>
+  <string name="setting_permissions_enabled">Вкл</string>
+  <string name="setting_permissions_disabled">Выкл</string>
+  <string name="setting_page_permissions">Разрешения</string>
+  <string name="setting_page_permissions_desc">Обзор системных разрешений</string>
 </resources>

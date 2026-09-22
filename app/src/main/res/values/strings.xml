@@ -1397,4 +1397,20 @@ GitHub: https://github.com/mgnegypt/eg-ai</string>
   <string name="setting_display_page_background_effect_type">Background effect type</string>
   <string name="setting_display_page_background_effect_blur">Blur</string>
   <string name="setting_display_page_background_effect_glass">Glass</string>
+  <string name="setting_permissions_title">Permissions</string>
+  <string name="setting_permissions_notification">Notifications</string>
+  <string name="setting_permissions_notification_desc">Required for foreground services and download completion alerts</string>
+  <string name="setting_permissions_battery_optimization">Battery optimization</string>
+  <string name="setting_permissions_battery_optimization_desc">Exempt MGN AI to keep background work alive</string>
+  <string name="setting_permissions_background">Background work</string>
+  <string name="setting_permissions_background_desc">Needs battery exemption plus notifications for a visible foreground service</string>
+  <string name="setting_permissions_storage">Storage</string>
+  <string name="setting_permissions_storage_desc">All-files access for workspace and exports</string>
+  <string name="setting_permissions_install_unknown_apps">Install unknown apps</string>
+  <string name="setting_permissions_install_unknown_apps_desc">Required to install downloaded APK updates</string>
+  <string name="setting_permissions_footer">These are system-level permissions. Grant them in system settings; status refreshes when you return.</string>
+  <string name="setting_permissions_enabled">On</string>
+  <string name="setting_permissions_disabled">Off</string>
+  <string name="setting_page_permissions">Permissions</string>
+  <string name="setting_page_permissions_desc">System permissions overview</string>
 </resources>

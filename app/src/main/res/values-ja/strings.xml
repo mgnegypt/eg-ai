@@ -1399,4 +1399,20 @@ mDNSアドレス: .localホスト名を使用し、IPを知らなくても同じ
   <string name="workspace_terminal_close_tab">ターミナル %1$d を閉じる</string>
   <string name="workspace_terminal_no_tabs">開いているターミナルタブがありません</string>
   <string name="assistant_page_context_message_limit_too_small">コンテキストメッセージの上限を%1$d未満にすることはできません。%1$dにリセットされました。</string>
+  <string name="setting_permissions_title">権限</string>
+  <string name="setting_permissions_notification">通知</string>
+  <string name="setting_permissions_notification_desc">フォアグラウンドサービスとダウンロード完了通知に必要</string>
+  <string name="setting_permissions_battery_optimization">電池の最適化</string>
+  <string name="setting_permissions_battery_optimization_desc">バックグラウンド動作のためMGN AIを除外</string>
+  <string name="setting_permissions_background">バックグラウンド動作</string>
+  <string name="setting_permissions_background_desc">表示されるフォアグラウンドサービスには電池除外と通知が必要</string>
+  <string name="setting_permissions_storage">ストレージ</string>
+  <string name="setting_permissions_storage_desc">ワークスペースとエクスポートのための全ファイルアクセス</string>
+  <string name="setting_permissions_install_unknown_apps">不明なアプリのインストール</string>
+  <string name="setting_permissions_install_unknown_apps_desc">ダウンロードしたAPK更新のインストールに必要</string>
+  <string name="setting_permissions_footer">これらはシステムレベルの権限です。システム設定で付与してください。戻ると状態が更新されます。</string>
+  <string name="setting_permissions_enabled">オン</string>
+  <string name="setting_permissions_disabled">オフ</string>
+  <string name="setting_page_permissions">権限</string>
+  <string name="setting_page_permissions_desc">システム権限の概要</string>
 </resources>

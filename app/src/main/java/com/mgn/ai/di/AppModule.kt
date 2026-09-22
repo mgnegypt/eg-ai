@@ -96,6 +96,7 @@ val appModule = module {
             mcpManager = get(),
             skillManager = get(),
             workspaceRepository = get(),
+            settingsStore = get(),
         )
     }
 

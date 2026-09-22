@@ -1399,4 +1399,20 @@ mDNS 주소: .local 호스트네임을 사용하며, IP를 몰라도 같은 네�
   <string name="workspace_terminal_close_tab">터미널 %1$d 닫기</string>
   <string name="workspace_terminal_no_tabs">열린 터미널 탭 없음</string>
   <string name="assistant_page_context_message_limit_too_small">컨텍스트 메시지 제한은 %1$d보다 작을 수 없습니다. %1$d(으)로 재설정되었습니다.</string>
+  <string name="setting_permissions_title">권한</string>
+  <string name="setting_permissions_notification">알림</string>
+  <string name="setting_permissions_notification_desc">포그라운드 서비스 및 다운로드 완료 알림에 필요</string>
+  <string name="setting_permissions_battery_optimization">배터리 최적화</string>
+  <string name="setting_permissions_battery_optimization_desc">백그라운드 작업을 위해 MGN AI 제외</string>
+  <string name="setting_permissions_background">백그라운드 작업</string>
+  <string name="setting_permissions_background_desc">표시되는 포그라운드 서비스에는 배터리 제외와 알림이 필요</string>
+  <string name="setting_permissions_storage">저장소</string>
+  <string name="setting_permissions_storage_desc">작업 공간 및 내보내기를 위한 모든 파일 액세스</string>
+  <string name="setting_permissions_install_unknown_apps">알 수 없는 앱 설치</string>
+  <string name="setting_permissions_install_unknown_apps_desc">다운로드한 APK 업데이트 설치에 필요</string>
+  <string name="setting_permissions_footer">시스템 수준 권한입니다. 시스템 설정에서 허용하세요. 돌아오면 상태가 새로고침됩니다.</string>
+  <string name="setting_permissions_enabled">켜짐</string>
+  <string name="setting_permissions_disabled">꺼짐</string>
+  <string name="setting_page_permissions">권한</string>
+  <string name="setting_page_permissions_desc">시스템 권한 개요</string>
 </resources>

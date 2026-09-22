@@ -1399,4 +1399,20 @@ mDNS 地址：使用 .local 主机名，同一网络中的其他设备可通过�
   <string name="workspace_terminal_new_tab">新建终端选项卡</string>
   <string name="workspace_terminal_close_tab">关闭终端 %1$d</string>
   <string name="workspace_terminal_no_tabs">没有打开的终端选项卡</string>
+  <string name="setting_permissions_title">权限</string>
+  <string name="setting_permissions_notification">通知</string>
+  <string name="setting_permissions_notification_desc">前台服务和下载完成提醒所需</string>
+  <string name="setting_permissions_battery_optimization">电池优化</string>
+  <string name="setting_permissions_battery_optimization_desc">将 MGN AI 加入电池优化白名单以保持后台运行</string>
+  <string name="setting_permissions_background">后台运行</string>
+  <string name="setting_permissions_background_desc">可见的前台服务需要电池豁免和通知</string>
+  <string name="setting_permissions_storage">存储</string>
+  <string name="setting_permissions_storage_desc">工作区和导出所需的全部文件访问权限</string>
+  <string name="setting_permissions_install_unknown_apps">安装未知应用</string>
+  <string name="setting_permissions_install_unknown_apps_desc">安装下载的 APK 更新所需</string>
+  <string name="setting_permissions_footer">这些是系统级权限，请在系统设置中授予；返回时状态会自动刷新。</string>
+  <string name="setting_permissions_enabled">开</string>
+  <string name="setting_permissions_disabled">关</string>
+  <string name="setting_page_permissions">权限</string>
+  <string name="setting_page_permissions_desc">系统权限概览</string>
 </resources>

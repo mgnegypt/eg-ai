@@ -343,6 +343,12 @@ fun SettingPage(vm: SettingVM = koinViewModel()) {
                         headlineContent = { Text(stringResource(R.string.setting_page_donate)) },
                     )
                     item(
+                        onClick = { navController.navigate(Screen.SettingPermissions) },
+                        leadingContent = { Icon(HugeIcons.Alert01, null) },
+                        supportingContent = { Text(stringResource(R.string.setting_page_permissions_desc)) },
+                        headlineContent = { Text(stringResource(R.string.setting_page_permissions)) },
+                    )
+                    item(
                         onClick = {
                             val intent = Intent(Intent.ACTION_SEND)
                             intent.type = "text/plain"
