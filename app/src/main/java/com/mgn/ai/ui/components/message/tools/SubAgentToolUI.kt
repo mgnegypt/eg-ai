@@ -257,7 +257,6 @@ private fun LivePreview(
         MarkdownBlock(
             content = report,
             modifier = Modifier.fillMaxWidth(),
-            compact = true,
         )
     }
 }
