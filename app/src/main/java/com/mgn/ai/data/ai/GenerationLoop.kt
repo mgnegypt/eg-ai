@@ -324,26 +324,80 @@ class GenerationLoop(
 
     }.flowOn(Dispatchers.IO)
 
-    private suspend fun generateInternal(
-        assistant: Assistant,
+    /**
+     * Dry-run: builds the exact message list that would be sent to the
+     * provider, without sending anything. Used by the chat runtime inspector.
+     *
+     * Adapted from rikkahub-lune (AGPL-3.0, same license).
+     */
+    suspend fun previewPreparedMessages(
         settings: Settings,
-        messages: List<UIMessage>,
-        onUpdateMessages: suspend (List<UIMessage>) -> Unit,
-        transformers: List<MessageTransformer>,
         model: Model,
-        providerImpl: Provider<ProviderSetting>,
-        provider: ProviderSetting,
-        tools: List<Tool>,
-        memories: List<AssistantMemory>,
-        stream: Boolean,
-        processingStatus: MutableStateFlow<String?> = MutableStateFlow(null),
+        messages: List<UIMessage>,
+        inputTransformers: List<InputMessageTransformer> = emptyList(),
+        assistant: Assistant,
+        memories: List<AssistantMemory>? = null,
+        tools: List<Tool> = emptyList(),
         conversationSystemPrompt: String? = null,
-        conversationId: Uuid? = null,
         conversationModeInjectionIds: Set<Uuid> = emptySet(),
         conversationLorebookIds: Set<Uuid> = emptySet(),
         workspaceCwd: String? = null,
-    ) {
-        val internalMessages = buildList {
+    ): List<UIMessage> {
+        return buildInternalMessages(
+            assistant = assistant,
+            settings = settings,
+            messages = messages,
+            transformers = inputTransformers,
+            model = model,
+            tools = tools,
+            memories = memories ?: emptyList(),
+            conversationSystemPrompt = conversationSystemPrompt,
+            conversationModeInjectionIds = conversationModeInjectionIds,
+            conversationLorebookIds = conversationLorebookIds,
+            workspaceCwd = workspaceCwd,
+        )
+    }
+
+    fun buildTextGenerationParams(
+        assistant: Assistant,
+        model: Model,
+        tools: List<Tool>,
+        conversationId: Uuid? = null,
+    ): TextGenerationParams {
+        return TextGenerationParams(
+            model = model,
+            temperature = assistant.temperature,
+            topP = assistant.topP,
+            maxTokens = assistant.maxTokens,
+            tools = tools,
+            reasoningLevel = assistant.reasoningLevel,
+            customHeaders = buildList {
+                addAll(assistant.customHeaders)
+                addAll(model.customHeaders)
+            },
+            customBody = buildList {
+                addAll(assistant.customBodies)
+                addAll(model.customBodies)
+            },
+            sessionId = (conversationId ?: Uuid.random()).toString(),
+        )
+    }
+
+    private suspend fun buildInternalMessages(
+        assistant: Assistant,
+        settings: Settings,
+        messages: List<UIMessage>,
+        transformers: List<MessageTransformer>,
+        model: Model,
+        tools: List<Tool>,
+        memories: List<AssistantMemory>,
+        conversationSystemPrompt: String? = null,
+        conversationModeInjectionIds: Set<Uuid> = emptySet(),
+        conversationLorebookIds: Set<Uuid> = emptySet(),
+        workspaceCwd: String? = null,
+        processingStatus: MutableStateFlow<String?> = MutableStateFlow(null),
+    ): List<UIMessage> {
+        return buildList {
             val system = buildString {
                 val effectiveSystemPrompt =
                     if (assistant.allowConversationSystemPrompt && !conversationSystemPrompt.isNullOrBlank()) {
@@ -380,6 +434,41 @@ class GenerationLoop(
             conversationLorebookIds = conversationLorebookIds,
             processingStatus = processingStatus,
             workspaceCwd = workspaceCwd,
+        )
+    }
+
+    private suspend fun generateInternal(
+        assistant: Assistant,
+        settings: Settings,
+        messages: List<UIMessage>,
+        onUpdateMessages: suspend (List<UIMessage>) -> Unit,
+        transformers: List<MessageTransformer>,
+        model: Model,
+        providerImpl: Provider<ProviderSetting>,
+        provider: ProviderSetting,
+        tools: List<Tool>,
+        memories: List<AssistantMemory>,
+        stream: Boolean,
+        processingStatus: MutableStateFlow<String?> = MutableStateFlow(null),
+        conversationSystemPrompt: String? = null,
+        conversationId: Uuid? = null,
+        conversationModeInjectionIds: Set<Uuid> = emptySet(),
+        conversationLorebookIds: Set<Uuid> = emptySet(),
+        workspaceCwd: String? = null,
+    ) {
+        val internalMessages = buildInternalMessages(
+            assistant = assistant,
+            settings = settings,
+            messages = messages,
+            transformers = transformers,
+            model = model,
+            tools = tools,
+            memories = memories,
+            conversationSystemPrompt = conversationSystemPrompt,
+            conversationModeInjectionIds = conversationModeInjectionIds,
+            conversationLorebookIds = conversationLorebookIds,
+            workspaceCwd = workspaceCwd,
+            processingStatus = processingStatus,
         )
 
         var messages: List<UIMessage> = messages

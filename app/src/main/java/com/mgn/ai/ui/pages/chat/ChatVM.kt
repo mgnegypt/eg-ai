@@ -13,7 +13,9 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.google.firebase.analytics.FirebaseAnalytics
 import kotlinx.coroutines.Job
+import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharedFlow
+import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.distinctUntilChanged
@@ -40,6 +42,7 @@ import com.mgn.ai.data.model.NodeFavoriteTarget
 import com.mgn.ai.data.repository.ConversationRepository
 import com.mgn.ai.data.repository.FavoriteRepository
 import com.mgn.ai.service.ChatError
+import com.mgn.ai.service.ChatRuntimeInspection
 import com.mgn.ai.service.ChatService
 import com.mgn.ai.ui.hooks.writeStringPreference
 import com.mgn.ai.ui.hooks.ChatInputState
@@ -126,6 +129,21 @@ class ChatVM(
     fun dismissError(id: Uuid) = chatService.dismissError(id)
 
     fun clearAllErrors() = chatService.clearAllErrors()
+
+    private val _runtimeInspection = MutableStateFlow<UiState<ChatRuntimeInspection>>(UiState.Idle)
+    val runtimeInspection: StateFlow<UiState<ChatRuntimeInspection>> = _runtimeInspection.asStateFlow()
+
+    fun refreshRuntimeInspection() {
+        viewModelScope.launch {
+            _runtimeInspection.value = UiState.Loading
+            _runtimeInspection.value = runCatching {
+                chatService.inspectConversationRuntime(_conversationId)
+            }.fold(
+                onSuccess = { UiState.Success(it) },
+                onFailure = { UiState.Error(it) },
+            )
+        }
+    }
 
     val messageQueue = chatService.getMessageQueueFlow(_conversationId)
 

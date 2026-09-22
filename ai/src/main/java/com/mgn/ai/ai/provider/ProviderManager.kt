@@ -54,4 +54,26 @@ class ProviderManager(client: OkHttpClient, context: Context) {
             is ProviderSetting.Claude -> getProvider("claude")
         } as Provider<T>
     }
+
+    /**
+     * Builds a dry-run preview of the HTTP request for a text generation
+     * call without sending anything. Used by the chat runtime inspector.
+     */
+    fun previewTextRequest(
+        setting: ProviderSetting,
+        messages: List<com.mgn.ai.ai.ui.UIMessage>,
+        params: TextGenerationParams,
+        stream: Boolean,
+    ): TextRequestPreview {
+        return when (setting) {
+            is ProviderSetting.OpenAI ->
+                (getProvider("openai") as OpenAIProvider).previewTextRequest(setting, messages, params, stream)
+
+            is ProviderSetting.Google ->
+                (getProvider("google") as GoogleProvider).previewTextRequest(setting, messages, params, stream)
+
+            is ProviderSetting.Claude ->
+                (getProvider("claude") as ClaudeProvider).previewTextRequest(setting, messages, params, stream)
+        }
+    }
 }

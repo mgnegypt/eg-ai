@@ -42,6 +42,10 @@ import com.mgn.ai.ai.provider.Provider
 import com.mgn.ai.ai.provider.ProviderSetting
 import com.mgn.ai.ai.provider.TextGenerationResult
 import com.mgn.ai.ai.provider.TextGenerationParams
+import com.mgn.ai.ai.provider.TextRequestHeader
+import com.mgn.ai.ai.provider.TextRequestPreview
+import com.mgn.ai.ai.provider.redactedSecret
+import com.mgn.ai.ai.provider.toPreviewHeaders
 import com.mgn.ai.ai.provider.providers.PartGroup
 import com.mgn.ai.ai.provider.providers.groupPartsByToolBoundary
 import com.mgn.ai.ai.provider.stream.SseEvent
@@ -289,6 +293,37 @@ class ClaudeProvider(private val client: OkHttpClient, context: Context? = null)
         generateClaudeWithPauseTurn(messages, params.model) { requestMessages ->
             generateTextOnce(providerSetting, requestMessages, params)
         }
+    }
+
+    /**
+     * Builds a dry-run preview of the HTTP request without sending anything.
+     * Secret values are redacted. Used by the chat runtime inspector.
+     */
+    fun previewTextRequest(
+        providerSetting: ProviderSetting.Claude,
+        messages: List<UIMessage>,
+        params: TextGenerationParams,
+        stream: Boolean,
+    ): TextRequestPreview {
+        val requestBody = buildMessageRequest(providerSetting, messages, params, stream = stream)
+        val request = Request.Builder()
+            .url("${providerSetting.baseUrl}/messages")
+            .headers(params.customHeaders.toHeaders())
+            .addHeader("anthropic-version", ANTHROPIC_VERSION)
+            .addHeader("Content-Type", "application/json")
+            .configureReferHeaders(providerSetting.baseUrl)
+            .build()
+        return TextRequestPreview(
+            providerName = providerSetting.name,
+            apiName = "Claude Messages API",
+            url = request.url.toString(),
+            stream = stream,
+            headers = request.headers.toPreviewHeaders() + TextRequestHeader(
+                name = "x-api-key",
+                value = providerSetting.apiKey.redactedSecret(),
+            ),
+            body = requestBody,
+        )
     }
 
     private suspend fun generateTextOnce(

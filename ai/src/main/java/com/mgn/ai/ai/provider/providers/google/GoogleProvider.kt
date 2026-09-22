@@ -39,6 +39,10 @@ import com.mgn.ai.ai.provider.Provider
 import com.mgn.ai.ai.provider.ProviderSetting
 import com.mgn.ai.ai.provider.TextGenerationResult
 import com.mgn.ai.ai.provider.TextGenerationParams
+import com.mgn.ai.ai.provider.TextRequestHeader
+import com.mgn.ai.ai.provider.TextRequestPreview
+import com.mgn.ai.ai.provider.redactedSecret
+import com.mgn.ai.ai.provider.toPreviewHeaders
 import com.mgn.ai.ai.provider.providers.PartGroup
 import com.mgn.ai.ai.provider.providers.google.vertex.ServiceAccountTokenProvider
 import com.mgn.ai.ai.provider.providers.groupPartsByToolBoundary
@@ -121,6 +125,65 @@ class GoogleProvider(private val client: OkHttpClient, context: Context? = null)
                     .build()
             }
         }
+    }
+
+    /**
+     * Builds a dry-run preview of the HTTP request without sending anything.
+     * Secret values are redacted. Used by the chat runtime inspector.
+     */
+    fun previewTextRequest(
+        providerSetting: ProviderSetting.Google,
+        messages: List<UIMessage>,
+        params: TextGenerationParams,
+        stream: Boolean,
+    ): TextRequestPreview {
+        val requestBody = buildCompletionRequestBody(messages, params)
+        var url = buildUrl(
+            providerSetting = providerSetting,
+            path = when {
+                providerSetting.vertexAI && stream ->
+                    "publishers/google/models/${params.model.modelId}:streamGenerateContent"
+                providerSetting.vertexAI ->
+                    "publishers/google/models/${params.model.modelId}:generateContent"
+                stream -> "models/${params.model.modelId}:streamGenerateContent"
+                else -> "models/${params.model.modelId}:generateContent"
+            }
+        )
+        if (stream) {
+            url = url.newBuilder().addQueryParameter("alt", "sse").build()
+        }
+        if (providerSetting.vertexAI && !providerSetting.useServiceAccount) {
+            url = url.newBuilder()
+                .addQueryParameter("key", providerSetting.apiKey.redactedSecret())
+                .build()
+        }
+        val request = Request.Builder()
+            .url(url)
+            .headers(params.customHeaders.toHeaders())
+            .addHeader("Content-Type", "application/json")
+            .configureReferHeaders(providerSetting.baseUrl)
+            .build()
+        val authenticationHeaders = when {
+            providerSetting.vertexAI && providerSetting.useServiceAccount -> listOf(
+                TextRequestHeader("Authorization", "Bearer [resolved at send time]")
+            )
+            !providerSetting.vertexAI -> listOf(
+                TextRequestHeader("x-goog-api-key", providerSetting.apiKey.redactedSecret())
+            )
+            else -> emptyList()
+        }
+        return TextRequestPreview(
+            providerName = providerSetting.name,
+            apiName = if (providerSetting.vertexAI) {
+                "Google Vertex AI Generate Content"
+            } else {
+                "Google Gemini Generate Content"
+            },
+            url = request.url.toString(),
+            stream = stream,
+            headers = request.headers.toPreviewHeaders() + authenticationHeaders,
+            body = requestBody,
+        )
     }
 
     override suspend fun listModels(providerSetting: ProviderSetting.Google): List<Model> =

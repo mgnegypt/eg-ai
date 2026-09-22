@@ -23,6 +23,10 @@ import com.mgn.ai.ai.provider.Provider
 import com.mgn.ai.ai.provider.ProviderSetting
 import com.mgn.ai.ai.provider.TextGenerationResult
 import com.mgn.ai.ai.provider.TextGenerationParams
+import com.mgn.ai.ai.provider.TextRequestHeader
+import com.mgn.ai.ai.provider.TextRequestPreview
+import com.mgn.ai.ai.provider.redactedSecret
+import com.mgn.ai.ai.provider.toPreviewHeaders
 import com.mgn.ai.ai.ui.ImageGenerationItem
 import com.mgn.ai.ai.ui.StreamChunk
 import com.mgn.ai.ai.ui.UIMessage
@@ -128,6 +132,23 @@ class OpenAIProvider(
             messages = messages,
             params = params
         )
+    }
+
+    /**
+     * Builds a dry-run preview of the HTTP request without sending anything.
+     * Secret header values are redacted. Used by the chat runtime inspector.
+     */
+    fun previewTextRequest(
+        providerSetting: ProviderSetting.OpenAI,
+        messages: List<UIMessage>,
+        params: TextGenerationParams,
+        stream: Boolean,
+    ): TextRequestPreview {
+        return if (providerSetting.useResponseApi) {
+            responseAPI.previewTextRequest(providerSetting, messages, params, stream)
+        } else {
+            chatCompletionsAPI.previewTextRequest(providerSetting, messages, params, stream)
+        }
     }
 
     override suspend fun generateText(

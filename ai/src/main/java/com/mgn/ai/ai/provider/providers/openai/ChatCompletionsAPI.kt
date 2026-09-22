@@ -37,6 +37,10 @@ import com.mgn.ai.ai.provider.ModelAbility
 import com.mgn.ai.ai.provider.ProviderSetting
 import com.mgn.ai.ai.provider.TextGenerationResult
 import com.mgn.ai.ai.provider.TextGenerationParams
+import com.mgn.ai.ai.provider.TextRequestHeader
+import com.mgn.ai.ai.provider.TextRequestPreview
+import com.mgn.ai.ai.provider.redactedSecret
+import com.mgn.ai.ai.provider.toPreviewHeaders
 import com.mgn.ai.ai.provider.stream.SseEvent
 import com.mgn.ai.ai.provider.providers.PartGroup
 import com.mgn.ai.ai.provider.providers.groupPartsByToolBoundary
@@ -78,6 +82,41 @@ class ChatCompletionsAPI(
     private val client: OkHttpClient,
     private val keyRoulette: KeyRoulette
 ) : OpenAIImpl {
+    /**
+     * Builds a dry-run preview of the HTTP request without sending anything.
+     * Secret values are redacted. Used by the chat runtime inspector.
+     */
+    fun previewTextRequest(
+        providerSetting: ProviderSetting.OpenAI,
+        messages: List<UIMessage>,
+        params: TextGenerationParams,
+        stream: Boolean,
+    ): TextRequestPreview {
+        val requestBody = buildChatCompletionRequest(
+            messages = messages,
+            params = params,
+            providerSetting = providerSetting,
+            stream = stream,
+        )
+        val request = Request.Builder()
+            .url("${providerSetting.baseUrl}${providerSetting.chatCompletionsPath}")
+            .headers(params.customHeaders.toHeaders())
+            .addHeader("Content-Type", "application/json")
+            .configureReferHeaders(providerSetting.baseUrl)
+            .build()
+        return TextRequestPreview(
+            providerName = providerSetting.name,
+            apiName = "OpenAI Chat Completions",
+            url = request.url.toString(),
+            stream = stream,
+            headers = request.headers.toPreviewHeaders() + TextRequestHeader(
+                name = "Authorization",
+                value = "Bearer ${providerSetting.apiKey.redactedSecret()}",
+            ),
+            body = requestBody,
+        )
+    }
+
     override suspend fun generateText(
         providerSetting: ProviderSetting.OpenAI,
         messages: List<UIMessage>,

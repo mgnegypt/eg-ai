@@ -56,6 +56,7 @@ import com.mgn.ai.ai.provider.Model
 import com.mgn.ai.ai.provider.ProviderSetting
 import com.mgn.ai.ai.ui.UIMessagePart
 import me.rerere.hugeicons.HugeIcons
+import me.rerere.hugeicons.stroke.Bug01
 import me.rerere.hugeicons.stroke.Cancel01
 import me.rerere.hugeicons.stroke.LeftToRightListBullet
 import me.rerere.hugeicons.stroke.Menu03
@@ -285,6 +286,8 @@ private fun ChatPageContent(
     val hazeState = rememberHazeState()
     val assistant = setting.getCurrentAssistant()
     var showFilesSheet by remember { mutableStateOf(false) }
+    val runtimeInspection by vm.runtimeInspection.collectAsStateWithLifecycle()
+    var showRuntimeInspector by rememberSaveable { mutableStateOf(false) }
     val attachmentPickerActions = rememberChatAttachmentPickerActions(
         inputState = inputState,
         setting = setting,
@@ -325,6 +328,10 @@ private fun ChatPageContent(
                     },
                     onClickMenu = {
                         previewMode = !previewMode
+                    },
+                    onOpenRuntimeInspector = {
+                        showRuntimeInspector = true
+                        vm.refreshRuntimeInspection()
                     },
                     onUpdateTitle = {
                         vm.updateTitle(it)
@@ -534,6 +541,13 @@ private fun ChatPageContent(
                 onDismiss = { showFilesSheet = false },
             )
         }
+        if (showRuntimeInspector) {
+            ChatRuntimeInspectorSheet(
+                state = runtimeInspection,
+                onDismissRequest = { showRuntimeInspector = false },
+                onRefresh = vm::refreshRuntimeInspection,
+            )
+        }
     }
 }
 
@@ -626,6 +640,7 @@ private fun TopBar(
     bigScreen: Boolean,
     previewMode: Boolean,
     onClickMenu: () -> Unit,
+    onOpenRuntimeInspector: () -> Unit,
     onNewChat: () -> Unit,
     onUpdateTitle: (String) -> Unit
 ) {
@@ -685,6 +700,10 @@ private fun TopBar(
             }
         },
         actions = {
+            IconButton(onClick = onOpenRuntimeInspector) {
+                Icon(HugeIcons.Bug01, "Runtime Inspector")
+            }
+
             IconButton(
                 onClick = {
                     onClickMenu()

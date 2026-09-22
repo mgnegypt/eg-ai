@@ -3,6 +3,9 @@ package com.mgn.ai.service
 import android.app.Application
 import android.util.Log
 import androidx.core.net.toUri
+import kotlinx.serialization.json.JsonObject
+import kotlinx.serialization.json.JsonPrimitive
+import kotlinx.serialization.json.buildJsonObject
 import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.CompletableDeferred
 import kotlinx.coroutines.CoroutineStart
@@ -523,6 +526,151 @@ class ChatService(
                 else -> part
             }
         }
+    }
+
+    /**
+     * Dry-run inspection of the exact runtime state (prompt messages, context
+     * variables and provider HTTP payload) for a conversation, without sending
+     * anything. Powers the chat runtime inspector.
+     *
+     * Adapted from rikkahub-lune (AGPL-3.0, same license).
+     */
+    suspend fun inspectConversationRuntime(conversationId: Uuid): ChatRuntimeInspection {
+        val settings = settingsStore.settingsFlow.first()
+        val conversation = getConversationFlow(conversationId).value
+        val assistant = settings.getAssistantById(conversation.assistantId)
+            ?: settings.getCurrentAssistant()
+        val model = settings.findModelById(assistant.chatModelId ?: settings.chatModelId)
+            ?: error("No model configured for this conversation")
+        val provider = model.findProvider(settings.providers)
+            ?: error("No provider configured for model ${model.modelId}")
+        val tools = try {
+            chatToolFactory.createTools(
+                settings = settings,
+                assistant = assistant,
+                model = model,
+                workspaceCwd = conversation.workspaceCwd,
+            )
+        } catch (error: InvalidMcpServerNamesException) {
+            error(context.getString(R.string.error_mcp_invalid_server_name, error.names.joinToString(", ")))
+        }
+        val preparedMessages = generationLoop.previewPreparedMessages(
+            settings = settings,
+            model = model,
+            messages = conversation.currentMessages,
+            inputTransformers = buildList {
+                addAll(inputTransformers)
+                add(templateTransformer)
+                add(workspaceReminderTransformer)
+            },
+            assistant = assistant,
+            memories = if (assistant.useGlobalMemory) {
+                memoryRepository.getGlobalMemories()
+            } else {
+                memoryRepository.getMemoriesOfAssistant(assistant.id.toString())
+            },
+            tools = tools,
+            conversationSystemPrompt = conversation.customSystemPrompt,
+            conversationModeInjectionIds = conversation.modeInjectionIds,
+            conversationLorebookIds = conversation.lorebookIds,
+            workspaceCwd = conversation.workspaceCwd,
+        )
+        val promptMessages = preparedMessages.map(::toPromptPreviewMessage)
+        return ChatRuntimeInspection(
+            assistantName = assistant.name.ifBlank {
+                context.getString(R.string.assistant_page_default_assistant)
+            },
+            modelName = model.displayName.ifBlank { model.modelId },
+            promptMessages = promptMessages,
+            promptTokenEstimate = promptMessages.sumOf { it.tokenEstimate },
+            contextVariables = buildRuntimeContextJson(
+                conversation = conversation,
+                assistant = assistant,
+                modelName = model.displayName.ifBlank { model.modelId },
+                promptMessages = promptMessages,
+                toolCount = tools.size,
+            ),
+            payloadPreview = providerManager.previewTextRequest(
+                setting = provider,
+                messages = preparedMessages,
+                params = generationLoop.buildTextGenerationParams(
+                    assistant = assistant,
+                    model = model,
+                    tools = tools,
+                    conversationId = conversationId,
+                ),
+                stream = assistant.streamOutput,
+            ),
+        )
+    }
+
+    private fun buildRuntimeContextJson(
+        conversation: Conversation,
+        assistant: Assistant,
+        modelName: String,
+        promptMessages: List<ChatPromptPreviewMessage>,
+        toolCount: Int,
+    ): JsonObject = buildJsonObject {
+        put("assistant", buildJsonObject {
+            put("id", JsonPrimitive(assistant.id.toString()))
+            put("name", JsonPrimitive(assistant.name))
+            put("model", JsonPrimitive(modelName))
+            put("mode_injection_count", JsonPrimitive(assistant.modeInjectionIds.size))
+            put("lorebook_count", JsonPrimitive(assistant.lorebookIds.size))
+        })
+        put("conversation", buildJsonObject {
+            put("id", JsonPrimitive(conversation.id.toString()))
+            put("message_count", JsonPrimitive(conversation.currentMessages.size))
+            put("mode_injection_count", JsonPrimitive(conversation.modeInjectionIds.size))
+            put("lorebook_count", JsonPrimitive(conversation.lorebookIds.size))
+        })
+        put("prompt", buildJsonObject {
+            put("message_count", JsonPrimitive(promptMessages.size))
+            put("token_estimate", JsonPrimitive(promptMessages.sumOf { it.tokenEstimate }))
+            put("tool_count", JsonPrimitive(toolCount))
+        })
+    }
+
+    private fun toPromptPreviewMessage(message: UIMessage): ChatPromptPreviewMessage {
+        val content = message.parts.toPromptPreviewText()
+        return ChatPromptPreviewMessage(
+            role = message.role,
+            content = content.ifBlank { "[Empty message]" },
+            tokenEstimate = (content.length / 4).coerceAtLeast(if (content.isBlank()) 0 else 1),
+        )
+    }
+
+    @Suppress("DEPRECATION")
+    private fun List<UIMessagePart>.toPromptPreviewText(): String {
+        return buildList {
+            this@toPromptPreviewText.forEach { part ->
+                when (part) {
+                    is UIMessagePart.Text -> add(part.text)
+                    is UIMessagePart.Image -> add("[Image]\n${part.url}")
+                    is UIMessagePart.Video -> add("[Video]\n${part.url}")
+                    is UIMessagePart.Audio -> add("[Audio]\n${part.url}")
+                    is UIMessagePart.Document ->
+                        add("[Document] ${part.fileName} (${part.mime})\n${part.url}")
+                    is UIMessagePart.Reasoning -> Unit
+                    is UIMessagePart.Tool -> {
+                        add("[Tool:${part.toolName}]\n${part.input}")
+                        if (part.output.isNotEmpty()) {
+                            add("[Tool Output]\n${part.output.toPromptPreviewText()}")
+                        }
+                    }
+                    is UIMessagePart.ServerTool -> {
+                        add("[Server Tool:${part.toolName}]\n${part.input ?: ""}")
+                        part.output?.let { add("[Server Tool Output]\n$it") }
+                    }
+                    is UIMessagePart.ToolCall -> add("[Tool Call:${part.toolName}]\n${part.arguments}")
+                    is UIMessagePart.ToolResult -> add("[Tool Result:${part.toolName}]\n${part.content}")
+                    is UIMessagePart.Search -> add("[Search]")
+                }
+            }
+        }.map { it.trimEnd() }
+            .filter { it.isNotBlank() }
+            .joinToString("\n\n")
+            .trim()
     }
 
     // ---- 重新生成消息 ----

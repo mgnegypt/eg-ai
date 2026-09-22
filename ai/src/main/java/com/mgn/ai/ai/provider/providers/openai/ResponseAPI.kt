@@ -34,6 +34,10 @@ import com.mgn.ai.ai.provider.ModelAbility
 import com.mgn.ai.ai.provider.ProviderSetting
 import com.mgn.ai.ai.provider.TextGenerationResult
 import com.mgn.ai.ai.provider.TextGenerationParams
+import com.mgn.ai.ai.provider.TextRequestHeader
+import com.mgn.ai.ai.provider.TextRequestPreview
+import com.mgn.ai.ai.provider.redactedSecret
+import com.mgn.ai.ai.provider.toPreviewHeaders
 import com.mgn.ai.ai.provider.stream.SseEvent
 import com.mgn.ai.ai.provider.providers.PartGroup
 import com.mgn.ai.ai.provider.providers.groupPartsByToolBoundary
@@ -205,6 +209,41 @@ class ResponseAPI(
         }
         // trySend 在缓冲满时会静默丢弃 delta，导致回复中间缺字 (#1295)，因此缓冲必须无界
     }.buffer(Channel.UNLIMITED).flowOn(Dispatchers.IO)
+
+    /**
+     * Builds a dry-run preview of the HTTP request without sending anything.
+     * Secret values are redacted. Used by the chat runtime inspector.
+     */
+    fun previewTextRequest(
+        providerSetting: ProviderSetting.OpenAI,
+        messages: List<UIMessage>,
+        params: TextGenerationParams,
+        stream: Boolean,
+    ): TextRequestPreview {
+        val requestBody = buildRequestBody(
+            providerSetting = providerSetting,
+            messages = messages,
+            params = params,
+            stream = stream,
+        )
+        val request = Request.Builder()
+            .url("${providerSetting.baseUrl}${providerSetting.responsesPath}")
+            .headers(params.customHeaders.toHeaders())
+            .addHeader("Content-Type", "application/json")
+            .configureReferHeaders(providerSetting.baseUrl)
+            .build()
+        return TextRequestPreview(
+            providerName = providerSetting.name,
+            apiName = "OpenAI Responses API",
+            url = request.url.toString(),
+            stream = stream,
+            headers = request.headers.toPreviewHeaders() + TextRequestHeader(
+                name = "Authorization",
+                value = "Bearer ${providerSetting.apiKey.redactedSecret()}",
+            ),
+            body = requestBody,
+        )
+    }
 
     internal fun buildRequestBody(
         providerSetting: ProviderSetting.OpenAI,
