@@ -129,6 +129,21 @@ private fun ModelSettingsPage(settings: Settings, vm: SettingVM, contentPadding:
             )
         }
         item {
+            // Sub-agent: no model selected = disabled (dispatch_subagent not exposed at all)
+            ModelSettingItem(
+                title = stringResource(R.string.setting_model_page_subagent_model),
+                description = stringResource(R.string.setting_model_page_subagent_model_desc),
+                modelId = settings.subAgentModelId,
+                providers = settings.providers,
+                onSelect = { vm.updateSettings(settings.copy(subAgentModelId = it.id)) },
+                onClear = { vm.updateSettings(settings.copy(subAgentModelId = null)) },
+                reasoningLevel = settings.subAgentReasoningLevel,
+                onUpdateReasoningLevel = {
+                    vm.updateSettings(settings.copy(subAgentReasoningLevel = it))
+                },
+            )
+        }
+        item {
             SuggestionSettingItem(
                 settings = settings,
                 vm = vm,
@@ -193,6 +208,7 @@ private fun ModelSettingItem(
     onSelect: (Model) -> Unit,
     reasoningLevel: ReasoningLevel? = null,
     onUpdateReasoningLevel: ((ReasoningLevel) -> Unit)? = null,
+    onClear: (() -> Unit)? = null,
 ) {
     val state = rememberModelListState(
         modelId = modelId,
@@ -234,6 +250,14 @@ private fun ModelSettingItem(
                             reasoningLevel = reasoningLevel,
                             onUpdateReasoningLevel = onUpdateReasoningLevel,
                         )
+                    },
+                )
+            }
+            if (modelId != null && onClear != null) {
+                item(
+                    onClick = onClear,
+                    headlineContent = {
+                        Text(stringResource(R.string.setting_model_page_clear_model))
                     },
                 )
             }
