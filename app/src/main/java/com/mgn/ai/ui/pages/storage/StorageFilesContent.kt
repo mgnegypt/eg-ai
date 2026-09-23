@@ -76,6 +76,7 @@ fun StorageFilesScaffoldContent(
 ) {
     val context = LocalContext.current
     val toaster = LocalToaster.current
+    val openFailedTemplate = stringResource(R.string.storage_files_open_failed)
 
     var selectedPaths by rememberSaveable(selectedAssistantId) { mutableStateOf(emptySet<String>()) }
     var showConfirmDelete by rememberSaveable(selectedAssistantId) { mutableStateOf(false) }
@@ -388,7 +389,6 @@ private fun AssistantFileRow(
     onLongClick: () -> Unit,
 ) {
     val context = LocalContext.current
-    val openFailedTemplate = stringResource(R.string.storage_files_open_failed)
     val interactionSource = remember { MutableInteractionSource() }
     val isPressed by interactionSource.collectIsPressedAsState()
     val scale by animateFloatAsState(
