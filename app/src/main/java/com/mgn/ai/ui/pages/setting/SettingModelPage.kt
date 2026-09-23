@@ -316,7 +316,7 @@ private fun PromptOptimizeGroup(settings: Settings, vm: SettingVM) {
             supportingContent = { Text(stringResource(R.string.setting_model_page_prompt_optimize_model_desc)) },
             trailingContent = {
                 Text(
-                    text = settings.providers.findModelById(settings.promptOptimizeModelId)?.displayName
+                    text = settings.promptOptimizeModelId?.let { settings.providers.findModelById(it)?.displayName }
                         ?: stringResource(R.string.model_list_select_model),
                     style = MaterialTheme.typography.bodyMedium,
                     color = MaterialTheme.colorScheme.onSurfaceVariant,

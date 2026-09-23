@@ -38,6 +38,7 @@ import com.mgn.ai.data.ai.prompts.PromptOptimizeDepth
 import com.mgn.ai.data.ai.prompts.PromptOptimizeScene
 import com.mgn.ai.data.ai.prompts.PromptOptimizeTone
 import com.mgn.ai.data.ai.prompts.promptOptimizeSystemPrompt
+import com.mgn.ai.data.ai.prompts.toDisplayText
 import com.mgn.ai.data.datastore.promptOptimizePromptForScene
 import com.mgn.ai.data.datastore.promptOptimizeThinkingBudgetForScene
 import com.mgn.ai.ai.provider.Model
