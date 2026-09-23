@@ -2,7 +2,7 @@ package com.mgn.ai.data.ai.transformers
 
 import com.mgn.ai.ai.core.MessageRole
 import com.mgn.ai.ai.ui.UIMessage
-import me.rerere.knowledge.KnowledgeManager
+import com.mgn.ai.knowledge.KnowledgeManager
 
 /**
  * 知识库系统提示注入转换器
