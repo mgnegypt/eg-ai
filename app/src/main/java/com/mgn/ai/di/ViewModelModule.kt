@@ -7,6 +7,7 @@ import com.mgn.ai.ui.pages.chat.ChatDrawerVM
 import com.mgn.ai.ui.pages.chat.ChatVM
 import com.mgn.ai.ui.pages.debug.DebugVM
 import com.mgn.ai.ui.pages.favorite.FavoriteVM
+import com.mgn.ai.ui.pages.assistant.groupchat.GroupChatTemplateDetailVM
 import com.mgn.ai.ui.pages.search.SearchVM
 import com.mgn.ai.ui.pages.storage.StorageCategoryVM
 import com.mgn.ai.ui.pages.storage.StorageManagerVM
@@ -85,6 +86,13 @@ val viewModelModule = module {
             categoryKey = it.get(),
             settingsStore = get(),
             storageRepo = get(),
+        )
+    }
+    viewModel<GroupChatTemplateDetailVM> {
+        GroupChatTemplateDetailVM(
+            id = it.get(),
+            settingsStore = get(),
+            workspaceRepository = get(),
         )
     }
 }

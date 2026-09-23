@@ -39,6 +39,7 @@ import com.mgn.ai.data.datastore.migration.PreferenceStoreV2Migration
 import com.mgn.ai.data.datastore.migration.PreferenceStoreV3Migration
 import com.mgn.ai.data.model.Assistant
 import com.mgn.ai.data.model.Avatar
+import com.mgn.ai.data.model.GroupChatTemplate
 import com.mgn.ai.data.model.InjectionPosition
 import com.mgn.ai.data.model.Lorebook
 import com.mgn.ai.data.model.PromptInjection
@@ -111,6 +112,7 @@ class SettingsStore(
         // 助手
         val SELECT_ASSISTANT = stringPreferencesKey("select_assistant")
         val ASSISTANTS = stringPreferencesKey("assistants")
+        val GROUP_CHAT_TEMPLATES = stringPreferencesKey("group_chat_templates")
         val ASSISTANT_TAGS = stringPreferencesKey("assistant_tags")
 
         // 搜索
@@ -199,6 +201,7 @@ class SettingsStore(
                 preferences[PROVIDERS] = JsonInstant.encodeToString(settings.providers)
 
                 preferences[ASSISTANTS] = JsonInstant.encodeToString(settings.assistants)
+                preferences[GROUP_CHAT_TEMPLATES] = JsonInstant.encodeToString(settings.groupChatTemplates)
                 preferences[SELECT_ASSISTANT] = settings.assistantId.toString()
                 preferences[ASSISTANT_TAGS] = JsonInstant.encodeToString(settings.assistantTags)
 
@@ -273,6 +276,9 @@ class SettingsStore(
                 } ?: emptyList(),
                 providers = JsonInstant.decodeFromString(preferences[PROVIDERS] ?: "[]"),
                 assistants = JsonInstant.decodeFromString(preferences[ASSISTANTS] ?: "[]"),
+                groupChatTemplates = preferences[GROUP_CHAT_TEMPLATES]?.let {
+                    runCatching { JsonInstant.decodeFromString<List<GroupChatTemplate>>(it) }.getOrNull()
+                } ?: emptyList(),
                 dynamicColor = preferences[DYNAMIC_COLOR] == true,
                 themeId = preferences[THEME_ID] ?: PresetThemes[0].id,
                 customThemes = preferences[CUSTOM_THEMES]?.let {
@@ -562,6 +568,7 @@ data class Settings(
     val assistantId: Uuid = DEFAULT_ASSISTANT_ID,
     val providers: List<ProviderSetting> = DEFAULT_PROVIDERS,
     val assistants: List<Assistant> = DEFAULT_ASSISTANTS,
+    val groupChatTemplates: List<GroupChatTemplate> = emptyList(),
     val assistantTags: List<Tag> = emptyList(),
     val searchServices: List<SearchServiceOptions> = listOf(SearchServiceOptions.DEFAULT),
     val searchCommonOptions: SearchCommonOptions = SearchCommonOptions(),
@@ -720,6 +727,12 @@ fun Settings.getCurrentAssistant(): Assistant {
 fun Settings.getAssistantById(id: Uuid): Assistant? {
     return this.assistants.find { it.id == id }
 }
+
+fun Settings.getGroupChatTemplate(id: Uuid): GroupChatTemplate? {
+    return groupChatTemplates.find { it.id == id }
+}
+
+fun Settings.isGroupChat(id: Uuid): Boolean = getGroupChatTemplate(id) != null
 
 fun Settings.getQuickMessagesOfAssistant(assistant: Assistant) =
     quickMessages.filter { it.id in assistant.quickMessageIds }

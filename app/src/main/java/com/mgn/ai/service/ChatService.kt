@@ -53,7 +53,11 @@ import com.mgn.ai.data.ai.GenerationLoop
 import com.mgn.ai.data.ai.TranslationHandler
 import com.mgn.ai.data.ai.mcp.McpManager
 import com.mgn.ai.data.ai.tools.ChatToolFactory
+import com.mgn.ai.data.ai.groupchat.GroupChatEngine
+import com.mgn.ai.data.ai.groupchat.GroupChatSeatPromptTransformer
 import com.mgn.ai.data.ai.tools.InvalidMcpServerNamesException
+import com.mgn.ai.data.model.GroupChatSeat
+import com.mgn.ai.data.model.GroupChatTemplate
 import com.mgn.ai.data.repository.ConversationDeletionCoordinator
 import com.mgn.ai.data.ai.tools.shouldUseExternalWebSearch
 import com.mgn.ai.data.ai.transformers.Base64ImageToLocalFileTransformer
@@ -68,11 +72,13 @@ import com.mgn.ai.data.ai.transformers.TimeReminderTransformer
 import com.mgn.ai.data.ai.transformers.WorkspaceReminderTransformer
 import com.mgn.ai.data.event.AppEvent
 import com.mgn.ai.data.event.AppEventBus
+import com.mgn.ai.data.datastore.Settings
 import com.mgn.ai.data.datastore.SettingsStore
 import com.mgn.ai.data.datastore.findModelById
 import com.mgn.ai.data.datastore.findProvider
 import com.mgn.ai.data.datastore.getAssistantById
 import com.mgn.ai.data.datastore.getCurrentAssistant
+import com.mgn.ai.data.datastore.getGroupChatTemplate
 import com.mgn.ai.data.datastore.getCurrentChatModel
 import com.mgn.ai.data.files.FilesManager
 import com.mgn.ai.data.model.Conversation
@@ -353,13 +359,23 @@ class ChatService(
         } else {
             // 新建对话, 并添加预设消息
             val currentSettings = settingsStore.settingsFlowRaw.first()
-            val assistant = currentSettings.getCurrentAssistant()
-            val newConversation = Conversation.ofId(
-                id = conversationId,
-                assistantId = assistant.id,
-                newConversation = true
-            ).updateCurrentMessages(assistant.presetMessages)
-            updateConversation(conversationId, newConversation)
+            val groupTemplate = currentSettings.getGroupChatTemplate(currentSettings.assistantId)
+            if (groupTemplate != null) {
+                val newConversation = Conversation.ofId(
+                    id = conversationId,
+                    assistantId = groupTemplate.id,
+                    newConversation = true,
+                )
+                updateConversation(conversationId, newConversation)
+            } else {
+                val assistant = currentSettings.getCurrentAssistant()
+                val newConversation = Conversation.ofId(
+                    id = conversationId,
+                    assistantId = assistant.id,
+                    newConversation = true
+                ).updateCurrentMessages(assistant.presetMessages)
+                updateConversation(conversationId, newConversation)
+            }
         }
     }
 
@@ -817,12 +833,227 @@ class ChatService(
 
     // ---- 处理消息补全 ----
 
+    /**
+     * Multi-seat group chat generation: resolves speaking seats (@mentions,
+     * sticky seat, or first enabled seat) and generates one reply per seat.
+     *
+     * Adapted from roccla231023/ROCL (AGPL-3.0, same license).
+     */
+    private suspend fun handleGroupChatMessageComplete(
+        conversationId: Uuid,
+        settings: Settings,
+        conversation: Conversation,
+        template: GroupChatTemplate,
+        messageRange: ClosedRange<Int>? = null,
+        forcedSpeakerSeatIds: List<Uuid>? = null,
+    ) {
+        if (template.seats.isEmpty()) return
+        checkInvalidMessages(conversationId)
+        val liveConversation = getConversationFlow(conversationId).value
+        val baseMessages = liveConversation.currentMessages.let {
+            if (messageRange != null) {
+                it.subList(messageRange.start, messageRange.endInclusive + 1)
+            } else {
+                it
+            }
+        }
+        val userText = baseMessages.lastOrNull { it.role == MessageRole.USER }?.toText().orEmpty()
+        val seatsById = template.seats.associateBy { it.id }
+        val speakerSeatIds = forcedSpeakerSeatIds
+            ?.filter { it in seatsById }
+            ?.distinct()
+            ?.takeIf { it.isNotEmpty() }
+            ?: GroupChatEngine.resolveSpeakerSeatIds(
+                userText = userText,
+                template = template,
+                assistantsById = settings.assistants.associateBy { it.id },
+                stickySeatId = liveConversation.stickySpeakerSeatId,
+            )
+        if (speakerSeatIds.isEmpty()) return
+
+        val speakers = speakerSeatIds.mapNotNull { seatsById[it] }
+        if (speakers.isEmpty()) return
+
+        updateConversation(conversationId, liveConversation.copy(chatSuggestions = emptyList()))
+        val session = getOrCreateSession(conversationId)
+        val userName = settings.displaySetting.userNickname
+        val seatDisplayNames = template.buildSeatDisplayNames(settings.assistants.associateBy { it.id })
+        var firstSenderName: String? = null
+
+        speakers.forEach { seat ->
+            generateGroupChatSeatReply(
+                conversationId = conversationId,
+                settings = settings,
+                template = template,
+                seat = seat,
+                userName = userName,
+                seatDisplayNames = seatDisplayNames,
+                session = session,
+            )?.let { senderName ->
+                if (firstSenderName == null) firstSenderName = senderName
+            }
+        }
+
+        val sticky = if (forcedSpeakerSeatIds != null) {
+            liveConversation.stickySpeakerSeatId
+        } else {
+            val mentionedCount = GroupChatEngine.resolveEnabledMentionedSeatIds(
+                text = userText,
+                template = template,
+                assistantsById = settings.assistants.associateBy { it.id },
+            ).size
+            GroupChatEngine.nextStickySeatId(
+                speakerSeatIds = speakers.map { it.id },
+                previousSticky = liveConversation.stickySpeakerSeatId,
+                clearAfterMultiMention = mentionedCount >= 2,
+            )
+        }
+        val finalConversation = getConversationFlow(conversationId).value.copy(
+            stickySpeakerSeatId = sticky,
+            updateAt = Instant.now(),
+        )
+        saveConversation(conversationId, finalConversation)
+        launchWithConversationReference(conversationId) {
+            generateTitle(conversationId, finalConversation)
+        }
+        firstSenderName?.let { senderName ->
+            appEventBus.emit(
+                AppEvent.ChatGenerationEnded(
+                    conversationId = conversationId,
+                    senderName = senderName,
+                    contentPreview = finalConversation.currentMessages.lastOrNull()
+                        ?.toText()?.take(50)?.trim() ?: "",
+                )
+            )
+        }
+    }
+
+    private suspend fun generateGroupChatSeatReply(
+        conversationId: Uuid,
+        settings: Settings,
+        template: GroupChatTemplate,
+        seat: GroupChatSeat,
+        userName: String,
+        seatDisplayNames: Map<Uuid, String>,
+        session: ConversationSession,
+    ): String? {
+        val assistantBase = settings.getAssistantById(seat.assistantId) ?: return null
+        val seatAssistant = assistantBase.applyGroupSeat(template, seat)
+        val model = settings.findModelById(seatAssistant.chatModelId ?: settings.chatModelId) ?: return null
+        val senderName = if (seatAssistant.useAssistantAvatar) {
+            seatDisplayNames[seat.id] ?: seatAssistant.name.ifEmpty {
+                context.getString(R.string.assistant_page_default_assistant)
+            }
+        } else {
+            model.displayName
+        }
+        val conversation = getConversationFlow(conversationId).value
+        val tools = try {
+            chatToolFactory.createTools(
+                settings = settings,
+                assistant = seatAssistant,
+                model = model,
+                workspaceCwd = conversation.workspaceCwd,
+            )
+        } catch (error: InvalidMcpServerNamesException) {
+            session.messageQueue.pause()
+            addError(
+                error = IllegalStateException(
+                    context.getString(
+                        R.string.error_mcp_invalid_server_name,
+                        error.names.joinToString(", "),
+                    )
+                ),
+                conversationId = conversationId,
+            )
+            return null
+        }
+        val suffix = GroupChatEngine.contextSystemPromptSuffix(template, seat, seatDisplayNames)
+        val promptAssistant = if (suffix.isBlank()) {
+            seatAssistant
+        } else {
+            seatAssistant.copy(
+                systemPrompt = buildString {
+                    if (seatAssistant.systemPrompt.isNotBlank()) {
+                        appendLine(seatAssistant.systemPrompt)
+                    }
+                    append(suffix)
+                }
+            )
+        }
+        generationLoop.generateText(
+            settings = settings,
+            model = model,
+            processingStatus = session.processingStatus,
+            messages = GroupChatEngine.messagesForNewSeatTurn(
+                messages = conversation.currentMessages,
+                seatId = seat.id,
+                modelId = model.id,
+            ),
+            assistant = promptAssistant,
+            conversationId = conversationId,
+            conversationSystemPrompt = conversation.customSystemPrompt,
+            conversationModeInjectionIds = conversation.modeInjectionIds,
+            conversationLorebookIds = conversation.lorebookIds,
+            workspaceCwd = conversation.workspaceCwd,
+            memories = if (seatAssistant.useGlobalMemory) {
+                memoryRepository.getGlobalMemories()
+            } else {
+                memoryRepository.getMemoriesOfAssistant(seatAssistant.id.toString())
+            },
+            inputTransformers = buildList {
+                addAll(inputTransformers)
+                add(templateTransformer)
+                add(workspaceReminderTransformer)
+                add(
+                    GroupChatSeatPromptTransformer(
+                        seat = seat,
+                        selfAssistantId = seatAssistant.id,
+                        seatDisplayNames = seatDisplayNames,
+                        assistantsById = settings.assistants.associateBy { it.id },
+                        userName = userName,
+                    )
+                )
+            },
+            outputTransformers = outputTransformers,
+            tools = tools,
+        ).onCompletion {
+            val updatedConversation = getConversationFlow(conversationId).value.copy(
+                messageNodes = getConversationFlow(conversationId).value.messageNodes.map { node ->
+                    node.copy(messages = node.messages.map { it.finishReasoning() })
+                },
+                updateAt = Instant.now()
+            )
+            updateConversation(conversationId, updatedConversation)
+        }.collect { chunk ->
+            when (chunk) {
+                is GenerationChunk.Messages -> {
+                    val updatedConversation = getConversationFlow(conversationId).value
+                        .updateCurrentMessages(chunk.messages)
+                    updateConversation(conversationId, updatedConversation)
+                }
+            }
+        }
+        return senderName
+    }
+
     private suspend fun handleMessageComplete(
         conversationId: Uuid,
         messageRange: ClosedRange<Int>? = null
     ) {
         val settings = settingsStore.settingsFlow.first()
         val initialConversation = getConversationFlow(conversationId).value
+        val groupTemplate = settings.getGroupChatTemplate(initialConversation.assistantId)
+        if (groupTemplate != null) {
+            handleGroupChatMessageComplete(
+                conversationId = conversationId,
+                settings = settings,
+                conversation = initialConversation,
+                template = groupTemplate,
+                messageRange = messageRange,
+            )
+            return
+        }
         val assistant = settings.getAssistantById(initialConversation.assistantId)
             ?: settings.getCurrentAssistant()
         val model = settings.findModelById(assistant.chatModelId ?: settings.chatModelId)

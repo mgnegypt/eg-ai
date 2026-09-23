@@ -6,7 +6,9 @@ import me.rerere.hugeicons.stroke.Add01
 import me.rerere.hugeicons.stroke.Search01
 import me.rerere.hugeicons.stroke.Delete01
 import me.rerere.hugeicons.stroke.Cancel01
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
@@ -14,6 +16,7 @@ import androidx.compose.foundation.layout.consumeWindowInsets
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.imePadding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
@@ -38,6 +41,8 @@ import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.material3.TopAppBarDefaults
+import androidx.compose.ui.draw.clip
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.material3.SheetValue
 import androidx.compose.material3.rememberBottomSheetState
 import androidx.compose.runtime.Composable
@@ -57,6 +62,8 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.util.fastForEach
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import me.rerere.hugeicons.stroke.Edit03
+import me.rerere.hugeicons.stroke.LookTop
 import me.rerere.hugeicons.stroke.MoreVertical
 import com.mgn.ai.R
 import com.mgn.ai.Screen
@@ -64,6 +71,7 @@ import com.mgn.ai.data.datastore.DEFAULT_ASSISTANTS_IDS
 import com.mgn.ai.data.datastore.Settings
 import com.mgn.ai.data.model.Assistant
 import com.mgn.ai.data.model.AssistantMemory
+import com.mgn.ai.data.model.GroupChatTemplate
 import com.mgn.ai.ui.components.nav.BackButton
 import com.mgn.ai.ui.components.ui.FormItem
 import com.mgn.ai.ui.components.ui.Tag
@@ -107,6 +115,16 @@ fun AssistantPage(vm: AssistantVM = koinViewModel()) {
             val matchesTags = selectedTagIds.isEmpty() ||
                 assistant.tags.any { tagId -> tagId in selectedTagIds }
             matchesSearch && matchesTags
+        }
+    }
+
+    val filteredGroupChats = remember(settings.groupChatTemplates, searchQuery) {
+        if (searchQuery.isBlank()) {
+            settings.groupChatTemplates
+        } else {
+            settings.groupChatTemplates.filter { template ->
+                template.name.contains(searchQuery, ignoreCase = true)
+            }
         }
     }
 
@@ -231,6 +249,49 @@ fun AssistantPage(vm: AssistantVM = koinViewModel()) {
                                     }
                                 )
                         )
+                    }
+                }
+                if (selectedTagIds.isEmpty()) {
+                    item(key = "group_chat_header") {
+                        Text(
+                            text = stringResource(R.string.group_chat_page_title),
+                            style = MaterialTheme.typography.titleSmall,
+                            color = MaterialTheme.colorScheme.primary,
+                            modifier = Modifier.padding(top = 12.dp, bottom = 4.dp, start = 4.dp),
+                        )
+                    }
+                    if (filteredGroupChats.isEmpty()) {
+                        item(key = "group_chat_empty") {
+                            Card(
+                                modifier = Modifier.fillMaxWidth(),
+                                onClick = {
+                                    val template = GroupChatTemplate()
+                                    vm.updateSettings(
+                                        settings.copy(groupChatTemplates = settings.groupChatTemplates + template)
+                                    )
+                                    navController.navigate(Screen.GroupChatTemplateDetail(id = template.id.toString()))
+                                },
+                                colors = CardDefaults.cardColors(
+                                    containerColor = CustomColors.listItemColors.containerColor
+                                ),
+                            ) {
+                                Text(
+                                    text = stringResource(R.string.group_chat_template_create),
+                                    style = MaterialTheme.typography.bodyMedium,
+                                    color = MaterialTheme.colorScheme.onSurfaceVariant,
+                                    modifier = Modifier.padding(16.dp),
+                                )
+                            }
+                        }
+                    } else {
+                        lazyItems(filteredGroupChats, key = { "group:" + it.id }) { template ->
+                            GroupChatListItem(
+                                template = template,
+                                onClick = {
+                                    navController.navigate(Screen.GroupChatTemplateDetail(id = template.id.toString()))
+                                },
+                            )
+                        }
                     }
                 }
             }
@@ -385,6 +446,65 @@ private fun AssistantCreationSheet(
                     }
                 }
             }
+        }
+    }
+}
+
+@Composable
+private fun GroupChatListItem(
+    template: GroupChatTemplate,
+    onClick: () -> Unit,
+) {
+    Card(
+        modifier = Modifier.fillMaxWidth(),
+        onClick = onClick,
+        colors = CardDefaults.cardColors(
+            containerColor = CustomColors.listItemColors.containerColor
+        ),
+    ) {
+        Row(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(16.dp),
+            horizontalArrangement = Arrangement.spacedBy(12.dp),
+            verticalAlignment = Alignment.CenterVertically,
+        ) {
+            Box(
+                modifier = Modifier
+                    .size(48.dp)
+                    .clip(RoundedCornerShape(50))
+                    .background(MaterialTheme.colorScheme.surfaceContainerHigh),
+                contentAlignment = Alignment.Center,
+            ) {
+                Icon(
+                    imageVector = HugeIcons.LookTop,
+                    contentDescription = null,
+                    tint = MaterialTheme.colorScheme.onSurfaceVariant,
+                )
+            }
+            Column(
+                modifier = Modifier.weight(1f),
+                verticalArrangement = Arrangement.spacedBy(4.dp),
+            ) {
+                Text(
+                    text = template.name.ifBlank { stringResource(R.string.group_chat_page_title) },
+                    style = MaterialTheme.typography.titleMedium,
+                    maxLines = 1,
+                    overflow = TextOverflow.Ellipsis,
+                )
+                Text(
+                    text = stringResource(R.string.group_chat_members_count, template.seats.size),
+                    style = MaterialTheme.typography.bodySmall,
+                    color = MaterialTheme.colorScheme.onSurfaceVariant,
+                    maxLines = 1,
+                    overflow = TextOverflow.Ellipsis,
+                )
+            }
+            Icon(
+                imageVector = HugeIcons.Edit03,
+                contentDescription = null,
+                tint = MaterialTheme.colorScheme.onSurfaceVariant,
+            )
         }
     }
 }

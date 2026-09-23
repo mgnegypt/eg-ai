@@ -115,6 +115,7 @@ import com.mgn.ai.ui.pages.setting.SettingThemePage
 import com.mgn.ai.ui.pages.setting.SettingDonatePage
 import com.mgn.ai.ui.pages.setting.SettingFilesPage
 import com.mgn.ai.ui.pages.setting.SettingPermissionsPage
+import com.mgn.ai.ui.pages.assistant.groupchat.GroupChatTemplateDetailPage
 import com.mgn.ai.ui.pages.storage.StorageCategoryPage
 import com.mgn.ai.ui.pages.storage.StorageManagerPage
 import com.mgn.ai.ui.pages.setting.SettingMcpPage
@@ -487,6 +488,10 @@ class RouteActivity : ComponentActivity() {
                                 StorageCategoryPage(category = key.category)
                             }
 
+                            entry<Screen.GroupChatTemplateDetail> { key ->
+                                GroupChatTemplateDetailPage(key.id)
+                            }
+
                             entry<Screen.SettingFiles> {
                                 SettingFilesPage()
                             }
@@ -716,6 +721,9 @@ sealed interface Screen : NavKey {
 
     @Serializable
     data class StorageCategory(val category: String) : Screen
+
+    @Serializable
+    data class GroupChatTemplateDetail(val id: String) : Screen
 
     @Serializable
     data object SettingFiles : Screen
