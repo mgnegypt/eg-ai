@@ -60,6 +60,8 @@ import com.mgn.ai.data.ai.tools.TodoReminderTransformer
 import com.mgn.ai.data.ai.tools.TodoStorage
 import com.mgn.ai.data.model.GroupChatSeat
 import com.mgn.ai.data.model.GroupChatTemplate
+import com.mgn.ai.data.model.applyGroupSeat
+import com.mgn.ai.data.model.buildSeatDisplayNames
 import com.mgn.ai.data.repository.ConversationDeletionCoordinator
 import com.mgn.ai.data.ai.tools.shouldUseExternalWebSearch
 import com.mgn.ai.data.ai.transformers.Base64ImageToLocalFileTransformer
