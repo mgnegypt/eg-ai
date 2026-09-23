@@ -175,7 +175,7 @@ fun StorageFilesScaffoldContent(
                     selectionMode = selectionMode,
                     onClick = {
                         if (selectionMode) {
-                        selectedPaths =
+                            selectedPaths =
                                 if (isSelected) selectedPaths - entry.absolutePath else selectedPaths + entry.absolutePath
                             return@AssistantFileRow
                         }
@@ -193,8 +193,7 @@ fun StorageFilesScaffoldContent(
                             context.startActivity(Intent.createChooser(intent, null))
                         }.onFailure {
                         toaster.show(
-                                message = context.getString(
-                                    R.string.storage_files_open_failed,
+                                message = openFailedTemplate.format(
                                     entry.fileName.trim().ifBlank { File(entry.absolutePath).name },
                                 ),
                                 type = com.dokar.sonner.ToastType.Error,
@@ -270,6 +269,7 @@ private fun AssistantFilesCard(
     onRequestDelete: () -> Unit,
 ) {
     val context = LocalContext.current
+    val openFailedTemplate = stringResource(R.string.storage_files_open_failed)
     val hasSelection = selectedCount > 0
     val isReady = filesState is UiState.Success && totalCount > 0
     Card(

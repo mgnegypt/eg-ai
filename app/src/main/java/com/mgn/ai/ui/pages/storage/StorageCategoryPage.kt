@@ -32,6 +32,8 @@ fun StorageCategoryPage(
 ) {
     val context = LocalContext.current
     val toaster = LocalToaster.current
+    val successToastRes = storageCategorySuccessToastRes(vm.category)
+    val successToast = stringResource(successToastRes)
     val scrollBehavior = TopAppBarDefaults.exitUntilCollapsedScrollBehavior()
 
     val categoryKey = vm.category
@@ -49,7 +51,7 @@ fun StorageCategoryPage(
 
     LaunchedEffect(actionState) {
         when (actionState) {
-            is UiState.Success -> toaster.show(message = context.getString(storageCategorySuccessToastRes(categoryKey)))
+            is UiState.Success -> toaster.show(message = successToast)
             is UiState.Error -> toaster.show(message = (actionState as UiState.Error).error.message ?: "Error")
             else -> Unit
         }
