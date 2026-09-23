@@ -21,6 +21,7 @@ import com.mgn.ai.data.repository.ConversationRepository
 import com.mgn.ai.data.repository.MemoryRepository
 import com.mgn.ai.data.repository.WorkspaceRepository
 import com.mgn.ai.workspace.WorkspaceShellStatus
+import kotlin.uuid.Uuid
 
 private const val TAG = "ChatToolFactory"
 

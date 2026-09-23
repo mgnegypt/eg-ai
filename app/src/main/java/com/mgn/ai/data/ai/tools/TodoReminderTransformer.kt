@@ -44,7 +44,7 @@ class TodoReminderTransformer(
         val conversationId = ctx.conversationId ?: return messages
 
         // 唯一数据源：直接读 TodoStorage，不从对话消息里反查 todo_write 调用
-        val todoList = todoStorage.load(conversationId) ?: return messages
+        val todoList = todoStorage.load(conversationId.toString()) ?: return messages
 
         if (!todoList.hasActive()) return messages
 
@@ -80,7 +80,7 @@ class TodoReminderTransformer(
         // 跨轮触发不查冷却——它的阈值本身就是低频节奏；且若用工具步增量做冷却，
         // 模型"闲聊不干活"时增量恒为 0，跨轮提醒会被永久卡死。
         if (isFallbehindTools && !isFallbehindTurns) {
-            val lastReminderStep = todoStorage.loadReminderStep(conversationId)
+            val lastReminderStep = todoStorage.loadReminderStep(conversationId.toString())
             if (lastReminderStep != null && executedToolsTotal - lastReminderStep < TOOLS_BETWEEN_REMINDERS) {
                 return messages
             }
@@ -119,7 +119,7 @@ class TodoReminderTransformer(
         }
 
         // 更新提醒基线：从当前累计工具步起算冷却
-        todoStorage.saveReminderStep(conversationId, executedToolsTotal)
+        todoStorage.saveReminderStep(conversationId.toString(), executedToolsTotal)
 
         val systemIndex = messages.indexOfFirst { it.role == MessageRole.SYSTEM }
         return if (systemIndex >= 0) {
