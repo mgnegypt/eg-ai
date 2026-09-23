@@ -5,7 +5,7 @@ package com.mgn.ai.data.ai.prompts
  * 系统提示词由「场景提示词 + 语气指引 + 深度指引」三部分拼接而成，
  * 避免 场景×语气×深度 全组合膨胀（4 段场景 + 3 段语气 + 2 段深度 = 9 段文案）。
  */
-internal enum class PromptOptimizeScene(val code: String) {
+enum class PromptOptimizeScene(val code: String) {
     GENERAL("general"),
     WRITING("writing"),
     QUESTION("question"),
@@ -13,7 +13,7 @@ internal enum class PromptOptimizeScene(val code: String) {
 }
 
 /** 优化语气：作为内置预设，不可自定义模板 */
-internal enum class PromptOptimizeTone {
+enum class PromptOptimizeTone {
     SERIOUS, HUMOROUS, NORMAL,
 }
 
@@ -21,14 +21,14 @@ internal enum class PromptOptimizeTone {
  * 优化深度：控制改写详略程度，只影响 prompt 文案，不联动思考预算（思考预算由设置页单独控制）。
  * code 用于 DataStore 按场景持久化。
  */
-internal enum class PromptOptimizeDepth(val code: String) {
+enum class PromptOptimizeDepth(val code: String) {
     CONCISE("concise"),
     MEDIUM("medium"),
     DETAILED("detailed"),
 }
 
 /** 场景的中文展示名（用于界面筛选与自定义模板的 {scene} 占位符） */
-internal fun PromptOptimizeScene.toDisplayText(): String = when (this) {
+fun PromptOptimizeScene.toDisplayText(): String = when (this) {
     PromptOptimizeScene.GENERAL -> "General"
     PromptOptimizeScene.WRITING -> "Writing"
     PromptOptimizeScene.QUESTION -> "Question"
@@ -36,14 +36,14 @@ internal fun PromptOptimizeScene.toDisplayText(): String = when (this) {
 }
 
 /** 语气的中文展示名（用于自定义模板的 {tone} 占位符） */
-internal fun PromptOptimizeTone.toDisplayText(): String = when (this) {
+fun PromptOptimizeTone.toDisplayText(): String = when (this) {
     PromptOptimizeTone.SERIOUS -> "Serious"
     PromptOptimizeTone.HUMOROUS -> "Humorous"
     PromptOptimizeTone.NORMAL -> "Normal"
 }
 
 /** 深度的中文展示名（用于自定义模板的 {depth} 占位符） */
-internal fun PromptOptimizeDepth.toDisplayText(): String = when (this) {
+fun PromptOptimizeDepth.toDisplayText(): String = when (this) {
     PromptOptimizeDepth.CONCISE -> "Concise"
     PromptOptimizeDepth.MEDIUM -> "Medium"
     PromptOptimizeDepth.DETAILED -> "Detailed"
@@ -55,7 +55,7 @@ internal fun PromptOptimizeDepth.toDisplayText(): String = when (this) {
  * 提示词为英文编写（主流模型对英文指令理解更充分），
  * 每条末尾统一锁定"输出语言跟随用户输入"，因此中文输入会得到中文结果。
  */
-internal fun promptOptimizeSystemPrompt(
+fun promptOptimizeSystemPrompt(
     scene: PromptOptimizeScene,
     tone: PromptOptimizeTone,
     depth: PromptOptimizeDepth,
@@ -206,7 +206,7 @@ internal val DEFAULT_PROMPT_OPTIMIZE_PROMPT = """
  * 各场景的默认可编辑模板。与 [promptOptimizeSystemPrompt] 语义一致，但含 {scene}/{tone}/{depth}/{content} 占位符，
  * 供设置页编辑器回显（保证"看到的即运行时生效的"，且各场景默认内容明确区隔）。
  */
-internal fun defaultPromptOptimizePromptForScene(scene: PromptOptimizeScene): String = when (scene) {
+fun defaultPromptOptimizePromptForScene(scene: PromptOptimizeScene): String = when (scene) {
     PromptOptimizeScene.GENERAL -> """
         You are a prompt optimization expert. Rewrite the user's text into a clear, well-structured instruction.
 

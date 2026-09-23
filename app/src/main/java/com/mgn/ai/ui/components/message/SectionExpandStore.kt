@@ -82,8 +82,6 @@ fun trackRecentConversation(conversationId: String, keepRecentCount: Int): Int {
         recentConversationIds.removeLast()
     }
     val removed = pruneSectionExpanded(recentConversationIds.toSet())
-    pruneToolBubbleExpanded(recentConversationIds.toSet())
-    trimToolBubbleExpanded()
     return removed
 }
 

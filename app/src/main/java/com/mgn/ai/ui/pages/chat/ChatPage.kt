@@ -102,9 +102,6 @@ fun ChatPage(id: Uuid, text: String?, files: List<Uri>, nodeId: Uuid? = null) {
         }
     )
     val filesManager: FilesManager = koinInject()
-    val todoStorage: TodoStorage = koinInject()
-    val promptOptimizeVM: PromptOptimizeVM = koinViewModel()
-    var showPromptOptimizeSheet by remember { mutableStateOf(false) }
     val navController = LocalNavController.current
     val scope = rememberCoroutineScope()
 
@@ -293,6 +290,9 @@ private fun ChatPageContent(
     var showFilesSheet by remember { mutableStateOf(false) }
     val runtimeInspection by vm.runtimeInspection.collectAsStateWithLifecycle()
     var showRuntimeInspector by rememberSaveable { mutableStateOf(false) }
+    val todoStorage: TodoStorage = koinInject()
+    val promptOptimizeVM: PromptOptimizeVM = koinViewModel()
+    var showPromptOptimizeSheet by remember { mutableStateOf(false) }
     val attachmentPickerActions = rememberChatAttachmentPickerActions(
         inputState = inputState,
         setting = setting,
