@@ -116,6 +116,7 @@ val appModule = module {
             settingsStore = get(),
             subAgentEngine = get(),
             todoStorage = get(),
+            knowledgeManager = get(),
         )
     }
 
@@ -136,7 +137,8 @@ val appModule = module {
             filesManager = get(),
             workspaceRepository = get(),
             folderRepository = get(),
-            todoStorage = get()
+            todoStorage = get(),
+            knowledgeManager = get()
         )
     }
 

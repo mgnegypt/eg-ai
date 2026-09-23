@@ -65,6 +65,8 @@ import com.mgn.ai.data.ai.groupchat.GroupChatSeatPromptTransformer
 import com.mgn.ai.data.ai.tools.InvalidMcpServerNamesException
 import com.mgn.ai.data.ai.tools.TodoReminderTransformer
 import com.mgn.ai.data.ai.tools.TodoStorage
+import com.mgn.ai.data.ai.transformers.KnowledgeBaseReminderTransformer
+import com.mgn.ai.knowledge.KnowledgeManager
 import com.mgn.ai.data.model.GroupChatSeat
 import com.mgn.ai.data.model.GroupChatTemplate
 import com.mgn.ai.data.model.applyGroupSeat
@@ -187,8 +189,10 @@ class ChatService(
     private val workspaceRepository: WorkspaceRepository,
     private val folderRepository: FolderRepository,
     private val todoStorage: TodoStorage,
+    private val knowledgeManager: KnowledgeManager,
 ) : ConversationDeletionCoordinator {
     private val todoReminderTransformer = TodoReminderTransformer(todoStorage)
+    private val knowledgeBaseReminderTransformer = KnowledgeBaseReminderTransformer(knowledgeManager)
     override suspend fun deleteConversationById(conversationId: Uuid, deleteFiles: Boolean) {
         removeConversationReference(conversationId)
         val conversation = conversationRepo.getConversationById(conversationId) ?: return
@@ -606,6 +610,7 @@ class ChatService(
                 addAll(inputTransformers)
                 add(templateTransformer)
                 add(workspaceReminderTransformer)
+                add(knowledgeBaseReminderTransformer)
                 add(todoReminderTransformer)
             },
             assistant = assistant,
@@ -1021,6 +1026,7 @@ class ChatService(
                 addAll(inputTransformers)
                 add(templateTransformer)
                 add(workspaceReminderTransformer)
+                add(knowledgeBaseReminderTransformer)
                 add(todoReminderTransformer)
                 add(
                     GroupChatSeatPromptTransformer(
@@ -1153,6 +1159,7 @@ class ChatService(
                     addAll(inputTransformers)
                     add(templateTransformer)
                     add(workspaceReminderTransformer)
+                add(knowledgeBaseReminderTransformer)
                 add(todoReminderTransformer)
                 },
                 outputTransformers = outputTransformers,

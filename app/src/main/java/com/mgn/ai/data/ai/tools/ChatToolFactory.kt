@@ -11,6 +11,8 @@ import com.mgn.ai.data.ai.subagent.SubAgentEngine
 import com.mgn.ai.data.ai.subagent.buildSubAgentTool
 import com.mgn.ai.data.ai.subagent.filterSubAgentTools
 import com.mgn.ai.data.datastore.findModelById
+import com.mgn.ai.knowledge.KnowledgeManager
+import com.mgn.ai.knowledge.tool.KnowledgeSearchTool
 import com.mgn.ai.data.datastore.findProvider
 import com.mgn.ai.data.ai.tools.local.LocalTools
 import com.mgn.ai.data.datastore.Settings
@@ -44,6 +46,7 @@ class ChatToolFactory(
     private val settingsStore: SettingsStore,
     private val subAgentEngine: SubAgentEngine,
     private val todoStorage: TodoStorage,
+    private val knowledgeManager: KnowledgeManager,
 ) {
     suspend fun createTools(
         settings: Settings,
@@ -88,6 +91,16 @@ class ChatToolFactory(
         addAll(createMcpManageTools(mcpManager, settingsStore))
         if (settings.enableTodoList && conversationId != null) {
             add(createTodoTool(conversationId.toString(), todoStorage))
+        }
+        if (assistant.knowledgeBaseIds.isNotEmpty()) {
+            val knowledgeTool = KnowledgeSearchTool(
+                knowledgeManager = knowledgeManager,
+                getAllowedKnowledgeBaseIds = { assistant.knowledgeBaseIds.map { it.toString() }.toSet() },
+                getEmbeddingForBase = { null },
+                getReranker = { null },
+            )
+            add(knowledgeTool.create())
+            add(knowledgeTool.createListTool())
         }
 
         val mcpTools = mcpManager.getAllAvailableTools()

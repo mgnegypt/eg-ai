@@ -9,9 +9,13 @@ import com.mgn.ai.data.repository.FavoriteRepository
 import com.mgn.ai.data.repository.FolderRepository
 import com.mgn.ai.data.repository.FilesRepository
 import com.mgn.ai.data.repository.GenMediaRepository
+import com.mgn.ai.data.db.AppDatabase
+import com.mgn.ai.data.knowledge.SimpleKeywordSearcher
 import com.mgn.ai.data.repository.MemoryRepository
 import com.mgn.ai.data.repository.StorageManagerRepository
 import com.mgn.ai.data.repository.WorkspaceRepository
+import com.mgn.ai.knowledge.KnowledgeManager
+import com.mgn.ai.knowledge.retrieval.KeywordSearcher
 import com.mgn.ai.workspace.ProotShellRunner
 import com.mgn.ai.workspace.RootfsInstaller
 import com.mgn.ai.workspace.WorkspaceBindMount
@@ -42,6 +46,19 @@ val repositoryModule = module {
 
     single {
         FavoriteRepository(get())
+    }
+
+    single<KeywordSearcher> {
+        SimpleKeywordSearcher(get<AppDatabase>().knowledgeChunkDao())
+    }
+
+    single {
+        KnowledgeManager(
+            knowledgeBaseDao = get<AppDatabase>().knowledgeBaseDao(),
+            knowledgeDocumentDao = get<AppDatabase>().knowledgeDocumentDao(),
+            chunkDao = get<AppDatabase>().knowledgeChunkDao(),
+            keywordSearcher = get(),
+        )
     }
 
     single {
