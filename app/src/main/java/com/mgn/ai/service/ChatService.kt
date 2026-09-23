@@ -56,6 +56,8 @@ import com.mgn.ai.data.ai.tools.ChatToolFactory
 import com.mgn.ai.data.ai.groupchat.GroupChatEngine
 import com.mgn.ai.data.ai.groupchat.GroupChatSeatPromptTransformer
 import com.mgn.ai.data.ai.tools.InvalidMcpServerNamesException
+import com.mgn.ai.data.ai.tools.TodoReminderTransformer
+import com.mgn.ai.data.ai.tools.TodoStorage
 import com.mgn.ai.data.model.GroupChatSeat
 import com.mgn.ai.data.model.GroupChatTemplate
 import com.mgn.ai.data.repository.ConversationDeletionCoordinator
@@ -175,7 +177,9 @@ class ChatService(
     private val filesManager: FilesManager,
     private val workspaceRepository: WorkspaceRepository,
     private val folderRepository: FolderRepository,
+    private val todoStorage: TodoStorage,
 ) : ConversationDeletionCoordinator {
+    private val todoReminderTransformer = TodoReminderTransformer(todoStorage)
     override suspend fun deleteConversationById(conversationId: Uuid, deleteFiles: Boolean) {
         removeConversationReference(conversationId)
         val conversation = conversationRepo.getConversationById(conversationId) ?: return
@@ -580,6 +584,7 @@ class ChatService(
                 assistant = assistant,
                 model = model,
                 workspaceCwd = conversation.workspaceCwd,
+                conversationId = conversationId,
             )
         } catch (error: InvalidMcpServerNamesException) {
             error(context.getString(R.string.error_mcp_invalid_server_name, error.names.joinToString(", ")))
@@ -592,6 +597,7 @@ class ChatService(
                 addAll(inputTransformers)
                 add(templateTransformer)
                 add(workspaceReminderTransformer)
+                add(todoReminderTransformer)
             },
             assistant = assistant,
             memories = if (assistant.useGlobalMemory) {
@@ -954,6 +960,7 @@ class ChatService(
                 assistant = seatAssistant,
                 model = model,
                 workspaceCwd = conversation.workspaceCwd,
+                conversationId = conversationId,
             )
         } catch (error: InvalidMcpServerNamesException) {
             session.messageQueue.pause()
@@ -1005,6 +1012,7 @@ class ChatService(
                 addAll(inputTransformers)
                 add(templateTransformer)
                 add(workspaceReminderTransformer)
+                add(todoReminderTransformer)
                 add(
                     GroupChatSeatPromptTransformer(
                         seat = seat,
@@ -1092,6 +1100,7 @@ class ChatService(
                     assistant = assistant,
                     model = model,
                     workspaceCwd = conversation.workspaceCwd,
+                    conversationId = conversationId,
                 )
             } catch (error: InvalidMcpServerNamesException) {
                 sessions[conversationId]?.messageQueue?.pause()
@@ -1135,6 +1144,7 @@ class ChatService(
                     addAll(inputTransformers)
                     add(templateTransformer)
                     add(workspaceReminderTransformer)
+                add(todoReminderTransformer)
                 },
                 outputTransformers = outputTransformers,
                 tools = tools,

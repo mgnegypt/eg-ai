@@ -88,6 +88,7 @@ class SettingsStore(
         val SUBAGENT_MODEL = stringPreferencesKey("subagent_model")
         val SUBAGENT_REASONING_LEVEL = stringPreferencesKey("subagent_reasoning_level")
         val KEEP_AWAKE = booleanPreferencesKey("keep_awake")
+        val TODO_LIST_ENABLED = booleanPreferencesKey("todo_list_enabled")
 
         // 模型选择
         val FAVORITE_MODELS = stringPreferencesKey("favorite_models")
@@ -179,6 +180,7 @@ class SettingsStore(
                 }
                 preferences[SUBAGENT_REASONING_LEVEL] = settings.subAgentReasoningLevel.name
                 preferences[KEEP_AWAKE] = settings.keepAwakeEnabled
+                preferences[TODO_LIST_ENABLED] = settings.enableTodoList
                 preferences[DISPLAY_SETTING] = JsonInstant.encodeToString(settings.displaySetting)
                 preferences[NETWORK_SETTING] = JsonInstant.encodeToString(settings.networkSetting)
 
@@ -290,6 +292,7 @@ class SettingsStore(
                     ?.let { value -> ReasoningLevel.entries.find { it.name == value } }
                     ?: ReasoningLevel.AUTO,
                 keepAwakeEnabled = preferences[KEEP_AWAKE] == true,
+                enableTodoList = preferences[TODO_LIST_ENABLED] != false,
                 displaySetting = JsonInstant.decodeFromString(preferences[DISPLAY_SETTING] ?: "{}"),
                 networkSetting = JsonInstant.decodeFromString(preferences[NETWORK_SETTING] ?: "{}"),
                 searchServices = preferences[SEARCH_SERVICES]?.let {
@@ -548,6 +551,7 @@ data class Settings(
     val subAgentModelId: Uuid? = null,
     val subAgentReasoningLevel: ReasoningLevel = ReasoningLevel.AUTO,
     val keepAwakeEnabled: Boolean = false,
+    val enableTodoList: Boolean = true,
     val displaySetting: DisplaySetting = DisplaySetting(),
     val networkSetting: NetworkSetting = NetworkSetting(),
     val favoriteModels: List<Uuid> = emptyList(),

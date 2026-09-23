@@ -42,12 +42,14 @@ class ChatToolFactory(
     private val workspaceRepository: WorkspaceRepository,
     private val settingsStore: SettingsStore,
     private val subAgentEngine: SubAgentEngine,
+    private val todoStorage: TodoStorage,
 ) {
     suspend fun createTools(
         settings: Settings,
         assistant: Assistant,
         model: Model,
         workspaceCwd: String? = null,
+        conversationId: Uuid? = null,
     ): List<Tool> {
         val assembled = buildList {
         if (assistant.enableMemory) {
@@ -83,6 +85,9 @@ class ChatToolFactory(
         }
         addAll(createSkillManageTools(skillManager))
         addAll(createMcpManageTools(mcpManager, settingsStore))
+        if (settings.enableTodoList && conversationId != null) {
+            add(createTodoTool(conversationId.toString(), todoStorage))
+        }
 
         val mcpTools = mcpManager.getAllAvailableTools()
         val invalidNames = mcpTools

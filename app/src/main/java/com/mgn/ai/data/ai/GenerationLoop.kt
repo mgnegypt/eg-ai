@@ -396,6 +396,7 @@ class GenerationLoop(
         conversationLorebookIds: Set<Uuid> = emptySet(),
         workspaceCwd: String? = null,
         processingStatus: MutableStateFlow<String?> = MutableStateFlow(null),
+        conversationId: Uuid? = null,
     ): List<UIMessage> {
         return buildList {
             val system = buildString {
@@ -434,6 +435,7 @@ class GenerationLoop(
             conversationLorebookIds = conversationLorebookIds,
             processingStatus = processingStatus,
             workspaceCwd = workspaceCwd,
+            conversationId = conversationId,
         )
     }
 
@@ -469,6 +471,7 @@ class GenerationLoop(
             conversationLorebookIds = conversationLorebookIds,
             workspaceCwd = workspaceCwd,
             processingStatus = processingStatus,
+            conversationId = conversationId,
         )
 
         var messages: List<UIMessage> = messages

@@ -100,6 +100,10 @@ val appModule = module {
     }
 
     single {
+        TodoStorage(get())
+    }
+
+    single {
         ChatToolFactory(
             json = get(),
             memoryRepository = get(),
@@ -110,6 +114,7 @@ val appModule = module {
             workspaceRepository = get(),
             settingsStore = get(),
             subAgentEngine = get(),
+            todoStorage = get(),
         )
     }
 
@@ -129,7 +134,8 @@ val appModule = module {
             mcpManager = get(),
             filesManager = get(),
             workspaceRepository = get(),
-            folderRepository = get()
+            folderRepository = get(),
+            todoStorage = get()
         )
     }
 
