@@ -52,6 +52,19 @@ class LocalTools(
             tools.add(calendarQueryTool)
             tools.add(calendarCreateTool)
         }
+        if (options.contains(LocalToolOption.Battery)) {
+            tools.add(batteryTool(context))
+        }
+        if (options.contains(LocalToolOption.AudioInfo)) {
+            tools.add(audioInfoTool(context))
+        }
+        if (options.contains(LocalToolOption.Sensors)) {
+            tools.add(listSensorsTool(context))
+            tools.add(readSensorTool(context))
+        }
+        if (options.contains(LocalToolOption.StorageInfo)) {
+            tools.add(storageTool(context))
+        }
         return tools
     }
 }

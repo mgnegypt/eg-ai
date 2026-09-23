@@ -32,4 +32,20 @@ sealed class LocalToolOption {
     @Serializable
     @SerialName("calendar")
     data object Calendar : LocalToolOption()
+
+    @Serializable
+    @SerialName("battery")
+    data object Battery : LocalToolOption()
+
+    @Serializable
+    @SerialName("audio_info")
+    data object AudioInfo : LocalToolOption()
+
+    @Serializable
+    @SerialName("sensors")
+    data object Sensors : LocalToolOption()
+
+    @Serializable
+    @SerialName("storage_info")
+    data object StorageInfo : LocalToolOption()
 }
