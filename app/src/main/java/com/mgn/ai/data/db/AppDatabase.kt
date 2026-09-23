@@ -20,6 +20,12 @@ import com.mgn.ai.data.db.entity.FolderEntity
 import com.mgn.ai.data.db.entity.GenMediaEntity
 import com.mgn.ai.data.db.entity.ManagedFileEntity
 import com.mgn.ai.data.db.entity.MemoryEntity
+import com.mgn.ai.knowledge.data.dao.KnowledgeBaseDao
+import com.mgn.ai.knowledge.data.dao.KnowledgeChunkDao
+import com.mgn.ai.knowledge.data.dao.KnowledgeDocumentDao
+import com.mgn.ai.knowledge.data.entity.KnowledgeBaseEntity
+import com.mgn.ai.knowledge.data.entity.KnowledgeChunkEntity
+import com.mgn.ai.knowledge.data.entity.KnowledgeDocumentEntity
 import com.mgn.ai.data.db.entity.MessageNodeEntity
 import com.mgn.ai.data.db.entity.WorkspaceEntity
 import com.mgn.ai.data.db.migrations.Migration_16_17
@@ -37,8 +43,11 @@ import com.mgn.ai.utils.JsonInstant
         FavoriteEntity::class,
         WorkspaceEntity::class,
         FolderEntity::class,
+        KnowledgeBaseEntity::class,
+        KnowledgeDocumentEntity::class,
+        KnowledgeChunkEntity::class,
     ],
-    version = 26,
+    version = 27,
     autoMigrations = [
         AutoMigration(from = 1, to = 2),
         AutoMigration(from = 2, to = 3),
@@ -78,6 +87,12 @@ abstract class AppDatabase : RoomDatabase() {
     abstract fun workspaceDao(): WorkspaceDAO
 
     abstract fun folderDao(): FolderDAO
+
+    abstract fun knowledgeBaseDao(): KnowledgeBaseDao
+
+    abstract fun knowledgeDocumentDao(): KnowledgeDocumentDao
+
+    abstract fun knowledgeChunkDao(): KnowledgeChunkDao
 }
 
 object TokenUsageConverter {
