@@ -1524,4 +1524,5 @@ mDNS 주소: .local 호스트네임을 사용하며, IP를 몰라도 같은 네�
   <string name="storage_toast_cache_cleared">캐시를 지웠습니다</string>
   <string name="storage_toast_history_cleared">히스토리 파일을 지웠습니다</string>
   <string name="storage_files_open_failed">파일을 열지 못했습니다: %1$s</string>
+  <string name="done">완료</string>
 </resources>

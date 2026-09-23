@@ -1522,4 +1522,5 @@ GitHub: https://github.com/mgnegypt/eg-ai</string>
   <string name="storage_toast_cache_cleared">Cache cleared</string>
   <string name="storage_toast_history_cleared">History files cleared</string>
   <string name="storage_files_open_failed">Failed to open file: %1$s</string>
+  <string name="done">Done</string>
 </resources>

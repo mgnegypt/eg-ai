@@ -1524,4 +1524,5 @@ mDNS 地址：使用 .local 主机名，同一网络中的其他设备可通过�
   <string name="storage_toast_cache_cleared">缓存已清除</string>
   <string name="storage_toast_history_cleared">历史文件已清除</string>
   <string name="storage_files_open_failed">打开文件失败：%1$s</string>
+  <string name="done">完成</string>
 </resources>

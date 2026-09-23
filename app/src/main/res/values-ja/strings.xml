@@ -1524,4 +1524,5 @@ mDNSアドレス: .localホスト名を使用し、IPを知らなくても同じ
   <string name="storage_toast_cache_cleared">キャッシュをクリアしました</string>
   <string name="storage_toast_history_cleared">履歴ファイルをクリアしました</string>
   <string name="storage_files_open_failed">ファイルを開けませんでした: %1$s</string>
+  <string name="done">完了</string>
 </resources>
