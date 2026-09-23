@@ -89,6 +89,8 @@ import com.mgn.ai.utils.base64Decode
 import com.mgn.ai.utils.navigateToChatPage
 import org.koin.androidx.compose.koinViewModel
 import com.mgn.ai.data.ai.tools.TodoStorage
+import com.mgn.ai.data.ai.tools.fingerprint
+import com.mgn.ai.ui.components.ai.PromptOptimizeSheet
 import org.koin.compose.koinInject
 import org.koin.core.parameter.parametersOf
 import kotlin.time.Duration.Companion.milliseconds

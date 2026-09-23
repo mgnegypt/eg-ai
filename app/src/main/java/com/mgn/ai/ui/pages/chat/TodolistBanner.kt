@@ -40,8 +40,9 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.StrokeCap
-import androidx.compose.ui.text.TextDecoration
+import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.text.style.TextOverflow
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import com.mgn.ai.R
 import com.mgn.ai.data.ai.tools.TodoItem
@@ -64,7 +65,7 @@ import me.rerere.hugeicons.stroke.Tick01
  * Adapted from Inonvation/rikkahub (AGPL-3.0, same license).
  */
 @Composable
-private fun TodolistBanner(
+internal fun TodolistBanner(
     todolist: TodoList,
     onDismiss: () -> Unit,
     stateKey: String? = null,
