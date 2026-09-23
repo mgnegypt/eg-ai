@@ -48,12 +48,25 @@ notices are preserved; no merged code is claimed as solely written by MGN AI.
 - Prompt optimizer: prompts/scenes/tones/depths, per-scene settings,
   `ChatService.optimizePrompt`, `PromptOptimizeVM`/sheet, input-bar entry,
   model-page settings group.
+- RAG knowledge: `:knowledge` module, knowledge tables (`Migration_26_27`),
+  `KnowledgeSearchTool` (keyword mode), reminder transformer, picker +
+  assistant binding. Deferred: embedding/rerank config, FTS index, CRUD UI,
+  study tutors, TrustedFolders, incremental sync, Shizuku management.
 
-### topabomb/rikkahub_mcp and ExTV/rikkahub-agent
-- https://github.com/topabomb/rikkahub_mcp and https://github.com/ExTV/rikkahub-agent
-  — AGPL-3.0
-- Analyzed for the feature matrix; integration of selected subsystems
-  (MCP runtime hardening, device-tool/agent subset) is queued, not yet merged.
+### topabomb/rikkahub_mcp
+- https://github.com/topabomb/rikkahub_mcp — AGPL-3.0
+- Analyzed for the feature matrix; MCP runtime hardening not yet merged
+  (base MCP stack is newer; queued).
+
+### ExTV/rikkahub-agent
+- https://github.com/ExTV/rikkahub-agent — AGPL-3.0
+- Merged: permission-free device tools (`get_battery_status`,
+  `get_storage_info`, `get_audio_info`, sensor list/read), keyless DuckDuckGo
+  search engine with circuit breaker + egress guard + extractor.
+- Deferred with reasons: cost guards (need Assistant budget-cap fields +
+  settings UI), WifiInfo/location tools (need runtime permission UX),
+  workflows/cron/Telegram/local-LLM/subsystems needing new permissions,
+  services or native modules.
 
 ## Other third-party software
 
