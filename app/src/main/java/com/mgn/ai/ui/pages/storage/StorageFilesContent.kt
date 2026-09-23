@@ -269,7 +269,6 @@ private fun AssistantFilesCard(
     onRequestDelete: () -> Unit,
 ) {
     val context = LocalContext.current
-    val openFailedTemplate = stringResource(R.string.storage_files_open_failed)
     val hasSelection = selectedCount > 0
     val isReady = filesState is UiState.Success && totalCount > 0
     Card(
@@ -389,6 +388,7 @@ private fun AssistantFileRow(
     onLongClick: () -> Unit,
 ) {
     val context = LocalContext.current
+    val openFailedTemplate = stringResource(R.string.storage_files_open_failed)
     val interactionSource = remember { MutableInteractionSource() }
     val isPressed by interactionSource.collectIsPressedAsState()
     val scale by animateFloatAsState(
