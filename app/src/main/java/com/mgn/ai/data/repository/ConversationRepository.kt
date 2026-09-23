@@ -308,7 +308,7 @@ class ConversationRepository(
         messageFtsManager.indexConversation(conversation)
     }
 
-    suspend fun deleteConversation(conversation: Conversation) {
+    suspend fun deleteConversation(conversation: Conversation, deleteFiles: Boolean = true) {
         // 获取完整的 Conversation（包含 messageNodes）以正确清理文件
         val fullConversation = if (conversation.messageNodes.isEmpty()) {
             getConversationById(conversation.id) ?: conversation
@@ -322,7 +322,9 @@ class ConversationRepository(
                 conversationToConversationEntity(conversation)
             )
         }
-        filesManager.deleteChatFiles(fullConversation.files)
+        if (deleteFiles) {
+            filesManager.deleteChatFiles(fullConversation.files)
+        }
     }
 
     suspend fun searchMessages(

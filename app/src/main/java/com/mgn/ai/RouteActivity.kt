@@ -115,6 +115,8 @@ import com.mgn.ai.ui.pages.setting.SettingThemePage
 import com.mgn.ai.ui.pages.setting.SettingDonatePage
 import com.mgn.ai.ui.pages.setting.SettingFilesPage
 import com.mgn.ai.ui.pages.setting.SettingPermissionsPage
+import com.mgn.ai.ui.pages.storage.StorageCategoryPage
+import com.mgn.ai.ui.pages.storage.StorageManagerPage
 import com.mgn.ai.ui.pages.setting.SettingMcpPage
 import com.mgn.ai.ui.pages.setting.SettingModelPage
 import com.mgn.ai.ui.pages.setting.SettingPage
@@ -477,6 +479,14 @@ class RouteActivity : ComponentActivity() {
                                 SettingPermissionsPage()
                             }
 
+                            entry<Screen.StorageManager> {
+                                StorageManagerPage()
+                            }
+
+                            entry<Screen.StorageCategory> { key ->
+                                StorageCategoryPage(category = key.category)
+                            }
+
                             entry<Screen.SettingFiles> {
                                 SettingFilesPage()
                             }
@@ -700,6 +710,12 @@ sealed interface Screen : NavKey {
 
     @Serializable
     data object SettingPermissions : Screen
+
+    @Serializable
+    data object StorageManager : Screen
+
+    @Serializable
+    data class StorageCategory(val category: String) : Screen
 
     @Serializable
     data object SettingFiles : Screen

@@ -54,6 +54,7 @@ import com.mgn.ai.data.ai.TranslationHandler
 import com.mgn.ai.data.ai.mcp.McpManager
 import com.mgn.ai.data.ai.tools.ChatToolFactory
 import com.mgn.ai.data.ai.tools.InvalidMcpServerNamesException
+import com.mgn.ai.data.repository.ConversationDeletionCoordinator
 import com.mgn.ai.data.ai.tools.shouldUseExternalWebSearch
 import com.mgn.ai.data.ai.transformers.Base64ImageToLocalFileTransformer
 import com.mgn.ai.data.ai.transformers.DocumentAsPromptTransformer
@@ -168,7 +169,20 @@ class ChatService(
     private val filesManager: FilesManager,
     private val workspaceRepository: WorkspaceRepository,
     private val folderRepository: FolderRepository,
-) {
+) : ConversationDeletionCoordinator {
+    override suspend fun deleteConversationById(conversationId: Uuid, deleteFiles: Boolean) {
+        removeConversationReference(conversationId)
+        val conversation = conversationRepo.getConversationById(conversationId) ?: return
+        conversationRepo.deleteConversation(conversation, deleteFiles = deleteFiles)
+    }
+
+    override suspend fun deleteConversationsOfAssistant(assistantId: Uuid, deleteFiles: Boolean) {
+        conversationRepo.getConversationsOfAssistant(assistantId).first().forEach { conversation ->
+            removeConversationReference(conversation.id)
+            conversationRepo.deleteConversation(conversation, deleteFiles = deleteFiles)
+        }
+    }
+
     // workspace 系统提示注入 (依赖 workspaceRepository, 故在类内构造)
     private val workspaceReminderTransformer = WorkspaceReminderTransformer(workspaceRepository)
 

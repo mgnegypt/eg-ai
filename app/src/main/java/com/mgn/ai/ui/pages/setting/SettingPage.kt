@@ -287,6 +287,12 @@ fun SettingPage(vm: SettingVM = koinViewModel()) {
                         headlineContent = { Text(stringResource(R.string.setting_page_data_backup)) },
                     )
                     item(
+                        onClick = { navController.navigate(Screen.StorageManager) },
+                        leadingContent = { Icon(HugeIcons.Database02, null) },
+                        supportingContent = { Text(stringResource(R.string.storage_manager_overview)) },
+                        headlineContent = { Text(stringResource(R.string.storage_manager_title)) },
+                    )
+                    item(
                         onClick = { navController.navigate(Screen.SettingFiles) },
                         leadingContent = { Icon(HugeIcons.ImageUpload, null) },
                         supportingContent = {

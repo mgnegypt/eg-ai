@@ -8,6 +8,8 @@ import com.mgn.ai.ui.pages.chat.ChatVM
 import com.mgn.ai.ui.pages.debug.DebugVM
 import com.mgn.ai.ui.pages.favorite.FavoriteVM
 import com.mgn.ai.ui.pages.search.SearchVM
+import com.mgn.ai.ui.pages.storage.StorageCategoryVM
+import com.mgn.ai.ui.pages.storage.StorageManagerVM
 import com.mgn.ai.ui.pages.history.HistoryVM
 import com.mgn.ai.ui.pages.stats.StatsVM
 import com.mgn.ai.ui.pages.imggen.ImgGenVM
@@ -77,4 +79,12 @@ val viewModelModule = module {
     viewModelOf(::FavoriteVM)
     viewModelOf(::SearchVM)
     viewModelOf(::StatsVM)
+    viewModelOf(::StorageManagerVM)
+    viewModel<StorageCategoryVM> {
+        StorageCategoryVM(
+            categoryKey = it.get(),
+            settingsStore = get(),
+            storageRepo = get(),
+        )
+    }
 }

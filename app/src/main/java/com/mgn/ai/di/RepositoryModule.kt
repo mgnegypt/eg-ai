@@ -10,6 +10,7 @@ import com.mgn.ai.data.repository.FolderRepository
 import com.mgn.ai.data.repository.FilesRepository
 import com.mgn.ai.data.repository.GenMediaRepository
 import com.mgn.ai.data.repository.MemoryRepository
+import com.mgn.ai.data.repository.StorageManagerRepository
 import com.mgn.ai.data.repository.WorkspaceRepository
 import com.mgn.ai.workspace.ProotShellRunner
 import com.mgn.ai.workspace.RootfsInstaller
@@ -41,6 +42,18 @@ val repositoryModule = module {
 
     single {
         FavoriteRepository(get())
+    }
+
+    single {
+        StorageManagerRepository(
+            context = get(),
+            settingsStore = get(),
+            conversationDAO = get(),
+            conversationRepository = get(),
+            conversationDeletionCoordinator = get(),
+            messageNodeDAO = get(),
+            genMediaDAO = get(),
+        )
     }
 
     single {

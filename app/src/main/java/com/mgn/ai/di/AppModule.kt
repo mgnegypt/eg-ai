@@ -12,6 +12,7 @@ import com.mgn.ai.data.ai.subagent.SubAgentEngine
 import com.mgn.ai.data.ai.subagent.SubAgentRunRegistry
 import com.mgn.ai.data.donation.DonationRepository
 import com.mgn.ai.data.event.AppEventBus
+import com.mgn.ai.data.repository.ConversationDeletionCoordinator
 import com.mgn.ai.service.ChatNotificationManager
 import com.mgn.ai.service.ChatService
 import com.mgn.ai.ui.pages.extensions.workspace.WorkspaceTerminalSessionManager
@@ -131,6 +132,8 @@ val appModule = module {
             folderRepository = get()
         )
     }
+
+    single<ConversationDeletionCoordinator> { get<ChatService>() }
 
     single {
         WebServerManager(
