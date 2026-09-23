@@ -1,8 +1,5 @@
 package com.mgn.ai.knowledge.retrieval
 
-import com.mgn.ai.ai.provider.Provider
-import com.mgn.ai.ai.provider.ProviderSetting
-import com.mgn.ai.ai.provider.RerankingGenerationParams
 import kotlinx.coroutines.async
 import kotlinx.coroutines.coroutineScope
 import com.mgn.ai.knowledge.data.entity.KnowledgeChunkEntity
@@ -38,38 +35,15 @@ data class RetrievalResult(
     val matchCount: Int = 0,        // 关键词在该 chunk 内出现次数（仅 KEYWORD 来源有意义）
 )
 
-class Reranker(
-    private val provider: Provider<ProviderSetting.OpenAI>,
-    private val providerSetting: ProviderSetting.OpenAI,
-    private val model: com.mgn.ai.ai.provider.Model,
-) {
+/**
+ * Rerank hook. The base ai module has no rerank provider API, so this is a
+ * pass-through stub: results keep their retrieval order. The pipeline treats
+ * a null reranker identically; wire a real implementation here if provider
+ * rerank support is ever added.
+ */
+class Reranker {
     suspend fun rerank(query: String, candidates: List<RetrievalResult>, topN: Int): List<RetrievalResult> {
-        if (candidates.isEmpty()) return emptyList()
-        try {
-            val result = provider.rerank(
-                providerSetting = providerSetting,
-                params = RerankingGenerationParams(
-                    model = model,
-                    query = query,
-                    documents = candidates.map { it.chunk.content },
-                    topN = topN,
-                )
-            )
-            val scored = result.results.associateBy { it.index }
-            return candidates.mapIndexed { index, r ->
-                val rerankScore = scored[index]?.relevanceScore
-                if (rerankScore != null) {
-                    r.copy(
-                        score = rerankScore,
-                        normalizedScore = rerankScore,
-                        scoreSource = ScoreSource.RERANK,
-                    )
-                } else r
-            }.sortedByDescending { it.normalizedScore }
-        } catch (e: Exception) {
-            // rerank 失败：保留原有结果与分数，不让检索整体失败
-            return candidates
-        }
+        return candidates.take(topN.coerceAtLeast(0))
     }
 }
 
