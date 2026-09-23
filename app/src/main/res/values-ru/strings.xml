@@ -1555,4 +1555,11 @@ GitHub: https://github.com/mgnegypt/eg-ai</string>
   <string name="group_chat_mention_members_desc">Упомянуть место</string>
   <string name="group_chat_mention_files_desc">Упомянуть файл рабочего пространства</string>
   <string name="assistant_page_no_system_prompt">Нет системного промпта</string>
+  <string name="chat_message_tool_todo_title">План задач</string>
+  <string name="chat_message_tool_todo_all_done">Всё готово</string>
+  <string name="chat_message_tool_todo_done_label">Готово</string>
+  <string name="chat_message_tool_todo_pending_count">%1$d ожидают</string>
+  <string name="chat_message_tool_todo_expand">Развернуть</string>
+  <string name="chat_message_tool_todo_collapse">Свернуть</string>
+  <string name="chat_message_tool_todo_close">Закрыть</string>
 </resources>

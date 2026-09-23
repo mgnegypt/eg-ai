@@ -1553,4 +1553,11 @@ GitHub: https://github.com/mgnegypt/eg-ai</string>
   <string name="group_chat_mention_members_desc">الإشارة إلى مقعد</string>
   <string name="group_chat_mention_files_desc">الإشارة إلى ملف في مساحة العمل</string>
   <string name="assistant_page_no_system_prompt">لا يوجد موجه نظام</string>
+  <string name="chat_message_tool_todo_title">خطة المهام</string>
+  <string name="chat_message_tool_todo_all_done">اكتمل الكل</string>
+  <string name="chat_message_tool_todo_done_label">تم</string>
+  <string name="chat_message_tool_todo_pending_count">%1$d معلّقة</string>
+  <string name="chat_message_tool_todo_expand">توسيع</string>
+  <string name="chat_message_tool_todo_collapse">طي</string>
+  <string name="chat_message_tool_todo_close">إغلاق</string>
 </resources>

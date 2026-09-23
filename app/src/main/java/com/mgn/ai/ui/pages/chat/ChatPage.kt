@@ -5,6 +5,7 @@ import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyListState
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.material3.AlertDialog
@@ -87,6 +88,7 @@ import com.mgn.ai.ui.hooks.useEditState
 import com.mgn.ai.utils.base64Decode
 import com.mgn.ai.utils.navigateToChatPage
 import org.koin.androidx.compose.koinViewModel
+import com.mgn.ai.data.ai.tools.TodoStorage
 import org.koin.compose.koinInject
 import org.koin.core.parameter.parametersOf
 import kotlin.time.Duration.Companion.milliseconds
@@ -100,6 +102,7 @@ fun ChatPage(id: Uuid, text: String?, files: List<Uri>, nodeId: Uuid? = null) {
         }
     )
     val filesManager: FilesManager = koinInject()
+    val todoStorage: TodoStorage = koinInject()
     val navController = LocalNavController.current
     val scope = rememberCoroutineScope()
 
@@ -447,6 +450,26 @@ private fun ChatPageContent(
                     },
                     onMoreClick = {
                         showFilesSheet = true
+                    },
+                    aboveInputContent = {
+                        val todolist by remember(conversation.id) {
+                            todoStorage.loadAsFlow(conversation.id.toString())
+                        }.collectAsStateWithLifecycle(initialValue = null)
+                        if (todolist != null && todolist!!.items.isNotEmpty()) {
+                            TodolistBanner(
+                                todolist = todolist!!,
+                                onDismiss = {
+                                    todoStorage.saveDismissedFingerprint(
+                                        conversation.id.toString(),
+                                        todolist!!.fingerprint()
+                                    )
+                                },
+                                stateKey = "todo:${conversation.id}",
+                                modifier = Modifier
+                                    .fillMaxWidth()
+                                    .padding(horizontal = 4.dp, vertical = 4.dp),
+                            )
+                        }
                     },
                 )
             },

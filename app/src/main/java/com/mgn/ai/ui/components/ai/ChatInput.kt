@@ -150,6 +150,7 @@ fun ChatInput(
     onStartVoiceMode: (() -> Unit)? = null,
     voiceState: VoiceSessionState = VoiceSessionState(),
     onStopVoiceMode: () -> Unit = {},
+    aboveInputContent: @Composable () -> Unit = {},
 ) {
     val toaster = LocalToaster.current
     val assistant = settings.getCurrentAssistant()
@@ -235,6 +236,8 @@ fun ChatInput(
                 onFinishEdit = onFinishEditQueuedMessage,
                 onResume = onResumeMessageQueue,
             )
+            // Status slot (todo cards etc.): below queued bubbles, above the input.
+            aboveInputContent()
             Surface(
                 modifier = Modifier
                     .fillMaxWidth()

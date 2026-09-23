@@ -1555,4 +1555,11 @@ mDNS 주소: .local 호스트네임을 사용하며, IP를 몰라도 같은 네�
   <string name="group_chat_mention_members_desc">시트 멘션</string>
   <string name="group_chat_mention_files_desc">작업 공간 파일 멘션</string>
   <string name="assistant_page_no_system_prompt">시스템 프롬프트 없음</string>
+  <string name="chat_message_tool_todo_title">작업 계획</string>
+  <string name="chat_message_tool_todo_all_done">모두 완료</string>
+  <string name="chat_message_tool_todo_done_label">완료</string>
+  <string name="chat_message_tool_todo_pending_count">%1$d개 대기 중</string>
+  <string name="chat_message_tool_todo_expand">펼치기</string>
+  <string name="chat_message_tool_todo_collapse">접기</string>
+  <string name="chat_message_tool_todo_close">닫기</string>
 </resources>

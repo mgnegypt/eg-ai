@@ -1553,4 +1553,11 @@ GitHub: https://github.com/mgnegypt/eg-ai</string>
   <string name="group_chat_mention_members_desc">提及一個席位</string>
   <string name="group_chat_mention_files_desc">提及一個工作區檔案</string>
   <string name="assistant_page_no_system_prompt">無系統提示詞</string>
+  <string name="chat_message_tool_todo_title">任務計畫</string>
+  <string name="chat_message_tool_todo_all_done">全部完成</string>
+  <string name="chat_message_tool_todo_done_label">已完成</string>
+  <string name="chat_message_tool_todo_pending_count">%1$d 項待處理</string>
+  <string name="chat_message_tool_todo_expand">展開</string>
+  <string name="chat_message_tool_todo_collapse">摺疊</string>
+  <string name="chat_message_tool_todo_close">關閉</string>
 </resources>

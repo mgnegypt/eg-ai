@@ -1553,4 +1553,11 @@ GitHub: https://github.com/mgnegypt/eg-ai</string>
   <string name="group_chat_mention_members_desc">Mention a seat</string>
   <string name="group_chat_mention_files_desc">Mention a workspace file</string>
   <string name="assistant_page_no_system_prompt">No system prompt</string>
+  <string name="chat_message_tool_todo_title">Task Plan</string>
+  <string name="chat_message_tool_todo_all_done">All done</string>
+  <string name="chat_message_tool_todo_done_label">Done</string>
+  <string name="chat_message_tool_todo_pending_count">%1$d pending</string>
+  <string name="chat_message_tool_todo_expand">Expand</string>
+  <string name="chat_message_tool_todo_collapse">Collapse</string>
+  <string name="chat_message_tool_todo_close">Close</string>
 </resources>

@@ -1555,4 +1555,11 @@ mDNS 地址：使用 .local 主机名，同一网络中的其他设备可通过�
   <string name="group_chat_mention_members_desc">提及一个席位</string>
   <string name="group_chat_mention_files_desc">提及一个工作区文件</string>
   <string name="assistant_page_no_system_prompt">无系统提示词</string>
+  <string name="chat_message_tool_todo_title">任务计划</string>
+  <string name="chat_message_tool_todo_all_done">全部完成</string>
+  <string name="chat_message_tool_todo_done_label">已完成</string>
+  <string name="chat_message_tool_todo_pending_count">%1$d 项待处理</string>
+  <string name="chat_message_tool_todo_expand">展开</string>
+  <string name="chat_message_tool_todo_collapse">折叠</string>
+  <string name="chat_message_tool_todo_close">关闭</string>
 </resources>
