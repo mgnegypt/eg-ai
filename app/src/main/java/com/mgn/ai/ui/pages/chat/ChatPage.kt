@@ -103,6 +103,8 @@ fun ChatPage(id: Uuid, text: String?, files: List<Uri>, nodeId: Uuid? = null) {
     )
     val filesManager: FilesManager = koinInject()
     val todoStorage: TodoStorage = koinInject()
+    val promptOptimizeVM: PromptOptimizeVM = koinViewModel()
+    var showPromptOptimizeSheet by remember { mutableStateOf(false) }
     val navController = LocalNavController.current
     val scope = rememberCoroutineScope()
 
@@ -451,6 +453,9 @@ private fun ChatPageContent(
                     onMoreClick = {
                         showFilesSheet = true
                     },
+                    onOptimizePromptClick = {
+                        showPromptOptimizeSheet = true
+                    },
                     aboveInputContent = {
                         val todolist by remember(conversation.id) {
                             todoStorage.loadAsFlow(conversation.id.toString())
@@ -569,6 +574,18 @@ private fun ChatPageContent(
                 state = runtimeInspection,
                 onDismissRequest = { showRuntimeInspector = false },
                 onRefresh = vm::refreshRuntimeInspection,
+            )
+        }
+        if (showPromptOptimizeSheet) {
+            PromptOptimizeSheet(
+                state = inputState,
+                vm = promptOptimizeVM,
+                settings = setting,
+                onConfirmReplace = { result ->
+                    inputState.setMessageText(result)
+                    showPromptOptimizeSheet = false
+                },
+                onDismiss = { showPromptOptimizeSheet = false },
             )
         }
     }

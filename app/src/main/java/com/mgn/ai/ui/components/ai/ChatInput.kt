@@ -91,6 +91,7 @@ import com.mgn.ai.ai.ui.UIMessagePart
 import com.mgn.ai.asr.ASRStatus
 import me.rerere.hugeicons.HugeIcons
 import me.rerere.hugeicons.stroke.Add01
+import me.rerere.hugeicons.stroke.AiEditing
 import me.rerere.hugeicons.stroke.ArrowUp02
 import me.rerere.hugeicons.stroke.Cancel01
 import me.rerere.hugeicons.stroke.Fullscreen
@@ -151,6 +152,7 @@ fun ChatInput(
     voiceState: VoiceSessionState = VoiceSessionState(),
     onStopVoiceMode: () -> Unit = {},
     aboveInputContent: @Composable () -> Unit = {},
+    onOptimizePromptClick: (() -> Unit)? = null,
 ) {
     val toaster = LocalToaster.current
     val assistant = settings.getCurrentAssistant()
@@ -360,6 +362,17 @@ fun ChatInput(
                                 imageVector = HugeIcons.Add01,
                                 contentDescription = stringResource(R.string.more_options)
                             )
+                        }
+
+                        if (onOptimizePromptClick != null) {
+                            ActionIconButton(
+                                onClick = onOptimizePromptClick
+                            ) {
+                                Icon(
+                                    imageVector = HugeIcons.AiEditing,
+                                    contentDescription = stringResource(R.string.prompt_optimize)
+                                )
+                            }
                         }
 
                         if (!voiceState.isActive && (asrState.isAvailable || asrState.isRecording)) {

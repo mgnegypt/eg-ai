@@ -4,24 +4,39 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.imePadding
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.pager.HorizontalPager
 import androidx.compose.foundation.pager.rememberPagerState
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.BottomAppBar
+import androidx.compose.material3.FilterChip
 import androidx.compose.material3.Icon
 import androidx.compose.material3.LargeFlexibleTopAppBar
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.ModalBottomSheet
 import androidx.compose.material3.NavigationBarItem
+import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Scaffold
+import androidx.compose.material3.SheetValue
 import androidx.compose.material3.Switch
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextButton
 import androidx.compose.material3.TopAppBarDefaults
+import androidx.compose.material3.rememberBottomSheetState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.input.nestedscroll.nestedScroll
@@ -39,7 +54,17 @@ import me.rerere.hugeicons.stroke.AiBrain01
 import me.rerere.hugeicons.stroke.AiEditing
 import me.rerere.hugeicons.stroke.ArrowRight01
 import com.mgn.ai.R
+import com.mgn.ai.data.ai.prompts.PromptOptimizeDepth
+import com.mgn.ai.data.ai.prompts.PromptOptimizeScene
+import com.mgn.ai.data.ai.prompts.defaultPromptOptimizePromptForScene
 import com.mgn.ai.data.datastore.Settings
+import com.mgn.ai.data.datastore.findModelById
+import com.mgn.ai.data.datastore.promptOptimizeDepthForScene
+import com.mgn.ai.data.datastore.promptOptimizePromptForScene
+import com.mgn.ai.data.datastore.promptOptimizeThinkingBudgetForScene
+import com.mgn.ai.data.datastore.withPromptOptimizeDepth
+import com.mgn.ai.data.datastore.withPromptOptimizePrompt
+import com.mgn.ai.data.datastore.withPromptOptimizeThinkingBudget
 import com.mgn.ai.ui.components.ai.ModelListSheet
 import com.mgn.ai.ui.components.ai.ReasoningButton
 import com.mgn.ai.ui.components.ai.rememberModelListState
@@ -148,6 +173,9 @@ private fun ModelSettingsPage(settings: Settings, vm: SettingVM, contentPadding:
                 settings = settings,
                 vm = vm,
             )
+        }
+        item {
+            PromptOptimizeGroup(settings = settings, vm = vm)
         }
         item {
             ModelSettingItem(
@@ -271,4 +299,167 @@ private fun ModelSettingItem(
     }
 
     ModelListSheet(state = state, onSelect = onSelect)
+}
+
+@Composable
+private fun PromptOptimizeGroup(settings: Settings, vm: SettingVM) {
+    val modelState = rememberModelListState(settings.promptOptimizeModelId, settings.providers, ModelType.CHAT)
+    var showSheet by remember { mutableStateOf(false) }
+    var selectedScene by remember { mutableStateOf(PromptOptimizeScene.GENERAL) }
+
+    CardGroup(
+        title = { Text(stringResource(R.string.setting_model_page_group_prompt_optimize)) },
+    ) {
+        item(
+            onClick = { modelState.open() },
+            headlineContent = { Text(stringResource(R.string.setting_model_page_prompt_optimize_model)) },
+            supportingContent = { Text(stringResource(R.string.setting_model_page_prompt_optimize_model_desc)) },
+            trailingContent = {
+                Text(
+                    text = settings.providers.findModelById(settings.promptOptimizeModelId)?.displayName
+                        ?: stringResource(R.string.model_list_select_model),
+                    style = MaterialTheme.typography.bodyMedium,
+                    color = MaterialTheme.colorScheme.onSurfaceVariant,
+                )
+            },
+        )
+        if (settings.promptOptimizeModelId != null) {
+            item(
+                onClick = { vm.updateSettings(settings.copy(promptOptimizeModelId = null)) },
+                headlineContent = {
+                    Text(stringResource(R.string.setting_model_page_clear_model))
+                },
+            )
+        }
+        item(
+            onClick = { showSheet = true },
+            headlineContent = { Text(stringResource(R.string.setting_model_page_prompt_optimize)) },
+            supportingContent = { Text(stringResource(R.string.setting_model_page_prompt_optimize_desc)) },
+        )
+    }
+
+    ModelListSheet(
+        state = modelState,
+        onSelect = { vm.updateSettings(settings.copy(promptOptimizeModelId = it.id)) },
+    )
+
+    if (showSheet) {
+        ModalBottomSheet(
+            onDismissRequest = { showSheet = false },
+            sheetState = rememberBottomSheetState(
+                initialValue = SheetValue.Hidden,
+                enabledValues = setOf(SheetValue.Hidden, SheetValue.Expanded),
+            ),
+        ) {
+            Column(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(horizontal = 16.dp)
+                    .padding(bottom = 16.dp)
+                    .imePadding()
+                    .verticalScroll(rememberScrollState()),
+                verticalArrangement = Arrangement.spacedBy(12.dp),
+            ) {
+                Row(
+                    modifier = Modifier.fillMaxWidth(),
+                    horizontalArrangement = Arrangement.spacedBy(8.dp),
+                    verticalAlignment = Alignment.CenterVertically,
+                ) {
+                    PromptOptimizeScene.entries.forEach { scene ->
+                        FilterChip(
+                            selected = selectedScene == scene,
+                            onClick = { selectedScene = scene },
+                            label = { Text(promptOptimizeSceneName(scene)) },
+                        )
+                    }
+                }
+
+                Row(
+                    modifier = Modifier.fillMaxWidth(),
+                    horizontalArrangement = Arrangement.spacedBy(8.dp),
+                    verticalAlignment = Alignment.CenterVertically,
+                ) {
+                    Text(
+                        text = stringResource(R.string.prompt_optimize_depth),
+                        style = MaterialTheme.typography.labelLarge,
+                    )
+                    Spacer(Modifier.width(4.dp))
+                    PromptOptimizeDepth.entries.forEach { depth ->
+                        FilterChip(
+                            selected = settings.promptOptimizeDepthForScene(selectedScene) == depth,
+                            onClick = {
+                                vm.updateSettings(settings.withPromptOptimizeDepth(selectedScene, depth))
+                            },
+                            label = { Text(stringResource(depthLabelRes(depth))) },
+                        )
+                    }
+                }
+
+                Row(
+                    modifier = Modifier.fillMaxWidth(),
+                    horizontalArrangement = Arrangement.SpaceBetween,
+                    verticalAlignment = Alignment.CenterVertically,
+                ) {
+                    Text(
+                        text = stringResource(R.string.setting_model_page_prompt_optimize) + " · " + promptOptimizeSceneName(selectedScene),
+                        style = MaterialTheme.typography.titleMedium,
+                    )
+                    ReasoningButton(
+                        reasoningLevel = ReasoningLevel.fromBudgetTokens(
+                            settings.promptOptimizeThinkingBudgetForScene(selectedScene)
+                        ),
+                        onUpdateReasoningLevel = { level ->
+                            vm.updateSettings(settings.withPromptOptimizeThinkingBudget(selectedScene, level.budgetTokens))
+                        },
+                        onlyIcon = true,
+                    )
+                }
+
+                Text(
+                    text = stringResource(R.string.setting_model_page_prompt_optimize_desc),
+                    style = MaterialTheme.typography.bodySmall,
+                    color = MaterialTheme.colorScheme.onSurfaceVariant,
+                )
+
+                OutlinedTextField(
+                    value = settings.promptOptimizePromptForScene(selectedScene)
+                        ?: defaultPromptOptimizePromptForScene(selectedScene),
+                    onValueChange = { vm.updateSettings(settings.withPromptOptimizePrompt(selectedScene, it)) },
+                    modifier = Modifier.fillMaxWidth(),
+                    maxLines = 15,
+                )
+
+                TextButton(
+                    onClick = {
+                        if (selectedScene == PromptOptimizeScene.GENERAL) {
+                            vm.updateSettings(
+                                settings.withPromptOptimizePrompt(selectedScene, "").copy(promptOptimizePrompt = null)
+                            )
+                        } else {
+                            vm.updateSettings(settings.withPromptOptimizePrompt(selectedScene, ""))
+                        }
+                    }
+                ) {
+                    Text(stringResource(R.string.setting_model_page_reset_to_default))
+                }
+            }
+        }
+    }
+}
+
+@Composable
+private fun promptOptimizeSceneName(scene: PromptOptimizeScene): String = stringResource(
+    when (scene) {
+        PromptOptimizeScene.GENERAL -> R.string.prompt_optimize_scene_general
+        PromptOptimizeScene.WRITING -> R.string.prompt_optimize_scene_writing
+        PromptOptimizeScene.QUESTION -> R.string.prompt_optimize_scene_question
+        PromptOptimizeScene.PROGRAMMING -> R.string.prompt_optimize_scene_programming
+    }
+)
+
+@Composable
+private fun depthLabelRes(depth: PromptOptimizeDepth): Int = when (depth) {
+    PromptOptimizeDepth.CONCISE -> R.string.prompt_optimize_depth_concise
+    PromptOptimizeDepth.MEDIUM -> R.string.prompt_optimize_depth_medium
+    PromptOptimizeDepth.DETAILED -> R.string.prompt_optimize_depth_detailed
 }

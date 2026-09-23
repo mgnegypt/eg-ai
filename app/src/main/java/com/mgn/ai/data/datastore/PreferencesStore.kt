@@ -30,6 +30,8 @@ import com.mgn.ai.data.ai.mcp.McpServerConfig
 import com.mgn.ai.data.ai.prompts.DEFAULT_COMPRESS_PROMPT
 import com.mgn.ai.data.ai.prompts.DEFAULT_OCR_PROMPT
 import com.mgn.ai.data.ai.prompts.DEFAULT_SUGGESTION_PROMPT
+import com.mgn.ai.data.ai.prompts.PromptOptimizeDepth
+import com.mgn.ai.data.ai.prompts.PromptOptimizeScene
 import com.mgn.ai.data.ai.prompts.DEFAULT_TITLE_PROMPT
 import com.mgn.ai.data.ai.prompts.DEFAULT_TRANSLATION_PROMPT
 import com.mgn.ai.data.ai.prompts.LEARNING_MODE_PROMPT
@@ -101,6 +103,12 @@ class SettingsStore(
         val TITLE_PROMPT = stringPreferencesKey("title_prompt")
         val TRANSLATION_PROMPT = stringPreferencesKey("translation_prompt")
         val TRANSLATE_THINKING_BUDGET = intPreferencesKey("translate_thinking_budget")
+        val PROMPT_OPTIMIZE_MODEL = stringPreferencesKey("prompt_optimize_model")
+        val PROMPT_OPTIMIZE_PROMPT = stringPreferencesKey("prompt_optimize_prompt")
+        val PROMPT_OPTIMIZE_PROMPTS_BY_SCENE = stringPreferencesKey("prompt_optimize_prompts_by_scene")
+        val PROMPT_OPTIMIZE_THINKING_BUDGET = intPreferencesKey("prompt_optimize_thinking_budget")
+        val PROMPT_OPTIMIZE_THINKING_BUDGET_BY_SCENE = stringPreferencesKey("prompt_optimize_thinking_budget_by_scene")
+        val PROMPT_OPTIMIZE_DEPTH_BY_SCENE = stringPreferencesKey("prompt_optimize_depth_by_scene")
         val SUGGESTION_PROMPT = stringPreferencesKey("suggestion_prompt")
         val OCR_MODEL = stringPreferencesKey("ocr_model")
         val OCR_PROMPT = stringPreferencesKey("ocr_prompt")
@@ -194,6 +202,16 @@ class SettingsStore(
                 preferences[TITLE_PROMPT] = settings.titlePrompt
                 preferences[TRANSLATION_PROMPT] = settings.translatePrompt
                 preferences[TRANSLATE_THINKING_BUDGET] = settings.translateThinkingBudget
+                settings.promptOptimizeModelId?.let {
+                    preferences[PROMPT_OPTIMIZE_MODEL] = it.toString()
+                } ?: preferences.remove(PROMPT_OPTIMIZE_MODEL)
+                settings.promptOptimizePrompt?.let {
+                    preferences[PROMPT_OPTIMIZE_PROMPT] = it
+                } ?: preferences.remove(PROMPT_OPTIMIZE_PROMPT)
+                preferences[PROMPT_OPTIMIZE_PROMPTS_BY_SCENE] = JsonInstant.encodeToString(settings.promptOptimizePromptsByScene)
+                preferences[PROMPT_OPTIMIZE_THINKING_BUDGET] = settings.promptOptimizeThinkingBudget
+                preferences[PROMPT_OPTIMIZE_THINKING_BUDGET_BY_SCENE] = JsonInstant.encodeToString(settings.promptOptimizeThinkingBudgetByScene)
+                preferences[PROMPT_OPTIMIZE_DEPTH_BY_SCENE] = JsonInstant.encodeToString(settings.promptOptimizeDepthByScene)
                 preferences[SUGGESTION_PROMPT] = settings.suggestionPrompt
                 preferences[OCR_MODEL] = settings.ocrModelId.toString()
                 preferences[OCR_PROMPT] = settings.ocrPrompt
@@ -266,6 +284,18 @@ class SettingsStore(
                 titlePrompt = preferences[TITLE_PROMPT] ?: DEFAULT_TITLE_PROMPT,
                 translatePrompt = preferences[TRANSLATION_PROMPT] ?: DEFAULT_TRANSLATION_PROMPT,
                 translateThinkingBudget = preferences[TRANSLATE_THINKING_BUDGET] ?: 0,
+                promptOptimizeModelId = preferences[PROMPT_OPTIMIZE_MODEL]?.let { runCatching { Uuid.parse(it) }.getOrNull() },
+                promptOptimizePrompt = preferences[PROMPT_OPTIMIZE_PROMPT],
+                promptOptimizePromptsByScene = preferences[PROMPT_OPTIMIZE_PROMPTS_BY_SCENE]?.let {
+                    runCatching { JsonInstant.decodeFromString<Map<String, String>>(it) }.getOrNull()
+                } ?: emptyMap(),
+                promptOptimizeThinkingBudget = preferences[PROMPT_OPTIMIZE_THINKING_BUDGET] ?: 0,
+                promptOptimizeThinkingBudgetByScene = preferences[PROMPT_OPTIMIZE_THINKING_BUDGET_BY_SCENE]?.let {
+                    runCatching { JsonInstant.decodeFromString<Map<String, Int>>(it) }.getOrNull()
+                } ?: emptyMap(),
+                promptOptimizeDepthByScene = preferences[PROMPT_OPTIMIZE_DEPTH_BY_SCENE]?.let {
+                    runCatching { JsonInstant.decodeFromString<Map<String, String>>(it) }.getOrNull()
+                } ?: emptyMap(),
                 suggestionPrompt = preferences[SUGGESTION_PROMPT] ?: DEFAULT_SUGGESTION_PROMPT,
                 ocrModelId = preferences[OCR_MODEL]?.let { Uuid.parse(it) } ?: Uuid.random(),
                 ocrPrompt = preferences[OCR_PROMPT] ?: DEFAULT_OCR_PROMPT,
@@ -563,6 +593,12 @@ data class Settings(
     val translateModeId: Uuid = Uuid.random(),
     val translatePrompt: String = DEFAULT_TRANSLATION_PROMPT,
     val translateThinkingBudget: Int = 0,
+    val promptOptimizeModelId: Uuid? = null,
+    val promptOptimizePrompt: String? = null,
+    val promptOptimizePromptsByScene: Map<String, String> = emptyMap(),
+    val promptOptimizeThinkingBudget: Int = 0,
+    val promptOptimizeThinkingBudgetByScene: Map<String, Int> = emptyMap(),
+    val promptOptimizeDepthByScene: Map<String, String> = emptyMap(),
     val enableSuggestion: Boolean = true,
     val suggestionPrompt: String = DEFAULT_SUGGESTION_PROMPT,
     val ocrModelId: Uuid = Uuid.random(),
@@ -826,3 +862,49 @@ val DEFAULT_MODE_INJECTIONS = listOf(
         name = "Learning Mode"
     )
 )
+
+/** 读取某场景的自定义优化模板：优先取按场景存储的，fallback 到旧版全局模板 */
+internal fun Settings.promptOptimizePromptForScene(scene: PromptOptimizeScene): String? =
+    promptOptimizePromptsByScene[scene.code] ?: promptOptimizePrompt
+
+/** 某场景的思考预算（token）：按场景存储优先，fallback 到旧版全局字段 */
+internal fun Settings.promptOptimizeThinkingBudgetForScene(scene: PromptOptimizeScene): Int =
+    promptOptimizeThinkingBudgetByScene[scene.code] ?: promptOptimizeThinkingBudget
+
+/** 设置某场景的思考预算；仅当与全局值相同时清空该场景条目（回退全局）。
+ *  注意：AUTO=-1 / OFF=0 是合法取值，不能因为 budget<=0 就清空，否则选 AUTO/OFF 会被静默回退成全局值。 */
+internal fun Settings.withPromptOptimizeThinkingBudget(scene: PromptOptimizeScene, budget: Int): Settings {
+    val newMap = if (budget == promptOptimizeThinkingBudget) {
+        promptOptimizeThinkingBudgetByScene - scene.code
+    } else {
+        promptOptimizeThinkingBudgetByScene + (scene.code to budget)
+    }
+    return copy(promptOptimizeThinkingBudgetByScene = newMap)
+}
+
+/** 保存某场景的自定义优化模板；空串/空白表示清除该场景自定义，回退内置提示词 */
+internal fun Settings.withPromptOptimizePrompt(scene: PromptOptimizeScene, prompt: String): Settings {
+    val trimmed = prompt.trim()
+    val newMap = if (trimmed.isBlank()) {
+        promptOptimizePromptsByScene - scene.code
+    } else {
+        promptOptimizePromptsByScene + (scene.code to trimmed)
+    }
+    return copy(promptOptimizePromptsByScene = newMap)
+}
+
+/** 某场景的优化深度（精简/中等/详细）；未按场景配置时回退默认【精简】 */
+internal fun Settings.promptOptimizeDepthForScene(scene: PromptOptimizeScene): PromptOptimizeDepth {
+    val code = promptOptimizeDepthByScene[scene.code]
+    return PromptOptimizeDepth.entries.firstOrNull { it.code == code } ?: PromptOptimizeDepth.CONCISE
+}
+
+/** 保存某场景的优化深度；当所选深度恰为默认【精简】时清空该场景条目（回退默认） */
+internal fun Settings.withPromptOptimizeDepth(scene: PromptOptimizeScene, depth: PromptOptimizeDepth): Settings {
+    val newMap = if (depth == PromptOptimizeDepth.CONCISE) {
+        promptOptimizeDepthByScene - scene.code
+    } else {
+        promptOptimizeDepthByScene + (scene.code to depth.code)
+    }
+    return copy(promptOptimizeDepthByScene = newMap)
+}

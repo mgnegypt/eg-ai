@@ -34,6 +34,12 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import com.mgn.ai.ai.core.MessageRole
 import com.mgn.ai.ai.core.ReasoningLevel
+import com.mgn.ai.data.ai.prompts.PromptOptimizeDepth
+import com.mgn.ai.data.ai.prompts.PromptOptimizeScene
+import com.mgn.ai.data.ai.prompts.PromptOptimizeTone
+import com.mgn.ai.data.ai.prompts.promptOptimizeSystemPrompt
+import com.mgn.ai.data.datastore.promptOptimizePromptForScene
+import com.mgn.ai.data.datastore.promptOptimizeThinkingBudgetForScene
 import com.mgn.ai.ai.provider.Model
 import com.mgn.ai.ai.provider.ModelAbility
 import com.mgn.ai.ai.provider.ProviderManager
@@ -1286,6 +1292,56 @@ class ChatService(
             )
         )
         saveConversation(conversationId, updatedConversation)
+    }
+
+    // ---- 提示词优化 ----
+
+    /**
+     * Optimizes a piece of input text with a scene x tone x depth system
+     * prompt. Falls back to the global chat model when no optimize model is
+     * configured. Failures stay out of the conversation error bubble; the
+     * caller surfaces them in the dialog layer.
+     *
+     * Adapted from Inonvation/rikkahub (AGPL-3.0, same license).
+     */
+    suspend fun optimizePrompt(
+        text: String,
+        scene: PromptOptimizeScene,
+        tone: PromptOptimizeTone,
+        depth: PromptOptimizeDepth,
+        extraNote: String = "",
+    ): Result<String> = runCatching {
+        val settings = settingsStore.settingsFlow.first()
+        val model = settings.findModelById(settings.promptOptimizeModelId, fallback = settings.chatModelId)
+            ?: throw IllegalStateException("No model available for prompt optimization")
+        val provider = model.findProvider(settings.providers)
+            ?: throw IllegalStateException("No provider available for prompt optimization")
+        val providerHandler = providerManager.getProviderByType(provider)
+        val systemPrompt = settings.promptOptimizePromptForScene(scene)?.let { custom ->
+            custom.applyPlaceholders(
+                "scene" to scene.toDisplayText(),
+                "tone" to tone.toDisplayText(),
+                "depth" to depth.toDisplayText(),
+                "content" to text,
+                "level" to tone.toDisplayText(),
+            )
+        } ?: promptOptimizeSystemPrompt(scene, tone, depth)
+        val userContent = if (extraNote.isNotBlank()) "$text\n\n[Extra requirements]\n$extraNote" else text
+        val result = providerHandler.generateText(
+            providerSetting = provider,
+            messages = listOf(
+                UIMessage.system(systemPrompt),
+                UIMessage.user(userContent),
+            ),
+            params = backgroundTextGenerationParams(
+                model,
+                Uuid.random(),
+                settings.promptOptimizeThinkingBudgetForScene(scene).let {
+                    ReasoningLevel.fromBudgetTokens(it)
+                },
+            ),
+        )
+        result.message.toText().trim().orEmpty()
     }
 
     // ---- 生成标题 ----
