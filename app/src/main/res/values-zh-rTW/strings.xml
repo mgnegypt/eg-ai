@@ -1586,4 +1586,6 @@ GitHub: https://github.com/mgnegypt/eg-ai</string>
   <string name="prompt_optimize_reselect">返回</string>
   <string name="prompt_optimize_apply">套用</string>
   <string name="prompt_optimize_failed">優化失敗</string>
+  <string name="assistant_detail_knowledge">知識庫</string>
+  <string name="assistant_detail_knowledge_desc">附加可搜尋的文件集合</string>
 </resources>

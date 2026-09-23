@@ -1588,4 +1588,6 @@ mDNS 주소: .local 호스트네임을 사용하며, IP를 몰라도 같은 네�
   <string name="prompt_optimize_reselect">뒤로</string>
   <string name="prompt_optimize_apply">적용</string>
   <string name="prompt_optimize_failed">최적화 실패</string>
+  <string name="assistant_detail_knowledge">지식 베이스</string>
+  <string name="assistant_detail_knowledge_desc">검색 가능한 문서 모음 연결</string>
 </resources>

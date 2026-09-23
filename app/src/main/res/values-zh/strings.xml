@@ -1588,4 +1588,6 @@ mDNS 地址：使用 .local 主机名，同一网络中的其他设备可通过�
   <string name="prompt_optimize_reselect">返回</string>
   <string name="prompt_optimize_apply">应用</string>
   <string name="prompt_optimize_failed">优化失败</string>
+  <string name="assistant_detail_knowledge">知识库</string>
+  <string name="assistant_detail_knowledge_desc">附加可搜索的文档集合</string>
 </resources>

@@ -1588,4 +1588,6 @@ mDNSアドレス: .localホスト名を使用し、IPを知らなくても同じ
   <string name="prompt_optimize_reselect">戻る</string>
   <string name="prompt_optimize_apply">適用</string>
   <string name="prompt_optimize_failed">最適化に失敗しました</string>
+  <string name="assistant_detail_knowledge">ナレッジベース</string>
+  <string name="assistant_detail_knowledge_desc">検索可能なドキュメント集を添付</string>
 </resources>

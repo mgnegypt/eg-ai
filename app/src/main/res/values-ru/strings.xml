@@ -1588,4 +1588,6 @@ GitHub: https://github.com/mgnegypt/eg-ai</string>
   <string name="prompt_optimize_reselect">Назад</string>
   <string name="prompt_optimize_apply">Применить</string>
   <string name="prompt_optimize_failed">Ошибка оптимизации</string>
+  <string name="assistant_detail_knowledge">Базы знаний</string>
+  <string name="assistant_detail_knowledge_desc">Подключить коллекции документов для поиска</string>
 </resources>

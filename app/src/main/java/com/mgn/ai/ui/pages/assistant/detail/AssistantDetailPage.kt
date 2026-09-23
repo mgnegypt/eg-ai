@@ -2,6 +2,7 @@ package com.mgn.ai.ui.pages.assistant.detail
 
 import me.rerere.hugeicons.HugeIcons
 import me.rerere.hugeicons.stroke.BookOpen01
+import me.rerere.hugeicons.stroke.Bookshelf01
 import me.rerere.hugeicons.stroke.Brain02
 import me.rerere.hugeicons.stroke.ArrowRight01
 import me.rerere.hugeicons.stroke.Code
@@ -35,6 +36,7 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.mgn.ai.R
 import com.mgn.ai.Screen
 import com.mgn.ai.data.model.Assistant
+import com.mgn.ai.ui.components.ai.KnowledgeBasePickerButton
 import com.mgn.ai.ui.components.nav.BackButton
 import com.mgn.ai.ui.components.ui.CardGroup
 import com.mgn.ai.ui.components.ui.UIAvatar
@@ -141,6 +143,19 @@ fun AssistantDetailPage(id: String) {
                         supportingContent = { Text(stringResource(R.string.assistant_detail_local_tools_desc)) },
                         headlineContent = { Text(stringResource(R.string.assistant_page_tab_local_tools)) },
                         trailingContent = { Icon(HugeIcons.ArrowRight01, null) },
+                    )
+                    item(
+                        leadingContent = { Icon(HugeIcons.Bookshelf01, null) },
+                        supportingContent = { Text(stringResource(R.string.assistant_detail_knowledge_desc)) },
+                        headlineContent = { Text(stringResource(R.string.assistant_detail_knowledge)) },
+                        trailingContent = {
+                            KnowledgeBasePickerButton(
+                                selectedIds = assistant.knowledgeBaseIds,
+                                onSelectionChange = { ids ->
+                                    vm.update(assistant.copy(knowledgeBaseIds = ids))
+                                },
+                            )
+                        },
                     )
                 }
             }
