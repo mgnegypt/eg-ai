@@ -123,8 +123,6 @@ class ChatToolFactory(
                 )
             )
         }
-        }
-        }
         val workflowTools = buildList {
             add(
                 com.mgn.ai.workflow.tools.workflowCreateTool(

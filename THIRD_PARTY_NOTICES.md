@@ -63,6 +63,10 @@ notices are preserved; no merged code is claimed as solely written by MGN AI.
 - Merged: permission-free device tools (`get_battery_status`,
   `get_storage_info`, `get_audio_info`, sensor list/read), keyless DuckDuckGo
   search engine with circuit breaker + egress guard + extractor.
+- Merged: automation workflows (engine, triggers incl. geofence/boot/cron,
+  conditions, tools, screens, `agent_runs` ledger, boot receiver, location
+  permission) and scheduled cron jobs (scheduler, worker, job tools, screens,
+  boot reschedule, `RECEIVE_BOOT_COMPLETED` permission).
 - Deferred with reasons: cost guards (need Assistant budget-cap fields +
   settings UI), WifiInfo/location tools (need runtime permission UX),
   workflows/cron/Telegram/local-LLM/subsystems needing new permissions,
