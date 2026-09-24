@@ -204,6 +204,7 @@ dependencies {
     implementation(libs.firebase.crashlytics)
     implementation(libs.firebase.config)
     implementation(libs.play.services.location)
+    implementation(libs.cron.utils)
 
     // DataStore
     implementation(libs.androidx.datastore.preferences)
