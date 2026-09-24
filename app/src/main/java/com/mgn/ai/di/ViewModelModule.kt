@@ -10,6 +10,7 @@ import com.mgn.ai.ui.pages.favorite.FavoriteVM
 import com.mgn.ai.ui.pages.assistant.groupchat.GroupChatTemplateDetailVM
 import com.mgn.ai.ui.pages.chat.PromptOptimizeVM
 import com.mgn.ai.ui.pages.search.SearchVM
+import com.mgn.ai.ui.pages.knowledge.KnowledgeBasesVM
 import com.mgn.ai.ui.pages.setting.scheduledjobs.ScheduledJobsViewModel
 import com.mgn.ai.workflow.ui.WorkflowsViewModel
 import com.mgn.ai.ui.pages.storage.StorageCategoryVM
@@ -87,7 +88,7 @@ val viewModelModule = module {
     viewModelOf(::StorageManagerVM)
     viewModelOf(::WorkflowsViewModel)
     viewModelOf(::ScheduledJobsViewModel)
-    viewModelOf(::com.mgn.ai.ui.pages.knowledge.KnowledgeBasesVM)
+    viewModelOf(::KnowledgeBasesVM)
     viewModel<com.mgn.ai.ui.pages.knowledge.KnowledgeBaseDetailVM> { params ->
         val baseId: String = params.get()
         com.mgn.ai.ui.pages.knowledge.KnowledgeBaseDetailVM(

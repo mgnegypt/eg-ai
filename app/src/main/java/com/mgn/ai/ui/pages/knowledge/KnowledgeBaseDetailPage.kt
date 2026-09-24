@@ -657,7 +657,7 @@ fun KnowledgeBaseDetailPage(baseId: String) {
                                     Tag {
                                         // KEYWORD 结果显示真实匹配次数，不伪装成"相关度 %"
                                         Text(
-                                            if (result.scoreSource == me.rerere.knowledge.retrieval.ScoreSource.KEYWORD)
+                                            if (result.scoreSource == com.mgn.ai.knowledge.retrieval.ScoreSource.KEYWORD)
                                                 "匹配 ${result.matchCount} 处"
                                             else
                                                 "相关度: ${"%.0f".format(result.normalizedScore * 100)}%"
@@ -666,7 +666,7 @@ fun KnowledgeBaseDetailPage(baseId: String) {
                                 }
 
                                 // KEYWORD 结果进度条用匹配次数反映强度，其余用归一化相似度
-                                val scoreForBar = if (result.scoreSource == me.rerere.knowledge.retrieval.ScoreSource.KEYWORD) {
+                                val scoreForBar = if (result.scoreSource == com.mgn.ai.knowledge.retrieval.ScoreSource.KEYWORD) {
                                     result.matchCount.toFloat() / 5f
                                 } else {
                                     result.normalizedScore

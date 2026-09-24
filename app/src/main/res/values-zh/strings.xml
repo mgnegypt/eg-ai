@@ -1683,4 +1683,6 @@ mDNS 地址：使用 .local 主机名，同一网络中的其他设备可通过�
   <string name="skills_page_delete">删除</string>
   <string name="skills_page_deselect_all">取消全选</string>
   <string name="skills_page_select_all">全选</string>
+  <string name="extensions_page_knowledge_bases">知识库</string>
+  <string name="extensions_page_knowledge_bases_desc">供助手检索的文档集合</string>
 </resources>

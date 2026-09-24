@@ -1683,4 +1683,6 @@ mDNSアドレス: .localホスト名を使用し、IPを知らなくても同じ
   <string name="skills_page_delete">削除</string>
   <string name="skills_page_deselect_all">選択をすべて解除</string>
   <string name="skills_page_select_all">すべて選択</string>
+  <string name="extensions_page_knowledge_bases">ナレッジベース</string>
+  <string name="extensions_page_knowledge_bases_desc">アシスタント用の検索可能なドキュメント集</string>
 </resources>

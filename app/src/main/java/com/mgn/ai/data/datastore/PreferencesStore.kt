@@ -98,6 +98,8 @@ class SettingsStore(
         val FAST_MODEL = stringPreferencesKey("fast_model")
         val FAST_MODEL_REASONING_LEVEL = stringPreferencesKey("fast_model_reasoning_level")
         val TRANSLATE_MODEL = stringPreferencesKey("translate_model")
+        val EMBEDDING_MODEL = stringPreferencesKey("embedding_model")
+        val RERANK_MODEL = stringPreferencesKey("rerank_model")
         val ENABLE_SUGGESTION = booleanPreferencesKey("enable_suggestion")
         val IMAGE_GENERATION_MODEL = stringPreferencesKey("image_generation_model")
         val TITLE_PROMPT = stringPreferencesKey("title_prompt")
@@ -197,6 +199,12 @@ class SettingsStore(
                 preferences[FAST_MODEL] = settings.fastModelId.toString()
                 preferences[FAST_MODEL_REASONING_LEVEL] = settings.fastModelReasoningLevel.name
                 preferences[TRANSLATE_MODEL] = settings.translateModeId.toString()
+                settings.embeddingModelId?.let {
+                    preferences[EMBEDDING_MODEL] = it.toString()
+                } ?: preferences.remove(EMBEDDING_MODEL)
+                settings.rerankModelId?.let {
+                    preferences[RERANK_MODEL] = it.toString()
+                } ?: preferences.remove(RERANK_MODEL)
                 preferences[ENABLE_SUGGESTION] = settings.enableSuggestion
                 preferences[IMAGE_GENERATION_MODEL] = settings.imageGenerationModelId.toString()
                 preferences[TITLE_PROMPT] = settings.titlePrompt
@@ -284,6 +292,8 @@ class SettingsStore(
                 titlePrompt = preferences[TITLE_PROMPT] ?: DEFAULT_TITLE_PROMPT,
                 translatePrompt = preferences[TRANSLATION_PROMPT] ?: DEFAULT_TRANSLATION_PROMPT,
                 translateThinkingBudget = preferences[TRANSLATE_THINKING_BUDGET] ?: 0,
+                embeddingModelId = preferences[EMBEDDING_MODEL]?.let { runCatching { Uuid.parse(it) }.getOrNull() },
+                rerankModelId = preferences[RERANK_MODEL]?.let { runCatching { Uuid.parse(it) }.getOrNull() },
                 promptOptimizeModelId = preferences[PROMPT_OPTIMIZE_MODEL]?.let { runCatching { Uuid.parse(it) }.getOrNull() },
                 promptOptimizePrompt = preferences[PROMPT_OPTIMIZE_PROMPT],
                 promptOptimizePromptsByScene = preferences[PROMPT_OPTIMIZE_PROMPTS_BY_SCENE]?.let {
@@ -591,6 +601,8 @@ data class Settings(
     val imageGenerationModelId: Uuid = Uuid.random(),
     val titlePrompt: String = DEFAULT_TITLE_PROMPT,
     val translateModeId: Uuid = Uuid.random(),
+    val embeddingModelId: Uuid? = null,
+    val rerankModelId: Uuid? = null,
     val translatePrompt: String = DEFAULT_TRANSLATION_PROMPT,
     val translateThinkingBudget: Int = 0,
     val promptOptimizeModelId: Uuid? = null,

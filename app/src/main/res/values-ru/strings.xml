@@ -1683,4 +1683,6 @@ GitHub: https://github.com/mgnegypt/eg-ai</string>
   <string name="skills_page_delete">Удалить</string>
   <string name="skills_page_deselect_all">Снять выбор со всех</string>
   <string name="skills_page_select_all">Выбрать все</string>
+  <string name="extensions_page_knowledge_bases">Базы знаний</string>
+  <string name="extensions_page_knowledge_bases_desc">Коллекции документов для поиска ассистентами</string>
 </resources>

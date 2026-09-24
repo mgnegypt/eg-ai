@@ -341,7 +341,7 @@ fun KnowledgeBasesPage() {
 
 @Composable
 private fun KnowledgeBaseCard(
-    base: me.rerere.knowledge.data.entity.KnowledgeBaseWithDocumentCount,
+    base: com.mgn.ai.knowledge.data.entity.KnowledgeBaseWithDocumentCount,
     onClick: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
@@ -388,7 +388,7 @@ private fun KnowledgeBaseCard(
 
 @Composable
 private fun KnowledgeBaseSelectableCard(
-    base: me.rerere.knowledge.data.entity.KnowledgeBaseWithDocumentCount,
+    base: com.mgn.ai.knowledge.data.entity.KnowledgeBaseWithDocumentCount,
     selected: Boolean,
     onSelectChange: () -> Unit,
     onClick: () -> Unit,

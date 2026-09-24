@@ -257,7 +257,7 @@ class KnowledgeBaseDetailVM(
                         if (rerankModel != null && rerankProviderSetting is ProviderSetting.OpenAI) {
                             @Suppress("UNCHECKED_CAST")
                             val rerankProvider = providerManager.getProviderByType(rerankProviderSetting) as Provider<ProviderSetting.OpenAI>
-                            Reranker(rerankProvider, rerankProviderSetting, rerankModel)
+                            Reranker()
                         } else null
                     } else null
                 } else null

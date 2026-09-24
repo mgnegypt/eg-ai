@@ -1681,4 +1681,6 @@ GitHub: https://github.com/mgnegypt/eg-ai</string>
   <string name="skills_page_delete">Delete</string>
   <string name="skills_page_deselect_all">Deselect all</string>
   <string name="skills_page_select_all">Select all</string>
+  <string name="extensions_page_knowledge_bases">Knowledge bases</string>
+  <string name="extensions_page_knowledge_bases_desc">Searchable document collections for assistants</string>
 </resources>
