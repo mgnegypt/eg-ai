@@ -145,6 +145,35 @@ val appModule = module {
     single<ConversationDeletionCoordinator> { get<ChatService>() }
 
     single {
+        com.mgn.ai.workflow.repository.WorkflowRepository(
+            workflowDao = get<com.mgn.ai.data.db.AppDatabase>().workflowDao(),
+            workflowRunDao = get<com.mgn.ai.data.db.AppDatabase>().workflowRunDao(),
+        )
+    }
+    single { com.mgn.ai.workflow.condition.ContextProvider(get()) }
+    single { com.mgn.ai.workflow.execution.WorkflowActionRunner() }
+    single {
+        com.mgn.ai.workflow.execution.WorkflowEngine(
+            repository = get(),
+            settingsStore = get(),
+            contextProvider = get(),
+            actionRunner = get(),
+        ).also { engine ->
+            get<com.mgn.ai.workflow.repository.WorkflowRepository>().bindEngine(engine)
+        }
+    }
+    single {
+        com.mgn.ai.workflow.trigger.TriggerRegistry(
+            context = get(),
+            appScope = get(),
+            workflowRepository = get(),
+        )
+    }
+    single {
+        com.mgn.ai.data.agentrun.AgentRunBootRecovery(get())
+    }
+
+    single {
         WebServerManager(
             context = get(),
             appScope = get(),

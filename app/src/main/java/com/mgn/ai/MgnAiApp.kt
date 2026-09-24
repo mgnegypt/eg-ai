@@ -109,6 +109,10 @@ class MgnAiApp : Application() {
         // Increment launch count
         incrementLaunchCount()
 
+        // Agent-run ledger boot recovery + workflow trigger registry
+        runAgentRunBootRecovery()
+        startWorkflowRegistry()
+
         // Composer.setDiagnosticStackTraceMode(ComposeStackTraceMode.Auto)
     }
 
@@ -121,6 +125,29 @@ class MgnAiApp : Application() {
                 Log.i(TAG, "incrementLaunchCount: ${store.settingsFlowRaw.first().launchCount}")
             }.onFailure {
                 Log.e(TAG, "incrementLaunchCount failed", it)
+            }
+        }
+    }
+
+    private fun runAgentRunBootRecovery() {
+        get<AppScope>().launch(Dispatchers.IO) {
+            runCatching {
+                get<com.mgn.ai.data.agentrun.AgentRunBootRecovery>().runRecovery()
+            }.onFailure {
+                Log.w(TAG, "runAgentRunBootRecovery failed", it)
+            }
+        }
+    }
+
+    private fun startWorkflowRegistry() {
+        get<AppScope>().launch(Dispatchers.IO) {
+            runCatching {
+                val registry = get<com.mgn.ai.workflow.trigger.TriggerRegistry>()
+                val engine = get<com.mgn.ai.workflow.execution.WorkflowEngine>()
+                registry.setEngineCallback(engine.triggerCallback)
+                registry.start()
+            }.onFailure {
+                Log.e(TAG, "startWorkflowRegistry failed", it)
             }
         }
     }

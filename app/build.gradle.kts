@@ -203,6 +203,7 @@ dependencies {
     implementation(libs.firebase.analytics)
     implementation(libs.firebase.crashlytics)
     implementation(libs.firebase.config)
+    implementation(libs.play.services.location)
 
     // DataStore
     implementation(libs.androidx.datastore.preferences)

@@ -36,6 +36,7 @@ lucide-icons = "1.1.0"
 huge-icons = "1.4"
 image-viewer = "1.1.0-alpha.7"
 google-services = "4.5.0"
+play-services-location = "21.3.0"
 firebase-bom = "34.19.0"
 firebase-crashlytics = "3.0.8"
 jsoup = "1.23.2"
@@ -133,6 +134,7 @@ huge-icons = { group = "com.github.rikkahub", name = "hugeicons-compose", versio
 image-viewer = { group = "com.jvziyaoyao.scale", name = "image-viewer", version.ref = "image-viewer" }
 firebase-bom = { group = "com.google.firebase", name = "firebase-bom", version.ref = "firebase-bom" }
 firebase-analytics = { group = "com.google.firebase", name = "firebase-analytics" }
+play-services-location = { group = "com.google.android.gms", name = "play-services-location", version.ref = "play-services-location" }
 firebase-crashlytics = { group = "com.google.firebase", name = "firebase-crashlytics" }
 firebase-config = { group = "com.google.firebase", name = "firebase-config" }
 jsoup = { group = "org.jsoup", name = "jsoup", version.ref = "jsoup" }
