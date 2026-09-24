@@ -1691,4 +1691,7 @@ GitHub: https://github.com/mgnegypt/eg-ai</string>
   <string name="setting_page_workflows_subtitle_never_run">لم يُشغَّل أبدًا</string>
   <string name="setting_page_workflows_subtitle_ran_success">تم التشغيل %1$s • نجاح</string>
   <string name="setting_page_workflows_subtitle_ran_failed">فشل %1$s</string>
+  <string name="setting_page_workflows_subtitle_when">عند: %1$s</string>
+  <string name="setting_page_workflows_subtitle_ran_skipped">تم التخطي %1$s</string>
+  <string name="setting_provider_page_reranking_model">إعادة الترتيب</string>
 </resources>

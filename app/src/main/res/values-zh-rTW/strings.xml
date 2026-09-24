@@ -1691,4 +1691,7 @@ GitHub: https://github.com/mgnegypt/eg-ai</string>
   <string name="setting_page_workflows_subtitle_never_run">從未執行</string>
   <string name="setting_page_workflows_subtitle_ran_success">執行 %1$s • 成功</string>
   <string name="setting_page_workflows_subtitle_ran_failed">失敗 %1$s</string>
+  <string name="setting_page_workflows_subtitle_when">條件：%1$s</string>
+  <string name="setting_page_workflows_subtitle_ran_skipped">已略過 %1$s</string>
+  <string name="setting_provider_page_reranking_model">重排序</string>
 </resources>

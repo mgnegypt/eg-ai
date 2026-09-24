@@ -1693,4 +1693,7 @@ mDNS 주소: .local 호스트네임을 사용하며, IP를 몰라도 같은 네�
   <string name="setting_page_workflows_subtitle_never_run">실행된 적 없음</string>
   <string name="setting_page_workflows_subtitle_ran_success">실행 %1$s • 성공</string>
   <string name="setting_page_workflows_subtitle_ran_failed">실패 %1$s</string>
+  <string name="setting_page_workflows_subtitle_when">조건: %1$s</string>
+  <string name="setting_page_workflows_subtitle_ran_skipped">건너뜀 %1$s</string>
+  <string name="setting_provider_page_reranking_model">리랭킹</string>
 </resources>

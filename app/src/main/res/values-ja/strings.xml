@@ -1693,4 +1693,7 @@ mDNSアドレス: .localホスト名を使用し、IPを知らなくても同じ
   <string name="setting_page_workflows_subtitle_never_run">未実行</string>
   <string name="setting_page_workflows_subtitle_ran_success">実行 %1$s • 成功</string>
   <string name="setting_page_workflows_subtitle_ran_failed">失敗 %1$s</string>
+  <string name="setting_page_workflows_subtitle_when">条件: %1$s</string>
+  <string name="setting_page_workflows_subtitle_ran_skipped">スキップ %1$s</string>
+  <string name="setting_provider_page_reranking_model">リランキング</string>
 </resources>

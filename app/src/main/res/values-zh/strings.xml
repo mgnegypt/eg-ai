@@ -1693,4 +1693,7 @@ mDNS 地址：使用 .local 主机名，同一网络中的其他设备可通过�
   <string name="setting_page_workflows_subtitle_never_run">从未运行</string>
   <string name="setting_page_workflows_subtitle_ran_success">运行 %1$s • 成功</string>
   <string name="setting_page_workflows_subtitle_ran_failed">失败 %1$s</string>
+  <string name="setting_page_workflows_subtitle_when">条件：%1$s</string>
+  <string name="setting_page_workflows_subtitle_ran_skipped">已跳过 %1$s</string>
+  <string name="setting_provider_page_reranking_model">重排序</string>
 </resources>
