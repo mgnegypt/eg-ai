@@ -141,20 +141,23 @@ fun ScheduledJobDetailScreen(
                         .fillMaxWidth()
                         .padding(horizontal = 16.dp, vertical = 10.dp),
                 ) {
+                    val runNowFired = stringResource(R.string.setting_page_scheduled_jobs_run_now_fired)
+                    val runNowDisabled = stringResource(R.string.setting_page_scheduled_jobs_run_now_disabled)
+                    val runNowNotFound = stringResource(R.string.setting_page_scheduled_jobs_run_now_not_found)
                     androidx.compose.material3.Button(onClick = {
                         scope.launch {
                             val outcome = vm.runNow(current.id)
                             history = vm.history(current.id)
                             job = vm.get(current.id)
-                            val msgRes = when (outcome) {
+                            val message = when (outcome) {
                                 ScheduledJobsViewModel.RunNowOutcome.Fired ->
-                                    R.string.setting_page_scheduled_jobs_run_now_fired
+                                    runNowFired
                                 ScheduledJobsViewModel.RunNowOutcome.Disabled ->
-                                    R.string.setting_page_scheduled_jobs_run_now_disabled
+                                    runNowDisabled
                                 ScheduledJobsViewModel.RunNowOutcome.NotFound ->
-                                    R.string.setting_page_scheduled_jobs_run_now_not_found
+                                    runNowNotFound
                             }
-                            snackbarHostState.showSnackbar(ctx.getString(msgRes))
+                            snackbarHostState.showSnackbar(message)
                         }
                     }) {
                         Text(stringResource(R.string.setting_page_scheduled_jobs_run_now))
