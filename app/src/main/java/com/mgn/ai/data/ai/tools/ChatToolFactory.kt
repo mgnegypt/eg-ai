@@ -47,6 +47,8 @@ class ChatToolFactory(
     private val subAgentEngine: SubAgentEngine,
     private val todoStorage: TodoStorage,
     private val knowledgeManager: KnowledgeManager,
+    private val workflowRepository: com.mgn.ai.workflow.repository.WorkflowRepository,
+    private val workflowEngine: com.mgn.ai.workflow.execution.WorkflowEngine,
 ) {
     suspend fun createTools(
         settings: Settings,
@@ -102,7 +104,6 @@ class ChatToolFactory(
             add(knowledgeTool.create())
             add(knowledgeTool.createListTool())
         }
-
         val mcpTools = mcpManager.getAllAvailableTools()
         val invalidNames = mcpTools
             .map { it.second }
@@ -123,9 +124,30 @@ class ChatToolFactory(
             )
         }
         }
+        }
+        val workflowTools = buildList {
+            add(
+                com.mgn.ai.workflow.tools.workflowCreateTool(
+                    repository = workflowRepository,
+                    knownToolNamesProvider = { assembled.map { it.name } },
+                )
+            )
+            add(com.mgn.ai.workflow.tools.workflowListTool(workflowRepository))
+            add(com.mgn.ai.workflow.tools.workflowGetTool(workflowRepository))
+            add(
+                com.mgn.ai.workflow.tools.workflowUpdateTool(
+                    repository = workflowRepository,
+                    knownToolNamesProvider = { assembled.map { it.name } },
+                )
+            )
+            add(com.mgn.ai.workflow.tools.workflowDeleteTool(workflowRepository))
+            add(com.mgn.ai.workflow.tools.workflowSetEnabledTool(workflowRepository))
+            add(com.mgn.ai.workflow.tools.workflowRunTool(workflowEngine, workflowRepository))
+        }
+        val withWorkflows = assembled + workflowTools
         // Sub-agent gate: no sub-agent model selected = dispatch_subagent is not
         // exposed at all (not even its schema).
-        val subAgentModelId = settings.subAgentModelId ?: return assembled
+        val subAgentModelId = settings.subAgentModelId ?: return withWorkflows
         val subAgentModel = settings.findModelById(subAgentModelId)
         val subAgentProvider = subAgentModel?.findProvider(settings.providers, checkOverwrite = false)
             ?.takeIf { it.enabled }
@@ -134,10 +156,10 @@ class ChatToolFactory(
                 TAG,
                 "createTools: sub-agent model $subAgentModelId not usable, sub-agent disabled"
             )
-            return assembled
+            return withWorkflows
         }
-        val subTools = filterSubAgentTools(assembled)
-        return assembled + buildSubAgentTool(
+        val subTools = filterSubAgentTools(withWorkflows)
+        return withWorkflows + buildSubAgentTool(
             engine = subAgentEngine,
             model = subAgentModel,
             settings = settings,

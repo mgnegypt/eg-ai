@@ -117,6 +117,8 @@ val appModule = module {
             subAgentEngine = get(),
             todoStorage = get(),
             knowledgeManager = get(),
+            workflowRepository = get(),
+            workflowEngine = get(),
         )
     }
 
