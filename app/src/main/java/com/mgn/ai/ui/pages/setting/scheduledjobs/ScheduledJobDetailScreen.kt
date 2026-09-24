@@ -162,14 +162,12 @@ fun ScheduledJobDetailScreen(
                     }) {
                         Text(stringResource(R.string.setting_page_scheduled_jobs_run_now))
                     }
+                    val editPrefillTemplate = stringResource(R.string.setting_page_scheduled_jobs_edit_prefill)
                     TextButton(onClick = {
                         nav.navigate(
                             Screen.Chat(
                                 id = kotlin.uuid.Uuid.random().toString(),
-                                text = ctx.getString(
-                                    R.string.setting_page_scheduled_jobs_edit_prefill,
-                                    current.name,
-                                ).base64Encode(),
+                                text = editPrefillTemplate.format(current.name).base64Encode(),
                             )
                         )
                     }) {
