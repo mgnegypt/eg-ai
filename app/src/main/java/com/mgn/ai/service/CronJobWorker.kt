@@ -21,7 +21,7 @@ import com.mgn.ai.data.agentrun.AgentRunKind
 import com.mgn.ai.data.agentrun.AgentRunRepository
 import com.mgn.ai.data.agentrun.AgentRunStatus
 import com.mgn.ai.data.ai.tools.HeadlessConversations
-import com.mgn.ai.data.ai.tools.LocalTools
+import com.mgn.ai.data.ai.tools.local.LocalTools
 import com.mgn.ai.data.datastore.SettingsStore
 import com.mgn.ai.data.datastore.getAssistantById
 import com.mgn.ai.data.db.entity.ScheduledJobEntity
