@@ -6,6 +6,8 @@ import androidx.room.RoomDatabase
 import androidx.room.TypeConverter
 import androidx.room.TypeConverters
 import com.mgn.ai.ai.core.TokenUsage
+import com.mgn.ai.data.agentrun.AgentRun
+import com.mgn.ai.data.agentrun.AgentRunDao
 import com.mgn.ai.data.db.dao.ConversationDAO
 import com.mgn.ai.data.db.dao.FavoriteDAO
 import com.mgn.ai.data.db.dao.FolderDAO
@@ -26,6 +28,10 @@ import com.mgn.ai.knowledge.data.dao.KnowledgeDocumentDao
 import com.mgn.ai.knowledge.data.entity.KnowledgeBaseEntity
 import com.mgn.ai.knowledge.data.entity.KnowledgeChunkEntity
 import com.mgn.ai.knowledge.data.entity.KnowledgeDocumentEntity
+import com.mgn.ai.workflow.db.WorkflowDao
+import com.mgn.ai.workflow.db.WorkflowEntity
+import com.mgn.ai.workflow.db.WorkflowRunDao
+import com.mgn.ai.workflow.db.WorkflowRunEntity
 import com.mgn.ai.data.db.entity.MessageNodeEntity
 import com.mgn.ai.data.db.entity.WorkspaceEntity
 import com.mgn.ai.data.db.migrations.Migration_16_17
@@ -46,8 +52,11 @@ import com.mgn.ai.utils.JsonInstant
         KnowledgeBaseEntity::class,
         KnowledgeDocumentEntity::class,
         KnowledgeChunkEntity::class,
+        WorkflowEntity::class,
+        WorkflowRunEntity::class,
+        AgentRun::class,
     ],
-    version = 27,
+    version = 28,
     autoMigrations = [
         AutoMigration(from = 1, to = 2),
         AutoMigration(from = 2, to = 3),
@@ -93,6 +102,12 @@ abstract class AppDatabase : RoomDatabase() {
     abstract fun knowledgeDocumentDao(): KnowledgeDocumentDao
 
     abstract fun knowledgeChunkDao(): KnowledgeChunkDao
+
+    abstract fun workflowDao(): WorkflowDao
+
+    abstract fun workflowRunDao(): WorkflowRunDao
+
+    abstract fun agentRunDao(): AgentRunDao
 }
 
 object TokenUsageConverter {

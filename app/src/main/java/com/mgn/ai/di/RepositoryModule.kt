@@ -9,6 +9,7 @@ import com.mgn.ai.data.repository.FavoriteRepository
 import com.mgn.ai.data.repository.FolderRepository
 import com.mgn.ai.data.repository.FilesRepository
 import com.mgn.ai.data.repository.GenMediaRepository
+import com.mgn.ai.data.agentrun.AgentRunRepository
 import com.mgn.ai.data.db.AppDatabase
 import com.mgn.ai.data.knowledge.SimpleKeywordSearcher
 import com.mgn.ai.data.repository.MemoryRepository
@@ -50,6 +51,10 @@ val repositoryModule = module {
 
     single<KeywordSearcher> {
         SimpleKeywordSearcher(get<AppDatabase>().knowledgeChunkDao())
+    }
+
+    single {
+        AgentRunRepository(get<AppDatabase>().agentRunDao())
     }
 
     single {
