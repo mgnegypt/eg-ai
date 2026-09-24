@@ -1686,4 +1686,11 @@ mDNS 地址：使用 .local 主机名，同一网络中的其他设备可通过�
   <string name="extensions_page_knowledge_bases">知识库</string>
   <string name="extensions_page_knowledge_bases_desc">供助手检索的文档集合</string>
   <string name="setting_page_workflows_empty">暂无工作流，请让助手创建一个。</string>
+  <string name="setting_page_workflows_how_it_works_dialog_title">工作流的工作原理</string>
+  <string name="setting_page_workflows_how_it_works_dialog_body">工作流由一个触发器加一列操作组成。触发器负责启动它（WiFi 连接、计划触发、到达某个地点、收到通知）。操作是按顺序运行的工具调用 — 与你在聊天中可以运行的工具相同。\n\n条件决定被触发的工作流是否真正执行（\"仅在日落后\"、\"仅在充电时\"）。所有条件都必须通过。\n\n工作流以无头模式运行 — 助手在创建工作流时已预先授权了工具，因此每次触发都不会再询问你。HARDLINE 过滤器仍会拦截危险的 shell 命令和对系统路径的写入。你可以在工作流的历史记录列表中看到结果。</string>
+  <string name="setting_page_workflows_how_it_works_dialog_dismiss">知道了</string>
+  <string name="setting_page_workflows_how_it_works">工作流的工作原理</string>
+  <string name="setting_page_workflows_subtitle_never_run">从未运行</string>
+  <string name="setting_page_workflows_subtitle_ran_success">运行 %1$s • 成功</string>
+  <string name="setting_page_workflows_subtitle_ran_failed">失败 %1$s</string>
 </resources>

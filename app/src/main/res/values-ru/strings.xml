@@ -1686,4 +1686,11 @@ GitHub: https://github.com/mgnegypt/eg-ai</string>
   <string name="extensions_page_knowledge_bases">Базы знаний</string>
   <string name="extensions_page_knowledge_bases_desc">Коллекции документов для поиска ассистентами</string>
   <string name="setting_page_workflows_empty">Воркфлоу пока нет. Попросите ассистента создать его.</string>
+  <string name="setting_page_workflows_how_it_works_dialog_title">Как работают воркфлоу</string>
+  <string name="setting_page_workflows_how_it_works_dialog_body">Воркфлоу — это триггер плюс список действий. Триггер — это то, что его запускает (подключение к WiFi, срабатывание расписания, прибытие в место, получение уведомления). Действия — это вызовы инструментов, выполняемые по порядку, — те же инструменты, которые можно запускать в чате.\n\nУсловия определяют, сработает ли запущенный воркфлоу на самом деле (\"только после заката\", \"только при зарядке\"). Должны быть выполнены все условия.\n\nВоркфлоу выполняются в фоновом режиме — ассистент заранее разрешил инструменты при создании воркфлоу, поэтому каждый запуск не требует подтверждения. Фильтр HARDLINE всё равно блокирует опасные shell-команды и запись в системные пути. Результат можно увидеть в списке истории воркфлоу.</string>
+  <string name="setting_page_workflows_how_it_works_dialog_dismiss">Понятно</string>
+  <string name="setting_page_workflows_how_it_works">Как работают воркфлоу</string>
+  <string name="setting_page_workflows_subtitle_never_run">Не запускался</string>
+  <string name="setting_page_workflows_subtitle_ran_success">Выполнено %1$s • Успешно</string>
+  <string name="setting_page_workflows_subtitle_ran_failed">Ошибка %1$s</string>
 </resources>

@@ -1684,4 +1684,11 @@ GitHub: https://github.com/mgnegypt/eg-ai</string>
   <string name="extensions_page_knowledge_bases">Knowledge bases</string>
   <string name="extensions_page_knowledge_bases_desc">Searchable document collections for assistants</string>
   <string name="setting_page_workflows_empty">No workflows yet. Ask your assistant to create one.</string>
+  <string name="setting_page_workflows_how_it_works_dialog_title">How workflows work</string>
+  <string name="setting_page_workflows_how_it_works_dialog_body">A workflow is a trigger plus a list of actions. The trigger is what starts it (WiFi connects, a schedule fires, you arrive at a place, a notification arrives). The actions are tool calls run in order — the same tools you can run in chat.\n\nConditions filter when a triggered workflow actually fires (\"only after sunset\", \"only if charging\"). All conditions must pass.\n\nWorkflows run in headless mode — your assistant pre-authorised the tools when it created the workflow, so each fire doesn\'t prompt you. The HARDLINE filter still blocks dangerous shell commands and writes to system paths regardless. You\'ll see the result in the workflow\'s history list.</string>
+  <string name="setting_page_workflows_how_it_works_dialog_dismiss">Got it</string>
+  <string name="setting_page_workflows_how_it_works">How workflows work</string>
+  <string name="setting_page_workflows_subtitle_never_run">Never run</string>
+  <string name="setting_page_workflows_subtitle_ran_success">Ran %1$s • Success</string>
+  <string name="setting_page_workflows_subtitle_ran_failed">Failed %1$s</string>
 </resources>

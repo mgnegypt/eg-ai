@@ -1686,4 +1686,11 @@ mDNS 주소: .local 호스트네임을 사용하며, IP를 몰라도 같은 네�
   <string name="extensions_page_knowledge_bases">지식 베이스</string>
   <string name="extensions_page_knowledge_bases_desc">어시스턴트용 검색 가능한 문서 모음</string>
   <string name="setting_page_workflows_empty">아직 워크플로가 없습니다. 어시스턴트에게 생성을 요청하세요.</string>
+  <string name="setting_page_workflows_how_it_works_dialog_title">워크플로의 동작 방식</string>
+  <string name="setting_page_workflows_how_it_works_dialog_body">워크플로는 트리거 하나와 작업 목록으로 구성됩니다. 트리거는 시작 조건입니다(WiFi 연결, 일정 실행, 장소 도착, 알림 수신). 작업은 순서대로 실행되는 도구 호출입니다 — 채팅에서 실행할 수 있는 것과 같은 도구입니다.\n\n트리거된 워크플로가 실제로 실행될지는 조건으로 걸러집니다(\"일몰 후에만\", \"충전 중에만\"). 모든 조건을 통과해야 합니다.\n\n워크플로는 헤드리스 모드로 실행됩니다 — 생성 시 어시스턴트가 도구를 미리 승인했으므로 실행할 때마다 확인을 요청하지 않습니다. HARDLINE 필터는 위험한 셸 명령과 시스템 경로 쓰기를 계속 차단합니다. 결과는 워크플로 기록 목록에서 확인할 수 있습니다.</string>
+  <string name="setting_page_workflows_how_it_works_dialog_dismiss">알겠습니다</string>
+  <string name="setting_page_workflows_how_it_works">워크플로의 동작 방식</string>
+  <string name="setting_page_workflows_subtitle_never_run">실행된 적 없음</string>
+  <string name="setting_page_workflows_subtitle_ran_success">실행 %1$s • 성공</string>
+  <string name="setting_page_workflows_subtitle_ran_failed">실패 %1$s</string>
 </resources>

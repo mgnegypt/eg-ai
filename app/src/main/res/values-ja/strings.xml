@@ -1686,4 +1686,11 @@ mDNSアドレス: .localホスト名を使用し、IPを知らなくても同じ
   <string name="extensions_page_knowledge_bases">ナレッジベース</string>
   <string name="extensions_page_knowledge_bases_desc">アシスタント用の検索可能なドキュメント集</string>
   <string name="setting_page_workflows_empty">ワークフローはまだありません。アシスタントに作成を依頼してください。</string>
+  <string name="setting_page_workflows_how_it_works_dialog_title">ワークフローの仕組み</string>
+  <string name="setting_page_workflows_how_it_works_dialog_body">ワークフローはトリガーとアクションのリストで構成されます。トリガーは開始のきっかけです（WiFi接続、スケジュールの実行、場所への到着、通知の受信）。アクションは順番に実行されるツール呼び出しです — チャットで実行できるのと同じツールです。\n\nトリガーされたワークフローが実際に実行されるかどうかは条件で絞り込まれます（\"日没後のみ\"、\"充電中のみ\"）。すべての条件を満たす必要があります。\n\nワークフローはヘッドレスモードで実行されます — 作成時にアシスタントがツールを事前承認しているため、実行のたびに確認は求められません。HARDLINEフィルターは危険なシェルコマンドやシステムパスへの書き込みを引き続きブロックします。結果はワークフローの履歴リストで確認できます。</string>
+  <string name="setting_page_workflows_how_it_works_dialog_dismiss">わかりました</string>
+  <string name="setting_page_workflows_how_it_works">ワークフローの仕組み</string>
+  <string name="setting_page_workflows_subtitle_never_run">未実行</string>
+  <string name="setting_page_workflows_subtitle_ran_success">実行 %1$s • 成功</string>
+  <string name="setting_page_workflows_subtitle_ran_failed">失敗 %1$s</string>
 </resources>

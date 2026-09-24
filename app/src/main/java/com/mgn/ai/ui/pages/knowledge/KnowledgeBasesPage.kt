@@ -65,7 +65,6 @@ import com.mgn.ai.ui.components.ui.Tag
 import com.mgn.ai.ui.components.ui.Tooltip
 import com.mgn.ai.ui.context.LocalNavController
 import com.mgn.ai.ui.context.LocalToaster
-import androidx.compose.ui.hapticfeedback.HapticFeedbackType
 import androidx.compose.ui.platform.LocalHapticFeedback
 import com.mgn.ai.ui.theme.CustomColors
 import com.mgn.ai.utils.plus

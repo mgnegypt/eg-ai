@@ -1684,4 +1684,11 @@ GitHub: https://github.com/mgnegypt/eg-ai</string>
   <string name="extensions_page_knowledge_bases">知識庫</string>
   <string name="extensions_page_knowledge_bases_desc">供助理檢索的文件集合</string>
   <string name="setting_page_workflows_empty">暫無工作流程，請讓助理建立一個。</string>
+  <string name="setting_page_workflows_how_it_works_dialog_title">工作流程的運作方式</string>
+  <string name="setting_page_workflows_how_it_works_dialog_body">工作流程由一個觸發器加一連串動作組成。觸發器負責啟動它（WiFi 連線、排程觸發、到達某個地點、收到通知）。動作是依序執行的工具呼叫 — 與你在聊天中可以執行的工具相同。\n\n條件決定被觸發的工作流程是否真正執行（\"僅在日落後\"、\"僅在充電時\"）。所有條件都必須通過。\n\n工作流程以無頭模式執行 — 助理在建立工作流程時已預先授權工具，因此每次觸發都不會再詢問你。HARDLINE 過濾器仍會攔截危險的 shell 指令和對系統路徑的寫入。你可以在工作流程的歷史記錄清單中看到結果。</string>
+  <string name="setting_page_workflows_how_it_works_dialog_dismiss">知道了</string>
+  <string name="setting_page_workflows_how_it_works">工作流程的運作方式</string>
+  <string name="setting_page_workflows_subtitle_never_run">從未執行</string>
+  <string name="setting_page_workflows_subtitle_ran_success">執行 %1$s • 成功</string>
+  <string name="setting_page_workflows_subtitle_ran_failed">失敗 %1$s</string>
 </resources>
