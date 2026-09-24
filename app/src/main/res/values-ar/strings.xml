@@ -1683,4 +1683,5 @@ GitHub: https://github.com/mgnegypt/eg-ai</string>
   <string name="skills_page_select_all">تحديد الكل</string>
   <string name="extensions_page_knowledge_bases">قواعد المعرفة</string>
   <string name="extensions_page_knowledge_bases_desc">مجموعات مستندات قابلة للبحث للمساعدين</string>
+  <string name="setting_page_workflows_empty">لا توجد مهام سير عمل بعد. اطلب من مساعدك إنشاء واحدة.</string>
 </resources>

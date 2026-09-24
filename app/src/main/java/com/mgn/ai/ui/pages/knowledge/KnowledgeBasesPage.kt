@@ -65,7 +65,8 @@ import com.mgn.ai.ui.components.ui.Tag
 import com.mgn.ai.ui.components.ui.Tooltip
 import com.mgn.ai.ui.context.LocalNavController
 import com.mgn.ai.ui.context.LocalToaster
-import com.mgn.ai.ui.hooks.rememberHaptic
+import androidx.compose.ui.hapticfeedback.HapticFeedbackType
+import androidx.compose.ui.platform.LocalHapticFeedback
 import com.mgn.ai.ui.theme.CustomColors
 import com.mgn.ai.utils.plus
 import org.koin.compose.viewmodel.koinViewModel
@@ -93,7 +94,7 @@ fun KnowledgeBasesPage() {
 
     // 拖拽排序
     val lazyListState = rememberLazyListState()
-    val hapticController = rememberHaptic()
+    val hapticController = LocalHapticFeedback.current
     val reorderableState = rememberReorderableLazyListState(lazyListState) { from, to ->
         vm.reorderBases(from.index, to.index)
     }
@@ -200,10 +201,10 @@ fun KnowledgeBasesPage() {
                                     modifier = Modifier
                                         .longPressDraggableHandle(
                                             onDragStarted = {
-                                                hapticController.perform(HapticFeedbackType.GestureThresholdActivate)
+                                                hapticController.performHapticFeedback(HapticFeedbackType.GestureThresholdActivate)
                                             },
                                             onDragStopped = {
-                                                hapticController.perform(HapticFeedbackType.GestureEnd)
+                                                hapticController.performHapticFeedback(HapticFeedbackType.GestureEnd)
                                                 vm.persistOrder()
                                             }
                                         )

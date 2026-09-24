@@ -43,6 +43,7 @@ import com.mgn.ai.ui.theme.CustomColors
 import com.mgn.ai.utils.base64Encode
 import com.mgn.ai.utils.formatRelativeAgo
 import com.mgn.ai.utils.plus
+import com.mgn.ai.workflow.model.ConditionSpec
 import com.mgn.ai.workflow.model.WorkflowAction
 import com.mgn.ai.workflow.model.WorkflowRun
 import com.mgn.ai.workflow.repository.WorkflowRepository.Loaded
@@ -320,24 +321,24 @@ private fun StatsBlock(loaded: Loaded) {
     }
 }
 
-private fun conditionLine(c: me.rerere.rikkahub.workflow.model.ConditionSpec): String {
+private fun conditionLine(c: com.mgn.ai.workflow.model.ConditionSpec): String {
     val base = when (c) {
-        is me.rerere.rikkahub.workflow.model.ConditionSpec.TimeBetween -> "between ${c.start} and ${c.end}"
-        is me.rerere.rikkahub.workflow.model.ConditionSpec.TimeAfterSunset -> "after sunset" +
+        is ConditionSpec.TimeBetween -> "between ${c.start} and ${c.end}"
+        is ConditionSpec.TimeAfterSunset -> "after sunset" +
             if (c.offsetMinutes != 0) " (${c.offsetMinutes}m offset)" else ""
-        is me.rerere.rikkahub.workflow.model.ConditionSpec.TimeBeforeSunrise -> "before sunrise" +
+        is ConditionSpec.TimeBeforeSunrise -> "before sunrise" +
             if (c.offsetMinutes != 0) " (${c.offsetMinutes}m offset)" else ""
-        is me.rerere.rikkahub.workflow.model.ConditionSpec.DayOfWeekIn -> "day(s) ${c.days.joinToString(",")}"
-        is me.rerere.rikkahub.workflow.model.ConditionSpec.WifiSsidIs -> "WiFi is ${c.ssid}"
-        is me.rerere.rikkahub.workflow.model.ConditionSpec.WifiSsidIn -> "WiFi in ${c.ssids.joinToString(",")}"
-        is me.rerere.rikkahub.workflow.model.ConditionSpec.BatteryAbove -> "battery > ${c.percent}%"
-        is me.rerere.rikkahub.workflow.model.ConditionSpec.BatteryBelow -> "battery < ${c.percent}%"
-        is me.rerere.rikkahub.workflow.model.ConditionSpec.IsCharging -> "charging"
-        is me.rerere.rikkahub.workflow.model.ConditionSpec.IsNotCharging -> "not charging"
-        is me.rerere.rikkahub.workflow.model.ConditionSpec.ForegroundAppIs -> "foreground app = ${c.packageName}"
-        is me.rerere.rikkahub.workflow.model.ConditionSpec.ForegroundAppIn -> "foreground in ${c.packageNames.size} pkgs"
-        is me.rerere.rikkahub.workflow.model.ConditionSpec.ScreenIsOn -> "screen on"
-        is me.rerere.rikkahub.workflow.model.ConditionSpec.ScreenIsOff -> "screen off"
+        is ConditionSpec.DayOfWeekIn -> "day(s) ${c.days.joinToString(",")}"
+        is ConditionSpec.WifiSsidIs -> "WiFi is ${c.ssid}"
+        is ConditionSpec.WifiSsidIn -> "WiFi in ${c.ssids.joinToString(",")}"
+        is ConditionSpec.BatteryAbove -> "battery > ${c.percent}%"
+        is ConditionSpec.BatteryBelow -> "battery < ${c.percent}%"
+        is ConditionSpec.IsCharging -> "charging"
+        is ConditionSpec.IsNotCharging -> "not charging"
+        is ConditionSpec.ForegroundAppIs -> "foreground app = ${c.packageName}"
+        is ConditionSpec.ForegroundAppIn -> "foreground in ${c.packageNames.size} pkgs"
+        is ConditionSpec.ScreenIsOn -> "screen on"
+        is ConditionSpec.ScreenIsOff -> "screen off"
     }
     return if (c.invert) "NOT ($base)" else base
 }

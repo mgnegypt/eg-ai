@@ -1683,4 +1683,5 @@ GitHub: https://github.com/mgnegypt/eg-ai</string>
   <string name="skills_page_select_all">全選</string>
   <string name="extensions_page_knowledge_bases">知識庫</string>
   <string name="extensions_page_knowledge_bases_desc">供助理檢索的文件集合</string>
+  <string name="setting_page_workflows_empty">暫無工作流程，請讓助理建立一個。</string>
 </resources>

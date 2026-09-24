@@ -100,6 +100,7 @@ class SettingsStore(
         val TRANSLATE_MODEL = stringPreferencesKey("translate_model")
         val EMBEDDING_MODEL = stringPreferencesKey("embedding_model")
         val RERANK_MODEL = stringPreferencesKey("rerank_model")
+        val PDF_OCR_ENABLED = booleanPreferencesKey("pdf_ocr_enabled")
         val ENABLE_SUGGESTION = booleanPreferencesKey("enable_suggestion")
         val IMAGE_GENERATION_MODEL = stringPreferencesKey("image_generation_model")
         val TITLE_PROMPT = stringPreferencesKey("title_prompt")
@@ -205,6 +206,7 @@ class SettingsStore(
                 settings.rerankModelId?.let {
                     preferences[RERANK_MODEL] = it.toString()
                 } ?: preferences.remove(RERANK_MODEL)
+                preferences[PDF_OCR_ENABLED] = settings.pdfOcrEnabled
                 preferences[ENABLE_SUGGESTION] = settings.enableSuggestion
                 preferences[IMAGE_GENERATION_MODEL] = settings.imageGenerationModelId.toString()
                 preferences[TITLE_PROMPT] = settings.titlePrompt
@@ -294,6 +296,7 @@ class SettingsStore(
                 translateThinkingBudget = preferences[TRANSLATE_THINKING_BUDGET] ?: 0,
                 embeddingModelId = preferences[EMBEDDING_MODEL]?.let { runCatching { Uuid.parse(it) }.getOrNull() },
                 rerankModelId = preferences[RERANK_MODEL]?.let { runCatching { Uuid.parse(it) }.getOrNull() },
+                pdfOcrEnabled = preferences[PDF_OCR_ENABLED] == true,
                 promptOptimizeModelId = preferences[PROMPT_OPTIMIZE_MODEL]?.let { runCatching { Uuid.parse(it) }.getOrNull() },
                 promptOptimizePrompt = preferences[PROMPT_OPTIMIZE_PROMPT],
                 promptOptimizePromptsByScene = preferences[PROMPT_OPTIMIZE_PROMPTS_BY_SCENE]?.let {
@@ -603,6 +606,7 @@ data class Settings(
     val translateModeId: Uuid = Uuid.random(),
     val embeddingModelId: Uuid? = null,
     val rerankModelId: Uuid? = null,
+    val pdfOcrEnabled: Boolean = false,
     val translatePrompt: String = DEFAULT_TRANSLATION_PROMPT,
     val translateThinkingBudget: Int = 0,
     val promptOptimizeModelId: Uuid? = null,

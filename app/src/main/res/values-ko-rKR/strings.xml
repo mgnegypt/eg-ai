@@ -1685,4 +1685,5 @@ mDNS 주소: .local 호스트네임을 사용하며, IP를 몰라도 같은 네�
   <string name="skills_page_select_all">모두 선택</string>
   <string name="extensions_page_knowledge_bases">지식 베이스</string>
   <string name="extensions_page_knowledge_bases_desc">어시스턴트용 검색 가능한 문서 모음</string>
+  <string name="setting_page_workflows_empty">아직 워크플로가 없습니다. 어시스턴트에게 생성을 요청하세요.</string>
 </resources>

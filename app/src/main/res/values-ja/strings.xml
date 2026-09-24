@@ -1685,4 +1685,5 @@ mDNSアドレス: .localホスト名を使用し、IPを知らなくても同じ
   <string name="skills_page_select_all">すべて選択</string>
   <string name="extensions_page_knowledge_bases">ナレッジベース</string>
   <string name="extensions_page_knowledge_bases_desc">アシスタント用の検索可能なドキュメント集</string>
+  <string name="setting_page_workflows_empty">ワークフローはまだありません。アシスタントに作成を依頼してください。</string>
 </resources>

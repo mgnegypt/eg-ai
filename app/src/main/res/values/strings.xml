@@ -1683,4 +1683,5 @@ GitHub: https://github.com/mgnegypt/eg-ai</string>
   <string name="skills_page_select_all">Select all</string>
   <string name="extensions_page_knowledge_bases">Knowledge bases</string>
   <string name="extensions_page_knowledge_bases_desc">Searchable document collections for assistants</string>
+  <string name="setting_page_workflows_empty">No workflows yet. Ask your assistant to create one.</string>
 </resources>
