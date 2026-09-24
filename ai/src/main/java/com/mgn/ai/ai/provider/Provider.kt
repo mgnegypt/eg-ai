@@ -53,7 +53,36 @@ interface Provider<T : ProviderSetting> {
     ): Flow<ImageGenerationItem> {
         error("Image edit is not supported")
     }
+
+    suspend fun rerank(
+        providerSetting: T,
+        params: RerankingGenerationParams,
+    ): RerankingGenerationResult {
+        error("Reranking is not supported")
+    }
 }
+
+@Serializable
+data class RerankingGenerationParams(
+    val model: Model,
+    val query: String,
+    val documents: List<String>,
+    val topN: Int? = null,
+    val customHeaders: List<CustomHeader> = emptyList(),
+    val customBody: List<CustomBody> = emptyList(),
+)
+
+@Serializable
+data class RerankingGenerationResult(
+    val model: String,
+    val results: List<RerankResult>,
+)
+
+@Serializable
+data class RerankResult(
+    val index: Int,
+    val relevanceScore: Float,
+)
 
 @Serializable
 data class TextGenerationResult(

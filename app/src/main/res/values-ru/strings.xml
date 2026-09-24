@@ -1696,4 +1696,9 @@ GitHub: https://github.com/mgnegypt/eg-ai</string>
   <string name="setting_page_workflows_subtitle_when">Когда: %1$s</string>
   <string name="setting_page_workflows_subtitle_ran_skipped">Пропущено %1$s</string>
   <string name="setting_provider_page_reranking_model">Реранжирование</string>
+  <string name="setting_model_page_group_knowledge">Базы знаний</string>
+  <string name="setting_model_page_embedding_model">Embedding-модель</string>
+  <string name="setting_model_page_embedding_model_desc">Векторизует текст баз знаний. Можно переопределить для базы.</string>
+  <string name="setting_model_page_rerank_model">Rerank-модель</string>
+  <string name="setting_model_page_rerank_model_desc">Переупорядочивает результаты. Необязательно.</string>
 </resources>

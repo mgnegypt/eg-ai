@@ -1696,4 +1696,9 @@ mDNS 주소: .local 호스트네임을 사용하며, IP를 몰라도 같은 네�
   <string name="setting_page_workflows_subtitle_when">조건: %1$s</string>
   <string name="setting_page_workflows_subtitle_ran_skipped">건너뜀 %1$s</string>
   <string name="setting_provider_page_reranking_model">리랭킹</string>
+  <string name="setting_model_page_group_knowledge">지식 베이스</string>
+  <string name="setting_model_page_embedding_model">임베딩 모델</string>
+  <string name="setting_model_page_embedding_model_desc">지식 베이스 텍스트를 벡터화. 베이스별로 재정의 가능.</string>
+  <string name="setting_model_page_rerank_model">리랭크 모델</string>
+  <string name="setting_model_page_rerank_model_desc">검색 결과 재정렬. 선택 사항.</string>
 </resources>

@@ -49,8 +49,12 @@ val repositoryModule = module {
         FavoriteRepository(get())
     }
 
+    single {
+        com.mgn.ai.data.db.fts.KnowledgeChunkFtsManager(get())
+    }
+
     single<KeywordSearcher> {
-        SimpleKeywordSearcher(get<AppDatabase>().knowledgeChunkDao())
+        com.mgn.ai.data.db.fts.FtsKeywordSearcher(get(), get<AppDatabase>().knowledgeChunkDao())
     }
 
     single {

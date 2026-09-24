@@ -44,6 +44,7 @@ class ChatToolFactory(
     private val skillManager: SkillManager,
     private val workspaceRepository: WorkspaceRepository,
     private val settingsStore: SettingsStore,
+    private val providerManager: com.mgn.ai.ai.provider.ProviderManager,
     private val subAgentEngine: SubAgentEngine,
     private val todoStorage: TodoStorage,
     private val knowledgeManager: KnowledgeManager,
@@ -96,8 +97,8 @@ class ChatToolFactory(
             val knowledgeTool = KnowledgeSearchTool(
                 knowledgeManager = knowledgeManager,
                 getAllowedKnowledgeBaseIds = { assistant.knowledgeBaseIds.map { it.toString() }.toSet() },
-                getEmbeddingForBase = { null },
-                getReranker = { null },
+                getEmbeddingForBase = { baseId -> resolveKnowledgeEmbeddingConfig(settings, baseId) },
+                getReranker = { resolveKnowledgeReranker(settings) },
             )
             add(knowledgeTool.create())
             add(knowledgeTool.createListTool())
@@ -149,6 +150,38 @@ class ChatToolFactory(
                 null
             },
         )
+    }
+
+    /**
+     * Resolves the embedding config for a knowledge base: per-base model
+     * first, then the global embedding model. OpenAI-compatible providers
+     * only; null = keyword-only retrieval.
+     */
+    private suspend fun resolveKnowledgeEmbeddingConfig(
+        settings: Settings,
+        baseId: String,
+    ): com.mgn.ai.knowledge.tool.EmbeddingConfig? {
+        val base = knowledgeManager.baseRepository.getById(baseId) ?: return null
+        val modelId = base.embeddingModelId?.let { runCatching { Uuid.parse(it) }.getOrNull() }
+            ?: settings.embeddingModelId ?: return null
+        val model = settings.findModelById(modelId) ?: return null
+        val providerSetting = model.findProvider(settings.providers) ?: return null
+        if (providerSetting !is com.mgn.ai.ai.provider.ProviderSetting.OpenAI) return null
+        @Suppress("UNCHECKED_CAST")
+        val provider = providerManager.getProviderByType(providerSetting) as com.mgn.ai.ai.provider.Provider<com.mgn.ai.ai.provider.ProviderSetting.OpenAI>
+        return com.mgn.ai.knowledge.tool.EmbeddingConfig(provider, providerSetting, model)
+    }
+
+    private suspend fun resolveKnowledgeReranker(
+        settings: Settings,
+    ): com.mgn.ai.knowledge.retrieval.Reranker? {
+        val rerankModelId = settings.rerankModelId ?: return null
+        val model = settings.findModelById(rerankModelId) ?: return null
+        val providerSetting = model.findProvider(settings.providers) ?: return null
+        if (providerSetting !is com.mgn.ai.ai.provider.ProviderSetting.OpenAI) return null
+        @Suppress("UNCHECKED_CAST")
+        val provider = providerManager.getProviderByType(providerSetting) as com.mgn.ai.ai.provider.Provider<com.mgn.ai.ai.provider.ProviderSetting.OpenAI>
+        return com.mgn.ai.knowledge.retrieval.Reranker(provider, providerSetting, model)
     }
 
     /**

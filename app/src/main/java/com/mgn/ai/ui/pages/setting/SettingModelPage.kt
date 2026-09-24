@@ -178,6 +178,9 @@ private fun ModelSettingsPage(settings: Settings, vm: SettingVM, contentPadding:
             PromptOptimizeGroup(settings = settings, vm = vm)
         }
         item {
+            KnowledgeGroup(settings = settings, vm = vm)
+        }
+        item {
             ModelSettingItem(
                 title = stringResource(R.string.setting_model_page_translate_model),
                 description = stringResource(R.string.setting_model_page_translate_model_desc),
@@ -462,4 +465,52 @@ private fun depthLabelRes(depth: PromptOptimizeDepth): Int = when (depth) {
     PromptOptimizeDepth.CONCISE -> R.string.prompt_optimize_depth_concise
     PromptOptimizeDepth.MEDIUM -> R.string.prompt_optimize_depth_medium
     PromptOptimizeDepth.DETAILED -> R.string.prompt_optimize_depth_detailed
+}
+
+@Composable
+private fun KnowledgeGroup(settings: Settings, vm: SettingVM) {
+    val embeddingState = rememberModelListState(settings.embeddingModelId, settings.providers, ModelType.EMBEDDING)
+    val rerankState = rememberModelListState(settings.rerankModelId, settings.providers, ModelType.RERANKING)
+
+    CardGroup(
+        title = { Text(stringResource(R.string.setting_model_page_group_knowledge)) },
+    ) {
+        item(
+            onClick = { embeddingState.open() },
+            headlineContent = { Text(stringResource(R.string.setting_model_page_embedding_model)) },
+            supportingContent = { Text(stringResource(R.string.setting_model_page_embedding_model_desc)) },
+            trailingContent = {
+                Text(
+                    text = settings.providers.findModelById(settings.embeddingModelId)?.displayName
+                        ?: stringResource(R.string.model_list_select_model),
+                    style = MaterialTheme.typography.bodyMedium,
+                    color = MaterialTheme.colorScheme.onSurfaceVariant,
+                )
+            },
+        )
+        item(
+            onClick = { rerankState.open() },
+            headlineContent = { Text(stringResource(R.string.setting_model_page_rerank_model)) },
+            supportingContent = { Text(stringResource(R.string.setting_model_page_rerank_model_desc)) },
+            trailingContent = {
+                Text(
+                    text = settings.providers.findModelById(settings.rerankModelId)?.displayName
+                        ?: stringResource(R.string.model_list_select_model),
+                    style = MaterialTheme.typography.bodyMedium,
+                    color = MaterialTheme.colorScheme.onSurfaceVariant,
+                )
+            },
+        )
+    }
+
+    ModelListSheet(
+        state = embeddingState,
+        onSelect = { vm.updateSettings(settings.copy(embeddingModelId = it.id)) },
+        onClear = { vm.updateSettings(settings.copy(embeddingModelId = null)) },
+    )
+    ModelListSheet(
+        state = rerankState,
+        onSelect = { vm.updateSettings(settings.copy(rerankModelId = it.id)) },
+        onClear = { vm.updateSettings(settings.copy(rerankModelId = null)) },
+    )
 }

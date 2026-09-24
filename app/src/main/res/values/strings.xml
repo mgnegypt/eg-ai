@@ -1694,4 +1694,9 @@ GitHub: https://github.com/mgnegypt/eg-ai</string>
   <string name="setting_page_workflows_subtitle_when">When: %1$s</string>
   <string name="setting_page_workflows_subtitle_ran_skipped">Skipped %1$s</string>
   <string name="setting_provider_page_reranking_model">Rerank model</string>
+  <string name="setting_model_page_group_knowledge">Knowledge bases</string>
+  <string name="setting_model_page_embedding_model">Embedding model</string>
+  <string name="setting_model_page_embedding_model_desc">Vectorizes knowledge base text. Bases can override it individually.</string>
+  <string name="setting_model_page_rerank_model">Rerank model</string>
+  <string name="setting_model_page_rerank_model_desc">Re-ranks knowledge retrieval results. Optional.</string>
 </resources>

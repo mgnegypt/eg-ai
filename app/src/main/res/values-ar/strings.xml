@@ -1694,4 +1694,9 @@ GitHub: https://github.com/mgnegypt/eg-ai</string>
   <string name="setting_page_workflows_subtitle_when">عند: %1$s</string>
   <string name="setting_page_workflows_subtitle_ran_skipped">تم التخطي %1$s</string>
   <string name="setting_provider_page_reranking_model">إعادة الترتيب</string>
+  <string name="setting_model_page_group_knowledge">قواعد المعرفة</string>
+  <string name="setting_model_page_embedding_model">نموذج التضمين</string>
+  <string name="setting_model_page_embedding_model_desc">يحوّل نصوص قاعدة المعرفة إلى متجهات. يمكن لكل قاعدة تجاوزه.</string>
+  <string name="setting_model_page_rerank_model">نموذج إعادة الترتيب</string>
+  <string name="setting_model_page_rerank_model_desc">يعيد ترتيب نتائج الاسترجاع. اختياري.</string>
 </resources>

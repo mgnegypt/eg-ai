@@ -1696,4 +1696,9 @@ mDNS 地址：使用 .local 主机名，同一网络中的其他设备可通过�
   <string name="setting_page_workflows_subtitle_when">条件：%1$s</string>
   <string name="setting_page_workflows_subtitle_ran_skipped">已跳过 %1$s</string>
   <string name="setting_provider_page_reranking_model">重排序</string>
+  <string name="setting_model_page_group_knowledge">知识库</string>
+  <string name="setting_model_page_embedding_model">Embedding 模型</string>
+  <string name="setting_model_page_embedding_model_desc">用于知识库文本向量化，未配置时知识库可单独设置</string>
+  <string name="setting_model_page_rerank_model">Rerank 模型</string>
+  <string name="setting_model_page_rerank_model_desc">用于知识库检索结果重排序，可选</string>
 </resources>

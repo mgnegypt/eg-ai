@@ -114,6 +114,7 @@ val appModule = module {
             skillManager = get(),
             workspaceRepository = get(),
             settingsStore = get(),
+            providerManager = get(),
             subAgentEngine = get(),
             todoStorage = get(),
             knowledgeManager = get(),

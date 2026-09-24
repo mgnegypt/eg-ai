@@ -261,6 +261,7 @@ internal fun ModelSelectorButton(
 fun ModelListSheet(
     state: ModelListState,
     onSelect: (Model) -> Unit,
+    onClear: (() -> Unit)? = null,
 ) {
     if (!state.visible) return
 
@@ -290,6 +291,17 @@ fun ModelListSheet(
                 .imePadding(),
             verticalArrangement = Arrangement.spacedBy(4.dp)
         ) {
+            if (onClear != null && state.modelId != null) {
+                TextButton(
+                    onClick = {
+                        onClear()
+                        dismiss()
+                    },
+                    modifier = Modifier.fillMaxWidth(),
+                ) {
+                    Text(stringResource(R.string.setting_model_page_clear_model))
+                }
+            }
             ModelList(
                 currentModel = state.modelId,
                 providers = state.filteredProviders,
