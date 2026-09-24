@@ -1671,4 +1671,6 @@ GitHub: https://github.com/mgnegypt/eg-ai</string>
   <string name="setting_page_scheduled_jobs_subtitle_never_run">Не запускалась</string>
   <string name="setting_page_scheduled_jobs_subtitle_ran">Последний запуск %1$s</string>
   <string name="setting_page_scheduled_jobs_subtitle_when">Когда: %1$s</string>
+  <string name="assistant_page_local_tools_workflows_title">Воркфлоу</string>
+  <string name="assistant_page_local_tools_workflows_desc">Создание автоматизаций по событиям</string>
 </resources>

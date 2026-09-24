@@ -15,6 +15,8 @@ class LocalTools(
     private val scheduledJobRepository: com.mgn.ai.data.repository.ScheduledJobRepository,
     private val scheduledJobRunRepository: com.mgn.ai.data.repository.ScheduledJobRunRepository,
     private val cronJobScheduler: com.mgn.ai.service.CronJobScheduler,
+    private val workflowRepository: com.mgn.ai.workflow.repository.WorkflowRepository,
+    private val workflowEngine: com.mgn.ai.workflow.execution.WorkflowEngine,
 ) {
     val javascriptTool by lazy { buildJavascriptTool() }
 
@@ -87,6 +89,27 @@ class LocalTools(
             tools.add(resumeJobTool(scheduledJobRepository, cronJobScheduler))
             tools.add(triggerJobNowTool(scheduledJobRepository, cronJobScheduler))
             tools.add(getJobHistoryTool(scheduledJobRepository, scheduledJobRunRepository))
+        }
+        if (options.contains(LocalToolOption.Workflows)) {
+            tools.add(
+                com.mgn.ai.workflow.tools.workflowCreateTool(
+                    workflowRepository,
+                    knownToolNamesProvider = { tools.map { it.name } },
+                    callerContext = invocationContext,
+                )
+            )
+            tools.add(com.mgn.ai.workflow.tools.workflowListTool(workflowRepository))
+            tools.add(com.mgn.ai.workflow.tools.workflowGetTool(workflowRepository))
+            tools.add(
+                com.mgn.ai.workflow.tools.workflowUpdateTool(
+                    workflowRepository,
+                    knownToolNamesProvider = { tools.map { it.name } },
+                    callerContext = invocationContext,
+                )
+            )
+            tools.add(com.mgn.ai.workflow.tools.workflowDeleteTool(workflowRepository))
+            tools.add(com.mgn.ai.workflow.tools.workflowSetEnabledTool(workflowRepository))
+            tools.add(com.mgn.ai.workflow.tools.workflowRunTool(workflowEngine, workflowRepository))
         }
         return tools
     }

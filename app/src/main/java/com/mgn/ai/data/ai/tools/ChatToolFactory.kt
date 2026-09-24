@@ -47,8 +47,6 @@ class ChatToolFactory(
     private val subAgentEngine: SubAgentEngine,
     private val todoStorage: TodoStorage,
     private val knowledgeManager: KnowledgeManager,
-    private val workflowRepository: com.mgn.ai.workflow.repository.WorkflowRepository,
-    private val workflowEngine: com.mgn.ai.workflow.execution.WorkflowEngine,
 ) {
     suspend fun createTools(
         settings: Settings,
@@ -124,26 +122,7 @@ class ChatToolFactory(
             )
         }
         }
-        val workflowTools = buildList {
-            add(
-                com.mgn.ai.workflow.tools.workflowCreateTool(
-                    repository = workflowRepository,
-                    knownToolNamesProvider = { assembled.map { it.name } },
-                )
-            )
-            add(com.mgn.ai.workflow.tools.workflowListTool(workflowRepository))
-            add(com.mgn.ai.workflow.tools.workflowGetTool(workflowRepository))
-            add(
-                com.mgn.ai.workflow.tools.workflowUpdateTool(
-                    repository = workflowRepository,
-                    knownToolNamesProvider = { assembled.map { it.name } },
-                )
-            )
-            add(com.mgn.ai.workflow.tools.workflowDeleteTool(workflowRepository))
-            add(com.mgn.ai.workflow.tools.workflowSetEnabledTool(workflowRepository))
-            add(com.mgn.ai.workflow.tools.workflowRunTool(workflowEngine, workflowRepository))
-        }
-        val withWorkflows = assembled + workflowTools
+        val withWorkflows = assembled
         // Sub-agent gate: no sub-agent model selected = dispatch_subagent is not
         // exposed at all (not even its schema).
         val subAgentModelId = settings.subAgentModelId ?: return withWorkflows

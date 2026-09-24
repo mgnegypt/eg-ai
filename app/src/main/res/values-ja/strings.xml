@@ -1671,4 +1671,6 @@ mDNSアドレス: .localホスト名を使用し、IPを知らなくても同じ
   <string name="setting_page_scheduled_jobs_subtitle_never_run">未実行</string>
   <string name="setting_page_scheduled_jobs_subtitle_ran">前回実行 %1$s</string>
   <string name="setting_page_scheduled_jobs_subtitle_when">実行タイミング: %1$s</string>
+  <string name="assistant_page_local_tools_workflows_title">ワークフロー</string>
+  <string name="assistant_page_local_tools_workflows_desc">イベント駆動の自動化ワークフローの作成を許可</string>
 </resources>

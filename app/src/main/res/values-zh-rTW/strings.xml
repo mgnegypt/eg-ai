@@ -1669,4 +1669,6 @@ GitHub: https://github.com/mgnegypt/eg-ai</string>
   <string name="setting_page_scheduled_jobs_subtitle_never_run">從未觸發</string>
   <string name="setting_page_scheduled_jobs_subtitle_ran">上次觸發 %1$s</string>
   <string name="setting_page_scheduled_jobs_subtitle_when">觸發時間：%1$s</string>
+  <string name="assistant_page_local_tools_workflows_title">工作流程</string>
+  <string name="assistant_page_local_tools_workflows_desc">允許建立事件驅動的自動化工作流程</string>
 </resources>

@@ -1671,4 +1671,6 @@ mDNS 地址：使用 .local 主机名，同一网络中的其他设备可通过�
   <string name="setting_page_scheduled_jobs_subtitle_never_run">从未触发</string>
   <string name="setting_page_scheduled_jobs_subtitle_ran">上次触发 %1$s</string>
   <string name="setting_page_scheduled_jobs_subtitle_when">触发时间：%1$s</string>
+  <string name="assistant_page_local_tools_workflows_title">工作流</string>
+  <string name="assistant_page_local_tools_workflows_desc">允许创建事件驱动的自动化工作流</string>
 </resources>

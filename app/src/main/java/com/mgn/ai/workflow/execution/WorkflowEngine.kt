@@ -11,7 +11,7 @@ import kotlinx.serialization.json.buildJsonObject
 import kotlinx.serialization.json.put
 import com.mgn.ai.ai.core.Tool
 import com.mgn.ai.data.ai.tools.HardlineCommandGuard
-import com.mgn.ai.data.ai.tools.LocalTools
+import com.mgn.ai.data.ai.tools.local.LocalTools
 import com.mgn.ai.data.datastore.SettingsStore
 import com.mgn.ai.workflow.condition.ConditionEvaluator
 import com.mgn.ai.workflow.condition.ContextProvider
@@ -199,7 +199,7 @@ class WorkflowEngine(
                     Log.w(TAG, "fire: authoring assistant $storedId for workflow $workflowId no longer exists; falling back to first-with-Workflows")
                 }
                 settings.assistants.firstOrNull { asst ->
-                    asst.localTools.any { it is com.mgn.ai.data.ai.tools.LocalToolOption.Workflows }
+                    asst.localTools.any { it is com.mgn.ai.data.ai.tools.local.LocalToolOption.Workflows }
                 }
             }
         }
@@ -250,20 +250,20 @@ class WorkflowEngine(
                     ) == android.content.pm.PackageManager.PERMISSION_GRANTED
                 } else true
                 when {
-                    !fineGranted -> "geofence_unavailable: ACCESS_FINE_LOCATION not granted — open Settings → Apps → RikkaHub → Permissions → Location and pick Allow all the time"
-                    !bgGranted -> "geofence_unavailable: ACCESS_BACKGROUND_LOCATION not granted — open Settings → Apps → RikkaHub → Permissions → Location and pick Allow all the time"
+                    !fineGranted -> "geofence_unavailable: ACCESS_FINE_LOCATION not granted — open Settings → Apps → MGN AI → Permissions → Location and pick Allow all the time"
+                    !bgGranted -> "geofence_unavailable: ACCESS_BACKGROUND_LOCATION not granted — open Settings → Apps → MGN AI → Permissions → Location and pick Allow all the time"
                     else -> null
                 }
             }
             is com.mgn.ai.workflow.model.TriggerSpec.NotificationReceived -> {
                 if (!com.mgn.ai.data.ai.tools.local.NotificationListenerHandle.isBound()) {
-                    "notification_listener_not_enabled: enable the RikkaHub notification listener in Settings → Apps → Special access → Notification access"
+                    "notification_listener_not_enabled: enable the MGN AI notification listener in Settings → Apps → Special access → Notification access"
                 } else null
             }
             is com.mgn.ai.workflow.model.TriggerSpec.AppLaunched,
             is com.mgn.ai.workflow.model.TriggerSpec.AppClosed -> {
                 if (!com.mgn.ai.data.ai.tools.local.AccessibilityServiceHandle.isRunning()) {
-                    "accessibility_not_enabled: enable the RikkaHub accessibility service in Settings → Accessibility (required for app_launched / app_closed triggers)"
+                    "accessibility_not_enabled: enable the MGN AI accessibility service in Settings → Accessibility (required for app_launched / app_closed triggers)"
                 } else null
             }
             is com.mgn.ai.workflow.model.TriggerSpec.BluetoothDeviceConnected,

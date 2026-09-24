@@ -1669,4 +1669,6 @@ GitHub: https://github.com/mgnegypt/eg-ai</string>
   <string name="setting_page_scheduled_jobs_subtitle_never_run">لم تُطلق أبدًا</string>
   <string name="setting_page_scheduled_jobs_subtitle_ran">آخر إطلاق %1$s</string>
   <string name="setting_page_scheduled_jobs_subtitle_when">الموعد: %1$s</string>
+  <string name="assistant_page_local_tools_workflows_title">سير العمل</string>
+  <string name="assistant_page_local_tools_workflows_desc">دع النموذج ينشئ مهام أتمتة مدفوعة بالأحداث</string>
 </resources>

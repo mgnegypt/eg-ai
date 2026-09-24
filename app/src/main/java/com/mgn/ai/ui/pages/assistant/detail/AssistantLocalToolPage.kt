@@ -296,6 +296,20 @@ private fun AssistantLocalToolContent(
                     )
                 }
             )
+            item(
+                headlineContent = {
+                    Text(stringResource(R.string.assistant_page_local_tools_workflows_title))
+                },
+                supportingContent = {
+                    Text(stringResource(R.string.assistant_page_local_tools_workflows_desc))
+                },
+                trailingContent = {
+                    Switch(
+                        checked = assistant.localTools.contains(LocalToolOption.Workflows),
+                        onCheckedChange = { toggleLocalTool(LocalToolOption.Workflows, it) }
+                    )
+                }
+            )
         }
     }
 }
