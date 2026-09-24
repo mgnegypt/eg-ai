@@ -488,6 +488,14 @@ class RouteActivity : ComponentActivity() {
                                 StorageCategoryPage(category = key.category)
                             }
 
+                            entry<Screen.SettingWorkflows> {
+                                com.mgn.ai.workflow.ui.WorkflowsScreen()
+                            }
+
+                            entry<Screen.WorkflowDetail> { key ->
+                                com.mgn.ai.workflow.ui.WorkflowDetailScreen(workflowId = key.id)
+                            }
+
                             entry<Screen.GroupChatTemplateDetail> { key ->
                                 GroupChatTemplateDetailPage(key.id)
                             }
@@ -721,6 +729,12 @@ sealed interface Screen : NavKey {
 
     @Serializable
     data class StorageCategory(val category: String) : Screen
+
+    @Serializable
+    data object SettingWorkflows : Screen
+
+    @Serializable
+    data class WorkflowDetail(val id: String) : Screen
 
     @Serializable
     data class GroupChatTemplateDetail(val id: String) : Screen

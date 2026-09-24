@@ -46,6 +46,7 @@ import me.rerere.hugeicons.stroke.Book03
 import me.rerere.hugeicons.stroke.Bookshelf01
 import me.rerere.hugeicons.stroke.Brain02
 import me.rerere.hugeicons.stroke.Clapping01
+import me.rerere.hugeicons.stroke.Connect
 import me.rerere.hugeicons.stroke.Database02
 import me.rerere.hugeicons.stroke.Earth
 import me.rerere.hugeicons.stroke.GlobalSearch
@@ -268,6 +269,12 @@ fun SettingPage(vm: SettingVM = koinViewModel()) {
                         leadingContent = { Icon(HugeIcons.ServerStack01, null) },
                         supportingContent = { Text(stringResource(R.string.setting_page_web_server_desc)) },
                         headlineContent = { Text(stringResource(R.string.setting_page_web_server)) },
+                    )
+                    item(
+                        onClick = { navController.navigate(Screen.SettingWorkflows) },
+                        leadingContent = { Icon(HugeIcons.Connect, null) },
+                        supportingContent = { Text(stringResource(R.string.setting_page_workflows_desc)) },
+                        headlineContent = { Text(stringResource(R.string.setting_page_workflows)) },
                     )
                 }
             }
