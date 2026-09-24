@@ -10,6 +10,8 @@ import com.mgn.ai.ui.pages.favorite.FavoriteVM
 import com.mgn.ai.ui.pages.assistant.groupchat.GroupChatTemplateDetailVM
 import com.mgn.ai.ui.pages.chat.PromptOptimizeVM
 import com.mgn.ai.ui.pages.search.SearchVM
+import com.mgn.ai.ui.pages.setting.scheduledjobs.ScheduledJobsViewModel
+import com.mgn.ai.workflow.ui.WorkflowsViewModel
 import com.mgn.ai.ui.pages.storage.StorageCategoryVM
 import com.mgn.ai.ui.pages.storage.StorageManagerVM
 import com.mgn.ai.ui.pages.history.HistoryVM
@@ -83,8 +85,8 @@ val viewModelModule = module {
     viewModelOf(::StatsVM)
     viewModelOf(::PromptOptimizeVM)
     viewModelOf(::StorageManagerVM)
-    viewModelOf(::com.mgn.ai.workflow.ui.WorkflowsViewModel)
-    viewModelOf(::com.mgn.ai.ui.pages.setting.scheduledjobs.ScheduledJobsViewModel)
+    viewModelOf(::WorkflowsViewModel)
+    viewModelOf(::ScheduledJobsViewModel)
     viewModel<StorageCategoryVM> {
         StorageCategoryVM(
             categoryKey = it.get(),
