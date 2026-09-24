@@ -139,13 +139,15 @@ fun WorkflowDetailScreen(
                         .fillMaxWidth()
                         .padding(horizontal = 16.dp, vertical = 10.dp),
                 ) {
+                    val runNowDoneTemplate = stringResource(R.string.setting_page_workflow_detail_run_now_done)
+                    val editPrefillTemplate = stringResource(R.string.setting_page_workflow_detail_edit_prefill)
                     Button(onClick = {
                         scope.launch {
                             val outcome = vm.runNow(currentLoaded.entity.id)
                             history = vm.history(currentLoaded.entity.id)
                             loaded = vm.get(currentLoaded.entity.id)
                             snackbarHostState.showSnackbar(
-                                ctx.getString(R.string.setting_page_workflow_detail_run_now_done, outcome.status.name)
+                                runNowDoneTemplate.format(outcome.status.name)
                             )
                         }
                     }) {
@@ -154,10 +156,7 @@ fun WorkflowDetailScreen(
                     TextButton(onClick = {
                         nav.navigate(Screen.Chat(
                             id = kotlin.uuid.Uuid.random().toString(),
-                            text = ctx.getString(
-                                R.string.setting_page_workflow_detail_edit_prefill,
-                                currentLoaded.entity.name,
-                            ).base64Encode(),
+                            text = editPrefillTemplate.format(currentLoaded.entity.name).base64Encode(),
                         ))
                     }) {
                         Text(stringResource(R.string.setting_page_workflow_detail_edit))
