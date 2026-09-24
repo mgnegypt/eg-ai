@@ -1671,4 +1671,14 @@ GitHub: https://github.com/mgnegypt/eg-ai</string>
   <string name="setting_page_scheduled_jobs_subtitle_when">觸發時間：%1$s</string>
   <string name="assistant_page_local_tools_workflows_title">工作流程</string>
   <string name="assistant_page_local_tools_workflows_desc">允許建立事件驅動的自動化工作流程</string>
+  <string name="knowledge_page_create">建立</string>
+  <string name="knowledge_page_create_base">建立知識庫</string>
+  <string name="knowledge_page_create_base_name_hint">輸入知識庫名稱</string>
+  <string name="setting_page_knowledge_bases">知識庫</string>
+  <string name="skills_page_batch_cancel">取消</string>
+  <string name="skills_page_batch_delete_message">確定要刪除 %d 個技能嗎？此動作無法復原。</string>
+  <string name="skills_page_batch_select">批次選取</string>
+  <string name="skills_page_delete">刪除</string>
+  <string name="skills_page_deselect_all">取消全選</string>
+  <string name="skills_page_select_all">全選</string>
 </resources>

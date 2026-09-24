@@ -504,6 +504,18 @@ class RouteActivity : ComponentActivity() {
                                 com.mgn.ai.ui.pages.setting.scheduledjobs.ScheduledJobDetailScreen(jobId = key.id)
                             }
 
+                            entry<Screen.KnowledgeBases> {
+                                com.mgn.ai.ui.pages.knowledge.KnowledgeBasesPage()
+                            }
+
+                            entry<Screen.KnowledgeBaseDetail> { key ->
+                                com.mgn.ai.ui.pages.knowledge.KnowledgeBaseDetailPage(key.id)
+                            }
+
+                            entry<Screen.KnowledgeBaseSettings> { key ->
+                                com.mgn.ai.ui.pages.knowledge.KnowledgeBaseSettingsPage(key.id)
+                            }
+
                             entry<Screen.GroupChatTemplateDetail> { key ->
                                 GroupChatTemplateDetailPage(key.id)
                             }
@@ -749,6 +761,15 @@ sealed interface Screen : NavKey {
 
     @Serializable
     data class ScheduledJobDetail(val id: String) : Screen
+
+    @Serializable
+    data object KnowledgeBases : Screen
+
+    @Serializable
+    data class KnowledgeBaseDetail(val id: String) : Screen
+
+    @Serializable
+    data class KnowledgeBaseSettings(val id: String) : Screen
 
     @Serializable
     data class GroupChatTemplateDetail(val id: String) : Screen

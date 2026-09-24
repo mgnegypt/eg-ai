@@ -1673,4 +1673,14 @@ GitHub: https://github.com/mgnegypt/eg-ai</string>
   <string name="setting_page_scheduled_jobs_subtitle_when">Когда: %1$s</string>
   <string name="assistant_page_local_tools_workflows_title">Воркфлоу</string>
   <string name="assistant_page_local_tools_workflows_desc">Создание автоматизаций по событиям</string>
+  <string name="knowledge_page_create">Создать</string>
+  <string name="knowledge_page_create_base">Создать базу знаний</string>
+  <string name="knowledge_page_create_base_name_hint">Введите название базы знаний</string>
+  <string name="setting_page_knowledge_bases">Базы знаний</string>
+  <string name="skills_page_batch_cancel">Отмена</string>
+  <string name="skills_page_batch_delete_message">Удалить %d навыка(ов)? Это действие нельзя отменить.</string>
+  <string name="skills_page_batch_select">Пакетный выбор</string>
+  <string name="skills_page_delete">Удалить</string>
+  <string name="skills_page_deselect_all">Снять выбор со всех</string>
+  <string name="skills_page_select_all">Выбрать все</string>
 </resources>

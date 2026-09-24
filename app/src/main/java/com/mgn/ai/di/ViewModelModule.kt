@@ -87,6 +87,35 @@ val viewModelModule = module {
     viewModelOf(::StorageManagerVM)
     viewModelOf(::WorkflowsViewModel)
     viewModelOf(::ScheduledJobsViewModel)
+    viewModelOf(::com.mgn.ai.ui.pages.knowledge.KnowledgeBasesVM)
+    viewModel<com.mgn.ai.ui.pages.knowledge.KnowledgeBaseDetailVM> { params ->
+        val baseId: String = params.get()
+        com.mgn.ai.ui.pages.knowledge.KnowledgeBaseDetailVM(
+            knowledgeManager = get(),
+            settingsStore = get(),
+            providerManager = get(),
+            documentProcessor = com.mgn.ai.data.DocumentProcessor(
+                knowledgeManager = get(),
+                settingsStore = get(),
+                providerManager = get(),
+                baseId = baseId,
+            ),
+            baseId = baseId,
+        )
+    }
+    viewModel<com.mgn.ai.ui.pages.knowledge.KnowledgeBaseSettingsVM> { params ->
+        val baseId: String = params.get()
+        com.mgn.ai.ui.pages.knowledge.KnowledgeBaseSettingsVM(
+            knowledgeManager = get(),
+            documentProcessor = com.mgn.ai.data.DocumentProcessor(
+                knowledgeManager = get(),
+                settingsStore = get(),
+                providerManager = get(),
+                baseId = baseId,
+            ),
+            baseId = baseId,
+        )
+    }
     viewModel<StorageCategoryVM> {
         StorageCategoryVM(
             categoryKey = it.get(),

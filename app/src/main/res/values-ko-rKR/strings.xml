@@ -1673,4 +1673,14 @@ mDNS 주소: .local 호스트네임을 사용하며, IP를 몰라도 같은 네�
   <string name="setting_page_scheduled_jobs_subtitle_when">실행 시점: %1$s</string>
   <string name="assistant_page_local_tools_workflows_title">워크플로</string>
   <string name="assistant_page_local_tools_workflows_desc">이벤트 기반 자동화 워크플로 생성 허용</string>
+  <string name="knowledge_page_create">만들기</string>
+  <string name="knowledge_page_create_base">지식 베이스 만들기</string>
+  <string name="knowledge_page_create_base_name_hint">지식 베이스 이름 입력</string>
+  <string name="setting_page_knowledge_bases">지식 베이스</string>
+  <string name="skills_page_batch_cancel">취소</string>
+  <string name="skills_page_batch_delete_message">%d개의 스킬을 삭제하시겠습니까? 이 작업은 되돌릴 수 없습니다.</string>
+  <string name="skills_page_batch_select">일괄 선택</string>
+  <string name="skills_page_delete">삭제</string>
+  <string name="skills_page_deselect_all">전체 선택 해제</string>
+  <string name="skills_page_select_all">모두 선택</string>
 </resources>

@@ -1671,4 +1671,14 @@ GitHub: https://github.com/mgnegypt/eg-ai</string>
   <string name="setting_page_scheduled_jobs_subtitle_when">الموعد: %1$s</string>
   <string name="assistant_page_local_tools_workflows_title">سير العمل</string>
   <string name="assistant_page_local_tools_workflows_desc">دع النموذج ينشئ مهام أتمتة مدفوعة بالأحداث</string>
+  <string name="knowledge_page_create">إنشاء</string>
+  <string name="knowledge_page_create_base">إنشاء قاعدة معرفة</string>
+  <string name="knowledge_page_create_base_name_hint">أدخل اسم قاعدة المعرفة</string>
+  <string name="setting_page_knowledge_bases">قواعد المعرفة</string>
+  <string name="skills_page_batch_cancel">إلغاء</string>
+  <string name="skills_page_batch_delete_message">حذف %d مهارة؟ لا يمكن التراجع عن هذا الإجراء.</string>
+  <string name="skills_page_batch_select">تحديد جماعي</string>
+  <string name="skills_page_delete">حذف</string>
+  <string name="skills_page_deselect_all">إلغاء تحديد الكل</string>
+  <string name="skills_page_select_all">تحديد الكل</string>
 </resources>

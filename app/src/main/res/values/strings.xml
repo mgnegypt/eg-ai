@@ -1671,4 +1671,14 @@ GitHub: https://github.com/mgnegypt/eg-ai</string>
   <string name="setting_page_scheduled_jobs_subtitle_when">When: %1$s</string>
   <string name="assistant_page_local_tools_workflows_title">Workflows</string>
   <string name="assistant_page_local_tools_workflows_desc">Let the model create event-driven automation workflows</string>
+  <string name="knowledge_page_create">Create</string>
+  <string name="knowledge_page_create_base">Create knowledge base</string>
+  <string name="knowledge_page_create_base_name_hint">Enter knowledge base name</string>
+  <string name="setting_page_knowledge_bases">Knowledge bases</string>
+  <string name="skills_page_batch_cancel">Cancel</string>
+  <string name="skills_page_batch_delete_message">Delete %d skill(s)? This action cannot be undone.</string>
+  <string name="skills_page_batch_select">Batch select</string>
+  <string name="skills_page_delete">Delete</string>
+  <string name="skills_page_deselect_all">Deselect all</string>
+  <string name="skills_page_select_all">Select all</string>
 </resources>
