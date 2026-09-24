@@ -1629,6 +1629,7 @@ GitHub: https://github.com/mgnegypt/eg-ai</string>
   <string name="assistant_page_local_tools_storage_info_desc">內部和外部儲存空間</string>
   <string name="assistant_page_local_tools_cron_jobs_title">排程任務</string>
   <string name="assistant_page_local_tools_cron_jobs_desc">允許建立和管理排程任務</string>
+  <string name="setting_page_scheduled_jobs_desc">按計劃執行工具的重複性和一次性任務。</string>
   <string name="setting_page_scheduled_jobs">排程任務</string>
   <string name="setting_page_scheduled_jobs_delete">刪除</string>
   <string name="setting_page_scheduled_jobs_delete_confirm_body">這將刪除該任務、其執行歷史以及任何待觸發的執行。無法復原。</string>

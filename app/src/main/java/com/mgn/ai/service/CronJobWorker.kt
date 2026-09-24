@@ -23,7 +23,7 @@ import com.mgn.ai.data.agentrun.AgentRunStatus
 import com.mgn.ai.data.ai.tools.HeadlessConversations
 import com.mgn.ai.data.ai.tools.LocalTools
 import com.mgn.ai.data.datastore.SettingsStore
-import com.mgn.ai.data.datastore.findAssistantById
+import com.mgn.ai.data.datastore.getAssistantById
 import com.mgn.ai.data.db.entity.ScheduledJobEntity
 import com.mgn.ai.data.db.entity.ScheduledJobRunEntity
 import com.mgn.ai.data.model.Conversation
@@ -361,13 +361,13 @@ class CronJobWorker(
         val assistantUuid = runCatching { Uuid.parse(job.assistantId) }.getOrNull()
             ?: return Triple("failed", "bad_assistant_id:${job.assistantId}", null)
         val settings = settingsStore.settingsFlow.first()
-        val assistant = settings.findAssistantById(assistantUuid)
+        val assistant = settings.getAssistantById(assistantUuid)
             ?: return Triple("failed", "assistant_not_found", null)
         // Headless context — sub-agent recursion guard fires from this dispatch path so
         // a cron job's direct-mode action sequence cannot itself spawn a sub-agent.
         val tools = localTools.getTools(
             assistant.localTools,
-            me.rerere.rikkahub.data.ai.tools.ToolInvocationContext(
+            com.mgn.ai.data.ai.tools.ToolInvocationContext(
                 callerAssistantId = assistantUuid.toString(),
                 callerConversationId = null,  // direct-mode has no conversation
                 isHeadless = true,

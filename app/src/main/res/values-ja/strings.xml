@@ -1631,6 +1631,7 @@ mDNSアドレス: .localホスト名を使用し、IPを知らなくても同じ
   <string name="assistant_page_local_tools_storage_info_desc">内部・外部ストレージ容量</string>
   <string name="assistant_page_local_tools_cron_jobs_title">スケジュール済みジョブ</string>
   <string name="assistant_page_local_tools_cron_jobs_desc">スケジュール済みジョブの作成と管理を許可</string>
+  <string name="setting_page_scheduled_jobs_desc">スケジュールに従ってツールを実行する定期・単発ジョブ。</string>
   <string name="setting_page_scheduled_jobs">スケジュール済みジョブ</string>
   <string name="setting_page_scheduled_jobs_delete">削除</string>
   <string name="setting_page_scheduled_jobs_delete_confirm_body">ジョブ、実行履歴、保留中の実行を削除します。元に戻せません。</string>

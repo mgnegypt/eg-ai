@@ -1629,6 +1629,7 @@ GitHub: https://github.com/mgnegypt/eg-ai</string>
   <string name="assistant_page_local_tools_storage_info_desc">مساحة التخزين الداخلية والخارجية</string>
   <string name="assistant_page_local_tools_cron_jobs_title">المهام المجدولة</string>
   <string name="assistant_page_local_tools_cron_jobs_desc">دع النموذج ينشئ المهام المجدولة ويديرها</string>
+  <string name="setting_page_scheduled_jobs_desc">مهام متكررة ومرة واحدة تنفذ الأدوات حسب جدول.</string>
   <string name="setting_page_scheduled_jobs">المهام المجدولة</string>
   <string name="setting_page_scheduled_jobs_delete">حذف</string>
   <string name="setting_page_scheduled_jobs_delete_confirm_body">يؤدي هذا إلى إزالة المهمة وسجل تشغيلها وأي إطلاق معلق. لا يمكن التراجع عن ذلك.</string>

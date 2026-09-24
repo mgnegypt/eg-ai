@@ -1631,6 +1631,7 @@ GitHub: https://github.com/mgnegypt/eg-ai</string>
   <string name="assistant_page_local_tools_storage_info_desc">Внутренняя и внешняя память</string>
   <string name="assistant_page_local_tools_cron_jobs_title">Задачи по расписанию</string>
   <string name="assistant_page_local_tools_cron_jobs_desc">Создание и управление задачами по расписанию</string>
+  <string name="setting_page_scheduled_jobs_desc">Повторяющиеся и разовые задачи, запускающие инструменты по расписанию.</string>
   <string name="setting_page_scheduled_jobs">Задачи по расписанию</string>
   <string name="setting_page_scheduled_jobs_delete">Удалить</string>
   <string name="setting_page_scheduled_jobs_delete_confirm_body">Это удалит задачу, историю её запусков и все ожидающие срабатывания. Действие нельзя отменить.</string>

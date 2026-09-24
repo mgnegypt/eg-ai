@@ -1629,6 +1629,7 @@ GitHub: https://github.com/mgnegypt/eg-ai</string>
   <string name="assistant_page_local_tools_storage_info_desc">Internal and external storage space</string>
   <string name="assistant_page_local_tools_cron_jobs_title">Scheduled jobs</string>
   <string name="assistant_page_local_tools_cron_jobs_desc">Let the model create and manage scheduled jobs</string>
+  <string name="setting_page_scheduled_jobs_desc">Recurring and one-shot jobs that run tools on a schedule.</string>
   <string name="setting_page_scheduled_jobs">Scheduled jobs</string>
   <string name="setting_page_scheduled_jobs_delete">Delete</string>
   <string name="setting_page_scheduled_jobs_delete_confirm_body">This removes the job, its run history, and any pending fire. Cannot be undone.</string>

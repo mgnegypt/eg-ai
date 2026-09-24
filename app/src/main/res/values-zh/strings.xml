@@ -1631,6 +1631,7 @@ mDNS 地址：使用 .local 主机名，同一网络中的其他设备可通过�
   <string name="assistant_page_local_tools_storage_info_desc">内部和外部存储空间</string>
   <string name="assistant_page_local_tools_cron_jobs_title">定时任务</string>
   <string name="assistant_page_local_tools_cron_jobs_desc">允许创建和管理定时任务</string>
+  <string name="setting_page_scheduled_jobs_desc">按计划运行工具的重复性和一次性任务。</string>
   <string name="setting_page_scheduled_jobs">定时任务</string>
   <string name="setting_page_scheduled_jobs_delete">删除</string>
   <string name="setting_page_scheduled_jobs_delete_confirm_body">这将删除该任务、其运行历史和任何待触发的执行。无法撤销。</string>
