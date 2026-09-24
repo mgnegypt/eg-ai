@@ -11,6 +11,9 @@ class LocalTools(
     private val eventBus: AppEventBus,
     private val ttsManager: TTSManager,
     private val settingsStore: SettingsStore,
+    private val scheduledJobRepository: com.mgn.ai.data.repository.ScheduledJobRepository,
+    private val scheduledJobRunRepository: com.mgn.ai.data.repository.ScheduledJobRunRepository,
+    private val cronJobScheduler: com.mgn.ai.service.CronJobScheduler,
 ) {
     val javascriptTool by lazy { buildJavascriptTool() }
 
@@ -67,6 +70,22 @@ class LocalTools(
         }
         if (options.contains(LocalToolOption.StorageInfo)) {
             tools.add(storageTool(context))
+        }
+        if (options.contains(LocalToolOption.CronJobs)) {
+            tools.add(
+                scheduleJobTool(
+                    scheduledJobRepository,
+                    cronJobScheduler,
+                    settingsStore,
+                    knownToolNamesProvider = { tools.map { it.name } },
+                )
+            )
+            tools.add(listJobsTool(scheduledJobRepository))
+            tools.add(deleteJobTool(scheduledJobRepository, scheduledJobRunRepository, cronJobScheduler))
+            tools.add(pauseJobTool(scheduledJobRepository, cronJobScheduler))
+            tools.add(resumeJobTool(scheduledJobRepository, cronJobScheduler))
+            tools.add(triggerJobNowTool(scheduledJobRepository, cronJobScheduler))
+            tools.add(getJobHistoryTool(scheduledJobRepository, scheduledJobRunRepository))
         }
         return tools
     }

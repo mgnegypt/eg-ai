@@ -496,6 +496,14 @@ class RouteActivity : ComponentActivity() {
                                 com.mgn.ai.workflow.ui.WorkflowDetailScreen(workflowId = key.id)
                             }
 
+                            entry<Screen.SettingScheduledJobs> {
+                                com.mgn.ai.ui.pages.setting.scheduledjobs.ScheduledJobsScreen()
+                            }
+
+                            entry<Screen.ScheduledJobDetail> { key ->
+                                com.mgn.ai.ui.pages.setting.scheduledjobs.ScheduledJobDetailScreen(jobId = key.id)
+                            }
+
                             entry<Screen.GroupChatTemplateDetail> { key ->
                                 GroupChatTemplateDetailPage(key.id)
                             }
@@ -735,6 +743,12 @@ sealed interface Screen : NavKey {
 
     @Serializable
     data class WorkflowDetail(val id: String) : Screen
+
+    @Serializable
+    data object SettingScheduledJobs : Screen
+
+    @Serializable
+    data class ScheduledJobDetail(val id: String) : Screen
 
     @Serializable
     data class GroupChatTemplateDetail(val id: String) : Screen

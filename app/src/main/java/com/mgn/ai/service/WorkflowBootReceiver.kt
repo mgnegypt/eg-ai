@@ -29,9 +29,12 @@ class WorkflowBootReceiver : BroadcastReceiver(), KoinComponent {
         val pending = goAsync()
         scope.launch {
             try {
-                val bootDispatcher: com.mgn.ai.workflow.trigger.WorkflowBootDispatcher =
-                    com.mgn.ai.workflow.trigger.WorkflowBootDispatcher
-                bootDispatcher.onBoot()
+                com.mgn.ai.workflow.trigger.WorkflowBootDispatcher.onBoot()
+                runCatching {
+                    val scheduler = org.koin.java.KoinJavaComponent.getKoin()
+                        .get<CronJobScheduler>()
+                    scheduler.scheduleAllEnabled()
+                }
             } finally {
                 pending.finish()
             }

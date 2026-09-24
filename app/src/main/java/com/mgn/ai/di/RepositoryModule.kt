@@ -58,6 +58,18 @@ val repositoryModule = module {
     }
 
     single {
+        com.mgn.ai.data.repository.ScheduledJobRepository(get<AppDatabase>().scheduledJobDao())
+    }
+
+    single {
+        com.mgn.ai.data.repository.ScheduledJobRunRepository(get<AppDatabase>().scheduledJobRunDao())
+    }
+
+    single {
+        com.mgn.ai.service.CronJobScheduler(get(), get())
+    }
+
+    single {
         KnowledgeManager(
             knowledgeBaseDao = get<AppDatabase>().knowledgeBaseDao(),
             knowledgeDocumentDao = get<AppDatabase>().knowledgeDocumentDao(),

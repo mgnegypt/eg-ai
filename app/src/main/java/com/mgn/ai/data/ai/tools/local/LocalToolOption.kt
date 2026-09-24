@@ -48,4 +48,8 @@ sealed class LocalToolOption {
     @Serializable
     @SerialName("storage_info")
     data object StorageInfo : LocalToolOption()
+
+    @Serializable
+    @SerialName("cron_jobs")
+    data object CronJobs : LocalToolOption()
 }

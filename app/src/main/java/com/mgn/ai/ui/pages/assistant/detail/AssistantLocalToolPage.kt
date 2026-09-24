@@ -226,6 +226,76 @@ private fun AssistantLocalToolContent(
                     )
                 }
             )
+            item(
+                headlineContent = {
+                    Text(stringResource(R.string.assistant_page_local_tools_battery_title))
+                },
+                supportingContent = {
+                    Text(stringResource(R.string.assistant_page_local_tools_battery_desc))
+                },
+                trailingContent = {
+                    Switch(
+                        checked = assistant.localTools.contains(LocalToolOption.Battery),
+                        onCheckedChange = { toggleLocalTool(LocalToolOption.Battery, it) }
+                    )
+                }
+            )
+            item(
+                headlineContent = {
+                    Text(stringResource(R.string.assistant_page_local_tools_audio_info_title))
+                },
+                supportingContent = {
+                    Text(stringResource(R.string.assistant_page_local_tools_audio_info_desc))
+                },
+                trailingContent = {
+                    Switch(
+                        checked = assistant.localTools.contains(LocalToolOption.AudioInfo),
+                        onCheckedChange = { toggleLocalTool(LocalToolOption.AudioInfo, it) }
+                    )
+                }
+            )
+            item(
+                headlineContent = {
+                    Text(stringResource(R.string.assistant_page_local_tools_sensors_title))
+                },
+                supportingContent = {
+                    Text(stringResource(R.string.assistant_page_local_tools_sensors_desc))
+                },
+                trailingContent = {
+                    Switch(
+                        checked = assistant.localTools.contains(LocalToolOption.Sensors),
+                        onCheckedChange = { toggleLocalTool(LocalToolOption.Sensors, it) }
+                    )
+                }
+            )
+            item(
+                headlineContent = {
+                    Text(stringResource(R.string.assistant_page_local_tools_storage_info_title))
+                },
+                supportingContent = {
+                    Text(stringResource(R.string.assistant_page_local_tools_storage_info_desc))
+                },
+                trailingContent = {
+                    Switch(
+                        checked = assistant.localTools.contains(LocalToolOption.StorageInfo),
+                        onCheckedChange = { toggleLocalTool(LocalToolOption.StorageInfo, it) }
+                    )
+                }
+            )
+            item(
+                headlineContent = {
+                    Text(stringResource(R.string.assistant_page_local_tools_cron_jobs_title))
+                },
+                supportingContent = {
+                    Text(stringResource(R.string.assistant_page_local_tools_cron_jobs_desc))
+                },
+                trailingContent = {
+                    Switch(
+                        checked = assistant.localTools.contains(LocalToolOption.CronJobs),
+                        onCheckedChange = { toggleLocalTool(LocalToolOption.CronJobs, it) }
+                    )
+                }
+            )
         }
     }
 }

@@ -8,6 +8,10 @@ import androidx.room.TypeConverters
 import com.mgn.ai.ai.core.TokenUsage
 import com.mgn.ai.data.agentrun.AgentRun
 import com.mgn.ai.data.agentrun.AgentRunDao
+import com.mgn.ai.data.db.entity.ScheduledJobEntity
+import com.mgn.ai.data.db.entity.ScheduledJobRunEntity
+import com.mgn.ai.data.db.dao.ScheduledJobDao
+import com.mgn.ai.data.db.dao.ScheduledJobRunDao
 import com.mgn.ai.data.db.dao.ConversationDAO
 import com.mgn.ai.data.db.dao.FavoriteDAO
 import com.mgn.ai.data.db.dao.FolderDAO
@@ -55,8 +59,10 @@ import com.mgn.ai.utils.JsonInstant
         WorkflowEntity::class,
         WorkflowRunEntity::class,
         AgentRun::class,
+        ScheduledJobEntity::class,
+        ScheduledJobRunEntity::class,
     ],
-    version = 28,
+    version = 29,
     autoMigrations = [
         AutoMigration(from = 1, to = 2),
         AutoMigration(from = 2, to = 3),
@@ -108,6 +114,10 @@ abstract class AppDatabase : RoomDatabase() {
     abstract fun workflowRunDao(): WorkflowRunDao
 
     abstract fun agentRunDao(): AgentRunDao
+
+    abstract fun scheduledJobDao(): ScheduledJobDao
+
+    abstract fun scheduledJobRunDao(): ScheduledJobRunDao
 }
 
 object TokenUsageConverter {

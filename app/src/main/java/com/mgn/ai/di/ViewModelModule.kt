@@ -84,6 +84,7 @@ val viewModelModule = module {
     viewModelOf(::PromptOptimizeVM)
     viewModelOf(::StorageManagerVM)
     viewModelOf(::com.mgn.ai.workflow.ui.WorkflowsViewModel)
+    viewModelOf(::com.mgn.ai.ui.pages.setting.scheduledjobs.ScheduledJobsViewModel)
     viewModel<StorageCategoryVM> {
         StorageCategoryVM(
             categoryKey = it.get(),
