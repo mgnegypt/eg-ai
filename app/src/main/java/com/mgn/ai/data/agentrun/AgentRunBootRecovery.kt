@@ -1,11 +1,15 @@
 package com.mgn.ai.data.agentrun
 
+import android.Manifest
 import android.app.NotificationChannel
 import android.app.NotificationManager
 import android.content.Context
+import android.content.pm.PackageManager
+import android.os.Build
 import android.util.Log
 import androidx.core.app.NotificationCompat
 import androidx.core.app.NotificationManagerCompat
+import androidx.core.content.ContextCompat
 
 private const val TAG = "AgentRunBootRecovery"
 
@@ -97,6 +101,11 @@ class AgentRunBootRecovery(
                 }
                 val text = "The app was killed mid-run ($breakdown). " +
                     "If this keeps happening, check the battery whitelist and foreground service settings."
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU &&
+                    ContextCompat.checkSelfPermission(context, Manifest.permission.POST_NOTIFICATIONS) != PackageManager.PERMISSION_GRANTED
+                ) {
+                    return
+                }
                 val builder = NotificationCompat.Builder(context, CHANNEL_ID)
                     .setContentTitle(title)
                     .setContentText(text)
