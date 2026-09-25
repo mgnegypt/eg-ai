@@ -2,6 +2,7 @@ package com.mgn.ai.knowledge.retrieval
 
 import com.mgn.ai.ai.provider.Provider
 import com.mgn.ai.ai.provider.ProviderSetting
+import com.mgn.ai.ai.provider.RerankingGenerationParams
 import kotlinx.coroutines.async
 import kotlinx.coroutines.coroutineScope
 import com.mgn.ai.knowledge.data.entity.KnowledgeChunkEntity
