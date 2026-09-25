@@ -42,6 +42,7 @@ import com.mgn.ai.data.datastore.Settings
 import com.mgn.ai.data.datastore.findProvider
 import com.mgn.ai.data.model.Assistant
 import com.mgn.ai.data.model.AssistantMemory
+import com.mgn.ai.data.model.SessionMemory
 import java.io.File
 import java.io.IOException
 import java.net.ConnectException
@@ -87,6 +88,7 @@ class GenerationLoop(
         conversationModeInjectionIds: Set<Uuid> = emptySet(),
         conversationLorebookIds: Set<Uuid> = emptySet(),
         workspaceCwd: String? = null,
+        sessionMemories: List<SessionMemory> = emptyList(),
     ): Flow<GenerationChunk> = flow {
         val provider = model.findProvider(settings.providers) ?: error("Provider not found")
         val providerImpl = providerManager.getProviderByType(provider)
@@ -142,6 +144,7 @@ class GenerationLoop(
                     conversationModeInjectionIds = conversationModeInjectionIds,
                     conversationLorebookIds = conversationLorebookIds,
                     workspaceCwd = workspaceCwd,
+                    sessionMemories = sessionMemories,
                 )
                 messages = messages.visualTransforms(
                     transformers = outputTransformers,
@@ -397,35 +400,26 @@ class GenerationLoop(
         workspaceCwd: String? = null,
         processingStatus: MutableStateFlow<String?> = MutableStateFlow(null),
         conversationId: Uuid? = null,
+        sessionMemories: List<SessionMemory> = emptyList(),
     ): List<UIMessage> {
-        return buildList {
-            val system = buildString {
-                val effectiveSystemPrompt =
-                    if (assistant.allowConversationSystemPrompt && !conversationSystemPrompt.isNullOrBlank()) {
-                        conversationSystemPrompt
-                    } else {
-                        assistant.systemPrompt
-                    }
-                if (effectiveSystemPrompt.isNotBlank()) {
-                    append(effectiveSystemPrompt)
-                }
-
-                // 记忆
-                if (assistant.enableMemory) {
-                    appendLine()
-                    append(buildMemoryPrompt(memories = memories))
-                }
-                // 工具prompt
-                tools.forEach { tool ->
-                    appendLine()
-                    append(tool.systemPrompt(model, messages))
-                }
+        val effectiveSystemPrompt =
+            if (assistant.allowConversationSystemPrompt && !conversationSystemPrompt.isNullOrBlank()) {
+                conversationSystemPrompt
+            } else {
+                assistant.systemPrompt
             }
-            if (system.isNotBlank()) {
-                add(UIMessage.system(prompt = system).copy(isSynthetic = true))
-            }
-            addAll(messages.limitContext(assistant.contextMessageLimit))
-        }.transforms(
+        // Structured memory assembly (pinned/dynamic/session placement).
+        // Adapted from roccla231023/ROCL (AGPL-3.0, same license).
+        val assembled = MemoryAssembler.assemble(
+            history = messages.limitContext(assistant.contextMessageLimit),
+            systemPrompt = effectiveSystemPrompt,
+            enableMemory = assistant.enableMemory,
+            enableSessionMemory = assistant.enableSessionMemory,
+            memories = memories,
+            sessionMemories = sessionMemories,
+            toolPrompts = tools.map { it.systemPrompt(model, messages) },
+        )
+        return assembled.transforms(
             transformers = transformers,
             context = context,
             model = model,
@@ -457,6 +451,7 @@ class GenerationLoop(
         conversationModeInjectionIds: Set<Uuid> = emptySet(),
         conversationLorebookIds: Set<Uuid> = emptySet(),
         workspaceCwd: String? = null,
+        sessionMemories: List<SessionMemory> = emptyList(),
     ) {
         val internalMessages = buildInternalMessages(
             assistant = assistant,
@@ -472,6 +467,7 @@ class GenerationLoop(
             workspaceCwd = workspaceCwd,
             processingStatus = processingStatus,
             conversationId = conversationId,
+            sessionMemories = sessionMemories,
         )
 
         var messages: List<UIMessage> = messages

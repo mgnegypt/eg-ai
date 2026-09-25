@@ -1699,4 +1699,6 @@ GitHub: https://github.com/mgnegypt/eg-ai</string>
   <string name="setting_model_page_embedding_model_desc">用於知識庫文字向量化，未設定時知識庫可單獨設定</string>
   <string name="setting_model_page_rerank_model">Rerank 模型</string>
   <string name="setting_model_page_rerank_model_desc">用於知識庫檢索結果重排序，可選</string>
+  <string name="assistant_page_session_memory">工作階段記憶</string>
+  <string name="assistant_page_session_memory_desc">讓助理僅在目前對話中保持重要細節活躍，如設定、大綱和需求。</string>
 </resources>

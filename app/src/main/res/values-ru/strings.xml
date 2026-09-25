@@ -1701,4 +1701,6 @@ GitHub: https://github.com/mgnegypt/eg-ai</string>
   <string name="setting_model_page_embedding_model_desc">Векторизует текст баз знаний. Можно переопределить для базы.</string>
   <string name="setting_model_page_rerank_model">Rerank-модель</string>
   <string name="setting_model_page_rerank_model_desc">Переупорядочивает результаты. Необязательно.</string>
+  <string name="assistant_page_session_memory">Память сессии</string>
+  <string name="assistant_page_session_memory_desc">Хранит важные детали активными только в текущем разговоре: настройки, планы, требования.</string>
 </resources>

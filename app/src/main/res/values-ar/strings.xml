@@ -1699,4 +1699,6 @@ GitHub: https://github.com/mgnegypt/eg-ai</string>
   <string name="setting_model_page_embedding_model_desc">يحوّل نصوص قاعدة المعرفة إلى متجهات. يمكن لكل قاعدة تجاوزه.</string>
   <string name="setting_model_page_rerank_model">نموذج إعادة الترتيب</string>
   <string name="setting_model_page_rerank_model_desc">يعيد ترتيب نتائج الاسترجاع. اختياري.</string>
+  <string name="assistant_page_session_memory">ذاكرة الجلسة</string>
+  <string name="assistant_page_session_memory_desc">دع المساعد يُبقي التفاصيل المهمة نشطة في المحادثة الحالية فقط، مثل الإعدادات والمخططات والمتطلبات.</string>
 </resources>

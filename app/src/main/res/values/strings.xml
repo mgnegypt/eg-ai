@@ -1699,4 +1699,6 @@ GitHub: https://github.com/mgnegypt/eg-ai</string>
   <string name="setting_model_page_embedding_model_desc">Vectorizes knowledge base text. Bases can override it individually.</string>
   <string name="setting_model_page_rerank_model">Rerank model</string>
   <string name="setting_model_page_rerank_model_desc">Re-ranks knowledge retrieval results. Optional.</string>
+  <string name="assistant_page_session_memory">Session Memory</string>
+  <string name="assistant_page_session_memory_desc">Let the assistant keep important details active only in the current conversation, such as settings, outlines, and requirements.</string>
 </resources>

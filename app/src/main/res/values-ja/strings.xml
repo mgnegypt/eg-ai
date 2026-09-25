@@ -1701,4 +1701,6 @@ mDNSアドレス: .localホスト名を使用し、IPを知らなくても同じ
   <string name="setting_model_page_embedding_model_desc">ナレッジベースのテキストをベクトル化。各ベースで上書き可能。</string>
   <string name="setting_model_page_rerank_model">Rerankモデル</string>
   <string name="setting_model_page_rerank_model_desc">検索結果を並べ替え。任意。</string>
+  <string name="assistant_page_session_memory">セッションメモリ</string>
+  <string name="assistant_page_session_memory_desc">設定や概要、要件などの重要事項を現在の会話内でのみ保持します。</string>
 </resources>

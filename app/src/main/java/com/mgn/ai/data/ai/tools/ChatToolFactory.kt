@@ -55,6 +55,8 @@ class ChatToolFactory(
         model: Model,
         workspaceCwd: String? = null,
         conversationId: Uuid? = null,
+        sessionMemories: List<SessionMemory> = emptyList(),
+        onSessionMemoriesChanged: (suspend (List<SessionMemory>) -> Unit)? = null,
     ): List<Tool> {
         val assembled = buildList {
         if (assistant.enableMemory) {
@@ -76,6 +78,19 @@ class ChatToolFactory(
             addAll(createSearchTools(settings))
         }
         addAll(localTools.getTools(assistant.localTools))
+        var currentSessionMemories = sessionMemories
+        if (assistant.enableSessionMemory && onSessionMemoriesChanged != null) {
+            addAll(
+                buildSessionMemoryTools(
+                    json = json,
+                    getMemories = { currentSessionMemories },
+                    onChange = { updated ->
+                        currentSessionMemories = updated
+                        onSessionMemoriesChanged(updated)
+                    },
+                )
+            )
+        }
         if (assistant.enableRecentChatsReference) {
             addAll(createConversationTools(conversationRepository, assistant.id))
         }

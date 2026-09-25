@@ -598,6 +598,7 @@ class ChatService(
                 model = model,
                 workspaceCwd = conversation.workspaceCwd,
                 conversationId = conversationId,
+                sessionMemories = conversation.sessionMemories,
             )
         } catch (error: InvalidMcpServerNamesException) {
             error(context.getString(R.string.error_mcp_invalid_server_name, error.names.joinToString(", ")))
@@ -975,6 +976,11 @@ class ChatService(
                 model = model,
                 workspaceCwd = conversation.workspaceCwd,
                 conversationId = conversationId,
+                sessionMemories = conversation.sessionMemories,
+                onSessionMemoriesChanged = { updated ->
+                    val current = getConversationFlow(conversationId).value
+                    updateConversation(conversationId, current.copy(sessionMemories = updated))
+                },
             )
         } catch (error: InvalidMcpServerNamesException) {
             session.messageQueue.pause()
@@ -1017,6 +1023,7 @@ class ChatService(
             conversationModeInjectionIds = conversation.modeInjectionIds,
             conversationLorebookIds = conversation.lorebookIds,
             workspaceCwd = conversation.workspaceCwd,
+            sessionMemories = conversation.sessionMemories,
             memories = if (seatAssistant.useGlobalMemory) {
                 memoryRepository.getGlobalMemories()
             } else {
@@ -1116,6 +1123,11 @@ class ChatService(
                     model = model,
                     workspaceCwd = conversation.workspaceCwd,
                     conversationId = conversationId,
+                    sessionMemories = conversation.sessionMemories,
+                    onSessionMemoriesChanged = { updated ->
+                        val current = getConversationFlow(conversationId).value
+                        updateConversation(conversationId, current.copy(sessionMemories = updated))
+                    },
                 )
             } catch (error: InvalidMcpServerNamesException) {
                 sessions[conversationId]?.messageQueue?.pause()
@@ -1150,6 +1162,7 @@ class ChatService(
                 conversationModeInjectionIds = conversation.modeInjectionIds,
                 conversationLorebookIds = conversation.lorebookIds,
                 workspaceCwd = conversation.workspaceCwd,
+                sessionMemories = conversation.sessionMemories,
                 memories = if (assistant.useGlobalMemory) {
                     memoryRepository.getGlobalMemories()
                 } else {

@@ -1701,4 +1701,6 @@ mDNS 地址：使用 .local 主机名，同一网络中的其他设备可通过�
   <string name="setting_model_page_embedding_model_desc">用于知识库文本向量化，未配置时知识库可单独设置</string>
   <string name="setting_model_page_rerank_model">Rerank 模型</string>
   <string name="setting_model_page_rerank_model_desc">用于知识库检索结果重排序，可选</string>
+  <string name="assistant_page_session_memory">会话记忆</string>
+  <string name="assistant_page_session_memory_desc">让助手仅在当前对话中保持重要细节活跃，如设置、大纲和需求。</string>
 </resources>

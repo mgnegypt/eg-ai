@@ -228,6 +228,27 @@ private fun AssistantMemoryContent(
                 }
             )
             item(
+                headlineContent = { Text(stringResource(R.string.assistant_page_session_memory)) },
+                supportingContent = {
+                    Text(
+                        text = stringResource(R.string.assistant_page_session_memory_desc),
+                    )
+                },
+                trailingContent = {
+                    Switch(
+                        checked = assistant.enableSessionMemory,
+                        onCheckedChange = {
+                            onUpdateAssistant(
+                                assistant.copy(
+                                    enableSessionMemory = it
+                                )
+                            )
+                        },
+                        enabled = assistant.enableMemory
+                    )
+                }
+            )
+            item(
                 headlineContent = { Text(stringResource(R.string.assistant_page_global_memory)) },
                 supportingContent = {
                     Text(

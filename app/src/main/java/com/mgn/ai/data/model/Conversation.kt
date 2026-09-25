@@ -33,6 +33,7 @@ data class Conversation(
     val folderId: Uuid? = null,
     // 群聊当前发言席位（group chat sticky speaker seat），null 表示无
     val stickySpeakerSeatId: Uuid? = null,
+    val sessionMemories: List<SessionMemory> = emptyList(),
     @Transient
     val newConversation: Boolean = false
 ) {
